@@ -7,7 +7,7 @@ import * as signalR from '@microsoft/signalr';
 export class SignalRService {
 
   // public data?: ChartModel[];
-  private hubConnection?: signalR.HubConnection
+  private hubConnection?: signalR.HubConnection;
 
   public startConnection = () => {
 
@@ -18,13 +18,19 @@ export class SignalRService {
 
     this.hubConnection
       .start()
-      .then(() => console.log('Connection started'))
+      .then(() => {
+        console.log('Connection started');
+      })
       .catch(err => console.log('Error while starting connection: ' + err));
+
+
+    this.hubConnection.invoke('JoinGroup', 'test')
+                  .catch(err => console.error(err))
   }
 
   public addTransferChartDataListener = () => {
     if (this.hubConnection) {
-      this.hubConnection.on('NewMessage', (data: string) => {
+      this.hubConnection.on('newMessage', (data: string) => {
         // this.data = data;
         console.log(data);
       });
@@ -33,7 +39,7 @@ export class SignalRService {
 
   public broadcastChartData = () => {
     if (this.hubConnection) {
-      this.hubConnection.invoke('NewMessage', 'Hello World!')
+      this.hubConnection.invoke('NewMessage','test', 'Hello World!')
         .catch(err => console.error(err));
     }
   }

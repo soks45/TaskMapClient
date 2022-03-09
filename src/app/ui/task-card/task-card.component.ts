@@ -12,4 +12,5 @@ export class TaskCardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
 }

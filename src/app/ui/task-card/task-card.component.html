@@ -1,4 +1,4 @@
-<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag (cdkDragEnded)="disabled"
+<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag #taskCard
           [cdkDragFreeDragPosition]="dragPosition" (cdkDragMoved)="onDnD($event)">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
@@ -18,3 +18,5 @@
     <button mat-button>SHARE</button>
   </mat-card-actions>
 </mat-card>
+
+

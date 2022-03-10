@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { ChartModel } from 'src/models/chart-model';
 
@@ -9,8 +9,8 @@ import { ChartModel } from 'src/models/chart-model';
   styleUrls: ['./task-card.component.scss']
 })
 export class TaskCardComponent implements OnInit {
+  @ViewChild('taskCard') taskCard?: ElementRef;
   dragPosition = {x: 0, y: 0};
-  disabled = false;
 
   constructor(private signalRService: SignalRService) { }
 
@@ -23,13 +23,10 @@ export class TaskCardComponent implements OnInit {
   }
 
   onDnD(event: any): void {
-    this.signalRService.broadcastChartData(JSON.stringify(event.pointerPosition));
-    console.log(event);
-    console.log(event.distance);
+    this.signalRService.broadcastChartData(JSON.stringify(event.distance));
   }
 
   changePosition(posDelta: ChartModel): void {
     this.dragPosition = {x: posDelta.x, y: posDelta.y};
   }
-
 }

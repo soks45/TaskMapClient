@@ -9,7 +9,6 @@ export class SignalRService {
 
   data$ = new BehaviorSubject('');
   private hubConnection?: signalR.HubConnection;
-  // private data?: string;
 
   public startConnection = () => {
 
@@ -27,7 +26,7 @@ export class SignalRService {
 
 
     this.hubConnection.invoke('JoinGroup', 'test')
-                  .catch(err => console.error(err))
+                  .catch(err => console.error(err));
   }
 
   public addTransferChartDataListener = () => {

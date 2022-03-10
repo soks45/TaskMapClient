@@ -10,6 +10,7 @@ import { ChartModel } from 'src/models/chart-model';
 })
 export class TaskCardComponent implements OnInit {
   dragPosition = {x: 0, y: 0};
+  disabled = false;
 
   constructor(private signalRService: SignalRService) { }
 

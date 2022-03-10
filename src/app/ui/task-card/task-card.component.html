@@ -1,4 +1,4 @@
-<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag
+<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag (cdkDragEnded)="disabled"
           [cdkDragFreeDragPosition]="dragPosition" (cdkDragMoved)="onDnD($event)">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, } from '@angular/core';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { ChartModel } from 'src/models/chart-model';
 
@@ -9,7 +9,6 @@ import { ChartModel } from 'src/models/chart-model';
   styleUrls: ['./task-card.component.scss']
 })
 export class TaskCardComponent implements OnInit {
-  @ViewChild('taskCard') taskCard?: ElementRef;
   dragPosition = {x: 0, y: 0};
 
   constructor(private signalRService: SignalRService) { }
@@ -23,10 +22,29 @@ export class TaskCardComponent implements OnInit {
   }
 
   onDnD(event: any): void {
-    this.signalRService.broadcastChartData(JSON.stringify(event.distance));
+    let element = event.source.getRootElement();
+    let boundingClientRect = element.getBoundingClientRect();
+    let parentPosition = this.getPosition(element);
+
+    const delta = {
+      x: (boundingClientRect.x - parentPosition.left),
+      y: (boundingClientRect.y - parentPosition.top)
+    }
+    this.signalRService.broadcastChartData(JSON.stringify(delta));
   }
 
-  changePosition(posDelta: ChartModel): void {
-    this.dragPosition = {x: posDelta.x, y: posDelta.y};
+  changePosition(coords: ChartModel): void {
+    this.dragPosition = {x: coords.x, y: coords.y};
+  }
+
+  getPosition(el: any) {
+    let x = 0;
+    let y = 0;
+    while(el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+      x += el.offsetLeft - el.scrollLeft;
+      y += el.offsetTop - el.scrollTop;
+      el = el.offsetParent;
+    }
+    return { top: y, left: x };
   }
 }

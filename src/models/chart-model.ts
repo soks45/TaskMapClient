@@ -1,3 +1,4 @@
 export interface ChartModel {
-  data: string,
+  x: number,
+  y: number
 }

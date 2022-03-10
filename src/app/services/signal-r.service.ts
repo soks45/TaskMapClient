@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SignalRService {
 
-  // public data?: ChartModel[];
+  data$ = new BehaviorSubject('');
   private hubConnection?: signalR.HubConnection;
+  // private data?: string;
 
   public startConnection = () => {
 
@@ -31,15 +33,15 @@ export class SignalRService {
   public addTransferChartDataListener = () => {
     if (this.hubConnection) {
       this.hubConnection.on('newMessage', (data: string) => {
-        // this.data = data;
+        this.data$.next(data);
         console.log(data);
       });
     }
   }
 
-  public broadcastChartData = () => {
+  public broadcastChartData = (data: string) => {
     if (this.hubConnection) {
-      this.hubConnection.invoke('NewMessage','test', 'Hello World!')
+      this.hubConnection.invoke('newMessage','test', data)
         .catch(err => console.error(err));
     }
   }

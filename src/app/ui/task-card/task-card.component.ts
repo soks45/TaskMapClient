@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SignalRService } from 'src/app/services/signal-r.service';
 import { ChartModel } from 'src/models/chart-model';
 

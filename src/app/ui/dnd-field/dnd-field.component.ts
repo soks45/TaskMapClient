@@ -28,10 +28,10 @@ export class DndFieldComponent implements OnInit {
     if(this.x && this.y && this.taskId) {
       const task: TaskB = {
         userId: 1,
-        taskId: this.taskId.nativeElement.value,
+        taskId: parseInt(this.taskId.nativeElement.value),
         coordinates: {
-          x: this.x.nativeElement.value,
-          y: this.y.nativeElement.value
+          x: parseInt(this.x.nativeElement.value),
+          y: parseInt(this.y.nativeElement.value)
         },
         taskLabel: '',
         taskText: '',
@@ -40,6 +40,7 @@ export class DndFieldComponent implements OnInit {
         color: '',
         createdDate: '123',
       }
+      console.log(task);
       this.taskService.addNewTask(task);
     }
 

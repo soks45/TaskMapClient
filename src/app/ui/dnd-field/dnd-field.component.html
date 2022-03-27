@@ -1,3 +1,8 @@
+<button (click)="addNewTask()"></button>
+<input type="text" #taskId>
+<input type="number" #x>
+<input type="number" #y>
+
 <div class="example-boundary" *ngFor="let item of taskList">
   <app-task-card [card]="item"></app-task-card>
 </div>

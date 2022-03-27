@@ -38,7 +38,11 @@ export class TaskService {
   }
 
   public switchBoard(boardId: number) {
-    this.JoinBoard(boardId);
+    this._taskHub.isConnected.pipe(filter(connection =>
+      connection == true
+    )).subscribe(connected => {
+      this.JoinBoard(boardId);
+    });
     this.GetTasks(boardId);
   }
 
@@ -48,6 +52,10 @@ export class TaskService {
 
   public newTaskPosition(task: TaskB): void {
     this._taskHub.hubConnection.invoke('NewTaskPosition', task);
+  }
+
+  public addNewTask(task: TaskB): void {
+    this._taskHub.hubConnection.invoke('AddNewTask', task);
   }
 
   private startListening(): void {

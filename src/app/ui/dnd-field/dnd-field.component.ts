@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { TaskB } from 'src/models/task-b';
 
@@ -8,6 +8,9 @@ import { TaskB } from 'src/models/task-b';
   styleUrls: ['./dnd-field.component.scss']
 })
 export class DndFieldComponent implements OnInit {
+  @ViewChild('x') x?: ElementRef;
+  @ViewChild('y') y?: ElementRef;
+  @ViewChild('taskId') taskId?: ElementRef;
   @Input() boardId: number = 0;
   taskList: TaskB[];
   constructor(private taskService: TaskService) {
@@ -19,5 +22,26 @@ export class DndFieldComponent implements OnInit {
     this.taskService.TaskList$.subscribe(res => {
       this.taskList = res;
     })
+  }
+
+  addNewTask(): void {
+    if(this.x && this.y && this.taskId) {
+      const task: TaskB = {
+        userId: 1,
+        taskId: this.taskId.nativeElement.value,
+        coordinates: {
+          x: this.x.nativeElement.value,
+          y: this.y.nativeElement.value
+        },
+        taskLabel: '',
+        taskText: '',
+        state: 0,
+        boardId: this.boardId,
+        color: '',
+        createdDate: '123',
+      }
+      this.taskService.addNewTask(task);
+    }
+
   }
 }

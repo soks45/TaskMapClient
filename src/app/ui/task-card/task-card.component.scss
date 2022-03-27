@@ -1,6 +1,6 @@
 .example-box {
-  width: 400px;
-  height: 550px;
+  width: 300px;
+  min-height: 300px;
 }
 
 .example-box:active {
@@ -11,7 +11,7 @@
 
 .example-boundary {
   width: 800px;
-  height: 800px;
+  min-height: 800px;
   max-width: 100%;
   border: dotted #ccc 2px;
 }

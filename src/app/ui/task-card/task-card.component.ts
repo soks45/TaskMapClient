@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { SignalRService } from 'src/app/services/signal-r.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { ChartModel } from 'src/models/chart-model';
+import { TaskService } from 'src/app/services/task.service';
+import { TaskB } from 'src/models/task-b';
 
 
 @Component({
@@ -9,32 +10,30 @@ import { ChartModel } from 'src/models/chart-model';
   styleUrls: ['./task-card.component.scss']
 })
 export class TaskCardComponent implements OnInit {
-  dragPosition = {x: 0, y: 0};
+  // @ts-ignore
+  @Input() card: TaskB;
 
-  constructor(private signalRService: SignalRService) { }
+  constructor(private taskService: TaskService) {
+
+  }
 
   ngOnInit(): void {
-    this.signalRService.data$.subscribe((data) => {
-      const pos = JSON.parse(data);
-      this.changePosition(pos);
-    });
-    this.signalRService.addTransferChartDataListener();
+
   }
+
 
   onDnD(event: any): void {
     let element = event.source.getRootElement();
     let boundingClientRect = element.getBoundingClientRect();
     let parentPosition = this.getPosition(element);
 
-    const delta = {
+    const delta: ChartModel = {
       x: (boundingClientRect.x - parentPosition.left),
       y: (boundingClientRect.y - parentPosition.top)
     }
-    this.signalRService.broadcastChartData(JSON.stringify(delta));
-  }
+    this.card.coordinates = delta;
+    this.taskService.newTaskPosition(this.card);
 
-  changePosition(coords: ChartModel): void {
-    this.dragPosition = {x: coords.x, y: coords.y};
   }
 
   getPosition(el: any) {

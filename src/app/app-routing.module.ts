@@ -8,6 +8,10 @@ const routes: Routes = [
     // canActivate: [true],
   },
   {
+    path: 'not-found',
+    loadChildren: () => import('./pages/not-found-page/not-found-page.module').then(m => m.NotFoundPageModule)
+  },
+  {
     path: '**',
     redirectTo: 'main-page'
   }

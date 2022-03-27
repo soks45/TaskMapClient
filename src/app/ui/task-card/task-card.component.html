@@ -1,5 +1,5 @@
-<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag id="Card"
-          [cdkDragFreeDragPosition]="dragPosition" (cdkDragMoved)="onDnD($event)">
+<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag
+          [cdkDragFreeDragPosition]="card.coordinates" (cdkDragMoved)="onDnD($event)">
   <mat-card-header>
     <div mat-card-avatar class="example-header-image"></div>
     <mat-card-title>Shiba Inu</mat-card-title>

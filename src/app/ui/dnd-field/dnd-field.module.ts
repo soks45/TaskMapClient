@@ -7,10 +7,6 @@ import { TaskCardModule } from 'src/app/ui/task-card/task-card.module';
 
 @NgModule({
   declarations: [DndFieldComponent],
-  exports: [DndFieldComponent],
-  imports: [
-    CommonModule,
-    TaskCardModule
-  ]
+  exports: [DndFieldComponent], imports: [CommonModule, TaskCardModule]
 })
 export class DndFieldModule { }

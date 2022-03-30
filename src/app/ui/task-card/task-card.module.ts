@@ -5,14 +5,15 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
+
 @NgModule({
   declarations: [TaskCardComponent],
   exports: [TaskCardComponent],
   imports: [
     CommonModule,
-    DragDropModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    DragDropModule,
   ]
 })
 export class TaskCardModule { }

@@ -1,6 +1,7 @@
 import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { TaskB } from 'src/models/task-b';
+import {ChartModel} from "src/models/chart-model";
 
 @Component({
   selector: 'app-dnd-field',
@@ -20,6 +21,7 @@ export class DndFieldComponent implements OnInit {
   ngOnInit(): void {
     this.taskService.switchBoard(this.boardId);
     this.taskService.TaskList$.subscribe(res => {
+      console.log('some changes', res);
       this.taskList = res;
     })
   }
@@ -43,6 +45,12 @@ export class DndFieldComponent implements OnInit {
       console.log(task);
       this.taskService.addNewTask(task);
     }
+  }
 
+  getElementCoordinates(el: ElementRef): ChartModel {
+    return {
+      x: el.nativeElement.offsetLeft,
+      y: el.nativeElement.offsetTop
+    }
   }
 }

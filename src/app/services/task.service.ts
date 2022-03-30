@@ -51,6 +51,9 @@ export class TaskService {
   }
 
   public newTaskPosition(task: TaskB): void {
+    task.coordinates.x = Math.abs(Math.floor(task.coordinates.x));
+    task.coordinates.y = Math.abs(Math.floor(task.coordinates.y));
+    console.log(task);
     this._taskHub.hubConnection.invoke('NewTaskPosition', task);
   }
 
@@ -59,8 +62,9 @@ export class TaskService {
   }
 
   private startListening(): void {
-    this._taskHub.hubConnection.on('newTaskPosition', (data: string) => {
-      const task = JSON.parse(data);
+    console.log('Listening started');
+    this._taskHub.hubConnection.on('newTaskPosition', (task: TaskB) => {
+      console.log('Listening newTaskPosition -start-');
       const newList = this.TaskList$.value;
       for (let i = 0; i < newList.length; i++) {
         if (newList[i].taskId === task.taskId) {
@@ -68,18 +72,25 @@ export class TaskService {
         }
       }
       this.TaskList$.next(newList);
+      console.log('Listening newTaskPosition -end-');
     });
-    this._taskHub.hubConnection.on('newTask', (data: string) => {
-      const task = JSON.parse(data);
+    this._taskHub.hubConnection.on('newTask', (task: TaskB) => {
+      console.log('Listening newTask -start-');
       const newList = this.TaskList$.value;
-      newList.push(task)
+      newList.push(task);
       this.TaskList$.next(newList);
+      console.log('Listening newTask -end-');
     });
-    this._taskHub.hubConnection.on('deleteTask', (data: string) => {
-      const task = JSON.parse(data);
-      const newList = this.TaskList$.value;
-      newList.splice(this.TaskList$.value.findIndex(task), 1);
+    this._taskHub.hubConnection.on('deleteTask', (task: TaskB) => {
+      console.log('Listening deleteTask -start-');
+      let newList = this.TaskList$.value;
+      this.TaskList$.value.findIndex((currentTask, index) =>{
+        if (currentTask === task) {
+          newList.splice(index, 1);
+        }
+      });
       this.TaskList$.next(newList);
+      console.log('Listening deleteTask -end-');
     });
   }
 

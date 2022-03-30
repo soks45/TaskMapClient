@@ -1,7 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs';
-import { environment } from 'src/environments/environment';
+import {LogLevel} from '@microsoft/signalr';
+import {BehaviorSubject} from 'rxjs';
+import {environment} from 'src/environments/environment';
 
 export class Hub {
   private _isConnected$ = new BehaviorSubject(false);
@@ -13,6 +14,7 @@ export class Hub {
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(_url)
       .withAutomaticReconnect()
+      .configureLogging(LogLevel.Trace)
       .build();
   }
 

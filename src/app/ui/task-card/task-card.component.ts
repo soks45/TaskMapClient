@@ -1,7 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit } from '@angular/core';
 import { TaskService } from 'src/app/services/task.service';
 import { TaskB } from 'src/models/task-b';
 import { CdkDragMove } from "@angular/cdk/drag-drop";
+import {
+  Subject, throttleTime,
+} from "rxjs";
 
 
 @Component({
@@ -12,23 +15,36 @@ import { CdkDragMove } from "@angular/cdk/drag-drop";
 export class TaskCardComponent implements OnInit {
   @Input() task!: TaskB;
 
+  private _dragEvents$: Subject<TaskB>;
 
   constructor(private taskService: TaskService) {
+    this._dragEvents$ = new Subject<any>();
 
   }
 
-  ngOnInit(): void {  }
+  ngOnInit(): void {
+    this._dragEvents$
+      .pipe(
+        throttleTime(20)
+      )
+      .subscribe(event => {
+        this.onDnD(event);
+      });
+  }
 
   currentCoords(): void {
     console.log(this.task.coordinates);
   }
 
-  onDnD($event: CdkDragMove): void {
+  onDnD(task: TaskB): void {
+    this.taskService.newTaskPosition(task);
+  }
+
+  DnD($event: CdkDragMove): void {
     const element = $event.source._dragRef;
     const newPosition = element.getFreeDragPosition();
-    // this.task.coordinates = newPosition;
     this.task.coordinates.x = newPosition.x;
     this.task.coordinates.y = newPosition.y;
-    this.taskService.newTaskPosition(this.task);
+    this._dragEvents$.next(this.task);
   }
 }

@@ -3,8 +3,9 @@ import { TaskService } from 'src/app/services/task.service';
 import { TaskB } from 'src/models/task-b';
 import { CdkDragMove } from "@angular/cdk/drag-drop";
 import {
-  Subject, throttleTime,
+  asyncScheduler, BehaviorSubject, throttleTime
 } from "rxjs";
+
 
 
 @Component({
@@ -15,17 +16,15 @@ import {
 export class TaskCardComponent implements OnInit {
   @Input() task!: TaskB;
 
-  private _dragEvents$: Subject<TaskB>;
-
+  private _dragEvents$: BehaviorSubject<TaskB>;
   constructor(private taskService: TaskService) {
-    this._dragEvents$ = new Subject<any>();
-
+    this._dragEvents$ = new BehaviorSubject<TaskB>(this.task);
   }
 
   ngOnInit(): void {
     this._dragEvents$
       .pipe(
-        throttleTime(20)
+        throttleTime(30, asyncScheduler, { leading: true, trailing: true })
       )
       .subscribe(event => {
         this.onDnD(event);

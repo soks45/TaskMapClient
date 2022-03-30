@@ -51,9 +51,12 @@ export class TaskService {
   }
 
   public newTaskPosition(task: TaskB): void {
-    task.coordinates.x = Math.abs(Math.floor(task.coordinates.x));
-    task.coordinates.y = Math.abs(Math.floor(task.coordinates.y));
+    console.log('do')
+    task.coordinates.x = Math.floor(task.coordinates.x);
+    task.coordinates.y = Math.floor(task.coordinates.y);
+    console.log('mejdu')
     console.log(task);
+    console.log('posle')
     this._taskHub.hubConnection.invoke('NewTaskPosition', task);
   }
 

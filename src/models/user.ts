@@ -6,6 +6,6 @@ export interface ShortUser {
 }
 
 export interface User extends ShortUser {
-
+  avatar: string
 }
 

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TaskCardComponent } from './task-card.component';
+import { TaskCardComponent } from 'src/app/ui/board/task-card/task-card.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+
 
 
 @NgModule({
@@ -13,7 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatCardModule,
     MatButtonModule,
-    DragDropModule,
+    DragDropModule
   ]
 })
 export class TaskCardModule { }

@@ -64,6 +64,10 @@ export class TaskService {
     this._taskHub.hubConnection.invoke('AddNewTask', task);
   }
 
+  public deleteTask(task: TaskB): void {
+    this._taskHub.hubConnection.invoke('DeleteTask', task);
+  }
+
   private startListening(): void {
     console.log('Listening started');
     this._taskHub.hubConnection.on('newTaskPosition', (task: TaskB) => {
@@ -87,11 +91,13 @@ export class TaskService {
     this._taskHub.hubConnection.on('deleteTask', (task: TaskB) => {
       console.log('Listening deleteTask -start-');
       let newList = this.TaskList$.value;
-      this.TaskList$.value.findIndex((currentTask, index) =>{
-        if (currentTask === task) {
+      this.TaskList$.value.findIndex((currentTask, index) => {
+        if (currentTask.taskId === task.taskId) {
           newList.splice(index, 1);
         }
       });
+      console.log(this.TaskList$.value);
+      console.log(newList);
       this.TaskList$.next(newList);
       console.log('Listening deleteTask -end-');
     });

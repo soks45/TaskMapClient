@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DndFieldComponent } from './dnd-field.component';
+import { TaskCreateDialogComponent } from './task-create-dialog.component';
 
-describe('DndFieldComponent', () => {
-  let component: DndFieldComponent;
-  let fixture: ComponentFixture<DndFieldComponent>;
+describe('TaskCreateDialogComponent', () => {
+  let component: TaskCreateDialogComponent;
+  let fixture: ComponentFixture<TaskCreateDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DndFieldComponent ]
+      declarations: [ TaskCreateDialogComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DndFieldComponent);
+    fixture = TestBed.createComponent(TaskCreateDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

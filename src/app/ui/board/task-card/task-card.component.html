@@ -1,0 +1,20 @@
+<mat-card class="example-box" cdkDragBoundary=".example-boundary" cdkDrag
+          [cdkDragFreeDragPosition]="task.coordinates" (cdkDragMoved)="DnD($event)" #card>
+  <mat-card-header>
+    <img mat-card-avatar class="example-header-image" [src]="userAvatar">
+    <mat-card-title>{{task.taskLabel}}</mat-card-title>
+    <mat-card-subtitle>{{task.createdDate}}</mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <p>
+      {{task.taskText}}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="deleteTask()" color="warn">Удалить</button>
+    <button mat-raised-button (click)="editTask()" color="accent">Редактировать</button>
+  </mat-card-actions>
+</mat-card>
+
+

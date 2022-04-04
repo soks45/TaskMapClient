@@ -1,8 +1,4 @@
-<button (click)="addNewTask()"></button>
-<input type="text" #taskId>
-<input type="number" #x>
-<input type="number" #y>
-
+<button mat-raised-button color="primary" (click)="createTask()">Новая задача</button>
 <div class="example-boundary">
   <app-task-card *ngFor="let item of taskList"
                  [task]="item"

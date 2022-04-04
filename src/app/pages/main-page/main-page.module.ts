@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { MainPageRoutingModule } from './main-page-routing.module';
 import { MainPageComponent } from './main-page.component';
-import { DndFieldModule } from 'src/app/ui/dnd-field/dnd-field.module';
-import { TaskCardModule } from 'src/app/ui/task-card/task-card.module';
+import { BoardModule } from 'src/app/ui/board/board.module';
 
 @NgModule({
   declarations: [
@@ -13,8 +12,7 @@ import { TaskCardModule } from 'src/app/ui/task-card/task-card.module';
   imports: [
     CommonModule,
     MainPageRoutingModule,
-    DndFieldModule,
-    TaskCardModule
+    BoardModule,
   ]
 })
 export class MainPageModule { }

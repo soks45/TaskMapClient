@@ -144,9 +144,13 @@ export class TaskService {
         boardId
       },
     }
-    this.http.get<TaskB[]>(`${environment.apiUrl}/Task`, options).subscribe(
+    this.http.get<TaskBServer[]>(`${environment.apiUrl}/Task`, options).subscribe(
       (response) => {
-        this.TaskList$.next(response);
+        const newList: TaskB[] = [];
+        response.forEach(value => {
+          newList.push(this.taskClient(value))
+        })
+        this.TaskList$.next(newList);
       }
     );
   }

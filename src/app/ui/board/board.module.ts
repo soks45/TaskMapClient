@@ -4,7 +4,7 @@ import { BoardComponent } from 'src/app/ui/board/board.component';
 import { TaskCardModule } from 'src/app/ui/board/task-card/task-card.module';
 import { MatButtonModule } from "@angular/material/button";
 import { DragDropModule } from "@angular/cdk/drag-drop";
-import { TaskCreateDialogModule } from "src/app/ui/board/task-create-dialog/task-create-dialog.module";
+import { ContextMenuModule } from "src/app/ui/board/context-menu/context-menu.module";
 
 @NgModule({
   declarations: [BoardComponent],
@@ -14,7 +14,7 @@ import { TaskCreateDialogModule } from "src/app/ui/board/task-create-dialog/task
     TaskCardModule,
     MatButtonModule,
     DragDropModule,
-    TaskCreateDialogModule
+    ContextMenuModule,
   ]
 })
 export class BoardModule { }

@@ -1,6 +1,8 @@
-<button mat-raised-button color="primary" (click)="createTask()">Новая задача</button>
-<div class="example-boundary">
+<app-context-menu [events]="events"></app-context-menu>
+<div class="example-boundary" (contextmenu)="onRightClick($event)">
   <app-task-card *ngFor="let item of taskList"
                  [task]="item"
   ></app-task-card>
 </div>
+
+

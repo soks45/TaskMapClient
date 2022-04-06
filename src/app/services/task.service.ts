@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter } from 'rxjs';
-import { TaskB } from 'src/models/task-b';
+import { TaskB, TaskBServer } from 'src/models/task-b';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from 'src/environments/environment';
@@ -50,27 +50,56 @@ export class TaskService {
     this._taskHub.stopConnection();
   }
 
+  private taskServer(task: TaskB): TaskBServer {
+    return {
+      taskLabel: task.taskLabel,
+      userId: task.userId,
+      taskId: task.taskId,
+      boardId: task.boardId,
+      color: task.color,
+      taskText: task.taskText,
+      coordinates: JSON.stringify(task.coordinates),
+      createdDate: task.createdDate,
+      state: task.state
+    }
+  }
+
+  private taskClient(taskServer: TaskBServer): TaskB {
+    return {
+      taskLabel: taskServer.taskLabel,
+      userId: taskServer.userId,
+      taskId: taskServer.taskId,
+      boardId: taskServer.boardId,
+      color: taskServer.color,
+      taskText: taskServer.taskText,
+      coordinates: JSON.parse(taskServer.coordinates),
+      createdDate: taskServer.createdDate,
+      state: taskServer.state
+    }
+  }
+
   public newTaskPosition(task: TaskB): void {
     console.log('do')
     task.coordinates.x = Math.floor(task.coordinates.x);
     task.coordinates.y = Math.floor(task.coordinates.y);
     console.log('mejdu')
     console.log(task);
-    console.log('posle')
-    this._taskHub.hubConnection.invoke('NewTaskPosition', task);
+    console.log('posle');
+    this._taskHub.hubConnection.invoke('NewTaskPosition', this.taskServer(task));
   }
 
   public addNewTask(task: TaskB): void {
-    this._taskHub.hubConnection.invoke('AddNewTask', task);
+    this._taskHub.hubConnection.invoke('AddNewTask', this.taskServer(task));
   }
 
   public deleteTask(task: TaskB): void {
-    this._taskHub.hubConnection.invoke('DeleteTask', task);
+    this._taskHub.hubConnection.invoke('DeleteTask', this.taskServer(task));
   }
 
   private startListening(): void {
     console.log('Listening started');
-    this._taskHub.hubConnection.on('newTaskPosition', (task: TaskB) => {
+    this._taskHub.hubConnection.on('newTaskPosition', (TaskBServer: TaskBServer) => {
+      const task = this.taskClient(TaskBServer);
       console.log('Listening newTaskPosition -start-');
       const newList = this.TaskList$.value;
       for (let i = 0; i < newList.length; i++) {
@@ -81,14 +110,16 @@ export class TaskService {
       this.TaskList$.next(newList);
       console.log('Listening newTaskPosition -end-');
     });
-    this._taskHub.hubConnection.on('newTask', (task: TaskB) => {
+    this._taskHub.hubConnection.on('newTask', (TaskBServer: TaskBServer) => {
+      const task = this.taskClient(TaskBServer);
       console.log('Listening newTask -start-');
       const newList = this.TaskList$.value;
       newList.push(task);
       this.TaskList$.next(newList);
       console.log('Listening newTask -end-');
     });
-    this._taskHub.hubConnection.on('deleteTask', (task: TaskB) => {
+    this._taskHub.hubConnection.on('deleteTask', (TaskBServer: TaskBServer) => {
+      const task = this.taskClient(TaskBServer);
       console.log('Listening deleteTask -start-');
       let newList = this.TaskList$.value;
       this.TaskList$.value.findIndex((currentTask, index) => {

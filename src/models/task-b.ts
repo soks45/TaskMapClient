@@ -15,7 +15,18 @@ export interface ShortTaskB {
 export interface TaskB extends ShortTaskB {
   userId: number,
   createdDate: string,
-  // createdDate: Moment,
+  taskLabel: string,
+  taskText: string,
+  color: string,
+  state: State
+}
+
+export interface TaskBServer {
+  taskId: number,
+  boardId: number,
+  coordinates: string,
+  userId: number,
+  createdDate: string,
   taskLabel: string,
   taskText: string,
   color: string,

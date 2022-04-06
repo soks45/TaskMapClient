@@ -6,6 +6,6 @@ import { Injectable } from '@angular/core';
 export class BoardService {
   currentBoard: number;
   constructor() {
-    this.currentBoard = 0;
+    this.currentBoard = 1;
   }
 }

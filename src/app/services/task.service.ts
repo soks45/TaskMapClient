@@ -4,6 +4,7 @@ import { TaskB, TaskBServer } from 'src/models/task-b';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Hub, SignalRService } from 'src/app/services/signal-r.service';
+import { AuthService } from 'src/app/core';
 
 
 @Injectable({
@@ -16,11 +17,13 @@ export class TaskService {
   public TaskList$: BehaviorSubject<TaskB[]>;
   constructor(
     private http: HttpClient,
-    private signalRService: SignalRService
+    private signalRService: SignalRService,
+    private authService: AuthService
   ) {
     this._taskHub = this.Hub();
     this.TaskList$ = new BehaviorSubject(Array<TaskB>());
-    this.startHubConnection();
+    this.authService.user$.pipe(filter(user => user !== null)).subscribe(() => this.startHubConnection());
+    this.authService.user$.pipe(filter(user => user === null)).subscribe(() => this.stopHubConnection());
   }
 
   public switchBoard(boardId: number) {

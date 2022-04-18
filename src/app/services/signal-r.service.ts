@@ -1,15 +1,16 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import {LogLevel} from '@microsoft/signalr';
-import {BehaviorSubject} from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { LogLevel } from '@microsoft/signalr';
+import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { AuthService } from 'src/app/core';
 
 export class Hub {
   private _isConnected$ = new BehaviorSubject(false);
   private readonly _hubConnection: signalR.HubConnection;
 
   constructor(
-    private _url: string
+    private _url: string,
   ) {
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(_url)

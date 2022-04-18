@@ -1,11 +1,16 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './core';
 
 const routes: Routes = [
   {
+    path: 'login',
+    loadChildren: () => import('./pages/login-page/login-page.module').then(m => m.LoginPageModule),
+  },
+  {
     path: 'main-page',
     loadChildren: () => import('./pages/main-page/main-page.module').then(m => m.MainPageModule),
-    // canActivate: [true],
+    canActivate: [AuthGuard],
   },
   {
     path: 'not-found',
@@ -13,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'main-page'
+    redirectTo: 'not-found'
   }
 ];
 

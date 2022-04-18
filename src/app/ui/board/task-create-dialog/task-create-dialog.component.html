@@ -1,28 +1,28 @@
-<form [formGroup]="formGroup">
-  <header>
-    <h1 mat-dialog-title *ngIf="isNew">Добавить задачу</h1>
-    <h1 mat-dialog-title *ngIf="!isNew">Редактировать задачу</h1>
-    <button mat-raised-button color="primary" (click)="onCloseDialog()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </header>
-  <div mat-dialog-content>
-    <section>
-      <mat-form-field>
-        <input matInput type="text" required formControlName="taskLabel" placeholder="task label">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput type="text" required formControlName="taskText" placeholder="task text">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input matInput type="text" required formControlName="color" placeholder="task color">
-      </mat-form-field>
-    </section>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-raised-button color="accent" (click)="onSubmit()">Отправить</button>
-    <button mat-raised-button color="accent" (click)="onCloseDialog()">Отменить</button>
-  </div>
-</form>
+<!--<form [formGroup]="formGroup">-->
+<!--  <header>-->
+<!--    <h1 mat-dialog-title *ngIf="isNew">Добавить задачу</h1>-->
+<!--    <h1 mat-dialog-title *ngIf="!isNew">Редактировать задачу</h1>-->
+<!--    <button mat-raised-button color="primary" (click)="onCloseDialog()">-->
+<!--      <mat-icon>close</mat-icon>-->
+<!--    </button>-->
+<!--  </header>-->
+<!--  <div mat-dialog-content>-->
+<!--    <section>-->
+<!--      <mat-form-field>-->
+<!--        <input matInput type="text" required formControlName="taskLabel" placeholder="task label">-->
+<!--      </mat-form-field>-->
+<!--      <br>-->
+<!--      <mat-form-field>-->
+<!--        <input matInput type="text" required formControlName="taskText" placeholder="task text">-->
+<!--      </mat-form-field>-->
+<!--      <br>-->
+<!--      <mat-form-field>-->
+<!--        <input matInput type="text" required formControlName="color" placeholder="task color">-->
+<!--      </mat-form-field>-->
+<!--    </section>-->
+<!--  </div>-->
+<!--  <div mat-dialog-actions>-->
+<!--    <button mat-raised-button color="accent" (click)="onSubmit()">Отправить</button>-->
+<!--    <button mat-raised-button color="accent" (click)="onCloseDialog()">Отменить</button>-->
+<!--  </div>-->
+<!--</form>-->

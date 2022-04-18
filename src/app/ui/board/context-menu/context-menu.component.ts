@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatMenuTrigger } from "@angular/material/menu";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { TaskCreateDialogComponent } from "src/app/ui/board/task-create-dialog/task-create-dialog.component";
 import { TaskB } from "src/models/task-b";
 import { MatDialog } from '@angular/material/dialog';
+import { BoardService } from 'src/app/services/board.service';
 
 @Component({
   selector: 'app-context-menu',
@@ -11,13 +12,17 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./context-menu.component.scss']
 })
 export class ContextMenuComponent implements OnInit {
-  @Input('events') events!: Subject<MouseEvent>;
+  events: Observable<MouseEvent>;
+
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger?: MatMenuTrigger;
   menuTopLeftPosition =  {x: `0`, y: `0`};
 
   constructor(
     private dialog: MatDialog,
-  ) {  }
+    private boardService: BoardService
+  ) {
+    this.events = this.boardService.events.asObservable()
+  }
 
   ngOnInit(): void {
     this.events.subscribe(event => {

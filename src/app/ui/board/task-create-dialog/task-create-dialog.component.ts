@@ -21,6 +21,7 @@ export class TaskCreateDialogComponent implements OnInit {
 
   formGroup: FormGroup;
   isNew = true;
+  boardId: number = NaN;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: TemplateFormDialogData,
@@ -36,6 +37,7 @@ export class TaskCreateDialogComponent implements OnInit {
       taskText: ['',[Validators.required]],
       color: ['', [Validators.required]]
     });
+    this.boardService.currentBoardId$.subscribe(id => this.boardId = id);
   }
 
   ngOnInit(): void {
@@ -75,7 +77,7 @@ export class TaskCreateDialogComponent implements OnInit {
         taskText: this.formGroup.value.taskText,
         color: this.formGroup.value.color,
         userId: this.authService.user.userId,
-        boardId: this.boardService.currentBoard,
+        boardId: this.boardId,
         taskId: Math.floor(Math.random() * 100),
         createdDate: currentDate,
         state: 0,

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter } from 'rxjs';
 import { TaskB, TaskBServer } from 'src/models/task-b';
 import { HttpClient } from '@angular/common/http';
-
 import { environment } from 'src/environments/environment';
 import { Hub, SignalRService } from 'src/app/services/signal-r.service';
 
@@ -24,6 +23,30 @@ export class TaskService {
     this.startHubConnection();
   }
 
+  public switchBoard(boardId: number) {
+    this._taskHub.isConnected.pipe(filter(connection =>
+      connection == true
+    )).subscribe(connected => {
+      this.JoinBoard(boardId);
+    });
+    this.GetTasks(boardId);
+  }
+
+
+  public newTaskPosition(task: TaskB): void {
+    task.coordinates.x = Math.floor(task.coordinates.x);
+    task.coordinates.y = Math.floor(task.coordinates.y);
+    this._taskHub.hubConnection.invoke('NewTaskPosition', this.taskServer(task));
+  }
+
+  public addNewTask(task: TaskB): void {
+    this._taskHub.hubConnection.invoke('AddNewTask', this.taskServer(task));
+  }
+
+  public deleteTask(task: TaskB): void {
+    this._taskHub.hubConnection.invoke('DeleteTask', this.taskServer(task));
+  }
+
   private Hub(): Hub {
     return this.signalRService.hubs[0];
   }
@@ -37,16 +60,7 @@ export class TaskService {
     });
   }
 
-  public switchBoard(boardId: number) {
-    this._taskHub.isConnected.pipe(filter(connection =>
-      connection == true
-    )).subscribe(connected => {
-      this.JoinBoard(boardId);
-    });
-    this.GetTasks(boardId);
-  }
-
-  public stopHubConnection(): void {
+  private stopHubConnection(): void {
     this._taskHub.stopConnection();
   }
 
@@ -76,24 +90,6 @@ export class TaskService {
       createdDate: taskServer.createdDate,
       state: taskServer.state
     }
-  }
-
-  public newTaskPosition(task: TaskB): void {
-    console.log('do')
-    task.coordinates.x = Math.floor(task.coordinates.x);
-    task.coordinates.y = Math.floor(task.coordinates.y);
-    console.log('mejdu')
-    console.log(task);
-    console.log('posle');
-    this._taskHub.hubConnection.invoke('NewTaskPosition', this.taskServer(task));
-  }
-
-  public addNewTask(task: TaskB): void {
-    this._taskHub.hubConnection.invoke('AddNewTask', this.taskServer(task));
-  }
-
-  public deleteTask(task: TaskB): void {
-    this._taskHub.hubConnection.invoke('DeleteTask', this.taskServer(task));
   }
 
   private startListening(): void {

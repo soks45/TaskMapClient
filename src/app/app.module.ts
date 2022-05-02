@@ -6,6 +6,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/core/core.module';
+import { HeaderModule } from 'src/app/ui/header/header.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { CoreModule } from 'src/app/core/core.module';
     HttpClientModule,
     CoreModule,
     BrowserAnimationsModule,
+    HeaderModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -3,7 +3,6 @@ import * as signalR from '@microsoft/signalr';
 import { LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { AuthService } from 'src/app/core';
 
 export class Hub {
   private _isConnected$ = new BehaviorSubject(false);

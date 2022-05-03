@@ -1,7 +1,9 @@
 .example-boundary {
-  width: 8000px;
-  height: 8000px;
-  max-width: 100%;
+  border-radius: 5vh;
+  position: relative;
+  margin-top: 2vh;
+  width: 190vh;
+  height: 85vh;
   border: dotted #ccc 2px;
 }
 

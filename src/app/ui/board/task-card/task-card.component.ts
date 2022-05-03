@@ -1,13 +1,11 @@
-import {Component, Input, OnInit } from '@angular/core';
-import { TaskService } from 'src/app/services/task.service';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TaskB } from 'src/models/task-b';
 import { CdkDragMove } from "@angular/cdk/drag-drop";
 import {
-  asyncScheduler, Subject, throttleTime
+  asyncScheduler, Subject, Subscription, throttleTime
 } from "rxjs";
 import { MatDialog } from '@angular/material/dialog';
 import { TaskCreateDialogComponent } from "src/app/ui/board/task-create-dialog/task-create-dialog.component";
-import { UserService } from "src/app/services/user.service";
 
 
 @Component({
@@ -15,33 +13,27 @@ import { UserService } from "src/app/services/user.service";
   templateUrl: './task-card.component.html',
   styleUrls: ['./task-card.component.scss']
 })
-export class TaskCardComponent implements OnInit {
-  // @Input() task!: TaskB;
-  //
-  // private _dragEvents$: Subject<TaskB>;
-  // userAvatar: string = 'https://material.angular.io/assets/img/examples/shiba1.jpg';
-  //
-  // constructor(
-  //   private taskService: TaskService,
-  //   private dialog: MatDialog,
-  //   private userService: UserService,
-  // ) {
-  //   this._dragEvents$ = new Subject<TaskB>();
-  // }
+export class TaskCardComponent implements OnInit, OnDestroy {
+  @Input() task!: TaskB;
+
+  private _dragEvents$: Subject<TaskB>;
+  userAvatar: string = 'https://material.angular.io/assets/img/examples/shiba1.jpg';
+  private subcription?: Subscription;
+
+  constructor(
+    private dialog: MatDialog,
+  ) {
+    this._dragEvents$ = new Subject<TaskB>();
+  }
 
   ngOnInit(): void {
-    // this._dragEvents$
-    //   .pipe(
-    //     throttleTime(17, asyncScheduler, { leading: true, trailing: true })
-    //   )
-    //   .subscribe(event => {
-    //     this.onDnD(event);
-    //   });
-    // this.userService.users.forEach((user, index) => {
-    //   if (user.userId === this.task.userId) {
-    //     this.userAvatar = user.avatar;
-    //   }
-    // });
+    // this.subcription = this._dragEvents$
+    //    .pipe(
+    //      throttleTime(17, asyncScheduler, { leading: true, trailing: true })
+    //    )
+    //    .subscribe(event => {
+    //      this.onDnD(event);
+    //    });
   }
 
   // currentCoords(): void {
@@ -75,4 +67,8 @@ export class TaskCardComponent implements OnInit {
   // deleteTask() {
   //   this.taskService.deleteTask(this.task);
   // }
+  //
+  ngOnDestroy() {
+    this.subcription?.unsubscribe();
+  }
 }

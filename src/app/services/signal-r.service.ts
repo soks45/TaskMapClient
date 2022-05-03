@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { LogLevel } from '@microsoft/signalr';
-import { BehaviorSubject } from 'rxjs';
+import { HubConnectionState, LogLevel } from '@microsoft/signalr';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export class Hub {
-  private _isConnected$ = new BehaviorSubject(false);
+  private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
   private readonly _hubConnection: signalR.HubConnection;
 
   constructor(
@@ -19,15 +19,16 @@ export class Hub {
   }
 
   public startConnection(): void {
+    this._hubConnection.state
     this._hubConnection
       .start()
       .then(() => {
         console.log('Connection started');
-        this._isConnected$.next(true);
+        this._connectionState$.next(this._hubConnection.state);
       })
       .catch(err => {
         console.log('Error while starting connection: ' + err);
-        this._isConnected$.next(false);
+        this._connectionState$.next(this._hubConnection.state);
       });
   }
 
@@ -36,27 +37,26 @@ export class Hub {
       .stop()
       .then(() => {
         console.log('Connection stopped');
-        this._isConnected$.next(false);
+        this._connectionState$.next(this._hubConnection.state);
       })
       .catch((err) => {
-          console.log('Error while stopping connection: ' + err);
-          this._isConnected$.next(false);
+        console.log('Error while stopping connection: ' + err);
+        this._connectionState$.next(this._hubConnection.state);
       })
   }
 
-  public get hubConnection(): signalR.HubConnection {
+  public get HubConnection(): signalR.HubConnection {
     return this._hubConnection;
   }
 
-  public get url(): string {
+  public get Url(): string {
     return this._url;
   }
 
-  public get isConnected(): BehaviorSubject<boolean> {
-    return this._isConnected$;
+  public get ConnectionState$(): Observable<HubConnectionState> {
+    return this._connectionState$.asObservable();
   }
 }
-
 
 @Injectable({
   providedIn: 'root'

@@ -4,7 +4,7 @@ import { AuthGuard } from './core';
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: 'login-page',
     loadChildren: () => import('./pages/login-page/login-page.module').then(m => m.LoginPageModule),
   },
   {

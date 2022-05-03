@@ -12,4 +12,7 @@ export class ProfileMultiselectMenuButtonComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  showMenu(): void {
+
+  }
 }

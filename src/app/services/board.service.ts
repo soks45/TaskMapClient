@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/core';
 import { Hub, SignalRService } from 'src/app/services/signal-r.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { NavigationEnd, Router } from '@angular/router';
+import { User } from 'src/models/user';
 
 
 @Injectable({
@@ -15,18 +16,41 @@ import { NavigationEnd, Router } from '@angular/router';
 })
 
 export class BoardService implements OnDestroy {
-
+  private _taskHub: Hub = this.signalRService.hubs[0];
   private _currentBoardId$: Subject<number> = new Subject<number>();
   private _userBoards$: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
   private _TaskList$: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
-  private _connected$!: Promise<void>;
-  private _isConnected: HubConnectionState = HubConnectionState.Disconnected;
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfNotBoardPage$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfSignalRNotConnected$: Subject<void> = new Subject<void>();
+  private readonly loginEvents$: Observable<User | null> = this.authService.user$.pipe(filter(user => user !== null), takeUntil(this.ngUnsubscribe$));
+  private readonly logoutEvents$: Observable<User | null> = this.authService.user$.pipe(filter(user => user === null), takeUntil(this.ngUnsubscribe$));
+  // @ts-ignore
+  private readonly redirectionsOnBoardPage$: Observable<Event_2> = this.router.events.
+  pipe(
+    filter(event => event instanceof NavigationEnd),
+    // @ts-ignore
+    filter(event => event.urlAfterRedirects === '/board-page'),
+    takeUntil(this.ngUnsubscribe$));
+  // @ts-ignore
+  private readonly redirectionsFromBoardPage$: Observable<Event_2> = this.router.events.
+  pipe(
+    filter(event => event instanceof NavigationEnd),
+    // @ts-ignore
+    filter(event => event.url !== '/board-page'),
+    takeUntil(this.ngUnsubscribe$));
+  private readonly signalRConnectedEvents$: Observable<HubConnectionState> = this._taskHub.ConnectionState$.
+  pipe(
+    filter(state => state === HubConnectionState.Connected),
+    takeUntil(this.ngUnsubscribe$));
+  private readonly signalRDisconnectedEvents$: Observable<HubConnectionState> = this._taskHub.ConnectionState$.
+  pipe(
+    filter(state => state !== HubConnectionState.Connected),
+    takeUntil(this.ngUnsubscribe$));
+
+
 
   events: Subject<MouseEvent> = new Subject<MouseEvent>();
-  private _taskHub: Hub = this.signalRService.hubs[0];
 
   constructor(
     private http: HttpClient,
@@ -34,82 +58,24 @@ export class BoardService implements OnDestroy {
     private signalRService: SignalRService,
     private router: Router
   ) {
-    this.authService.user$.subscribe(user => console.log('user', user));
-    this.authService.user$.pipe(filter(user => user !== null), takeUntil(this.ngUnsubscribe$)).subscribe(() => this._connected$ = this.startHubConnection());
-    this.authService.user$.pipe(filter(user => user === null), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
-      if (this._taskHub.HubConnection.state === HubConnectionState.Connected) {
-        this.stopHubConnection();
-      }
-
+    this.loginEvents$.subscribe(() => {
+      this.startHubConnection();
     });
-    this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          // @ts-ignore
-          filter(event => event.url !== '/board-page'),
-          takeUntil(this.ngUnsubscribe$)
-        )
-        .subscribe(() => {
-          this.stopListening();
-          this.ngUnsubscribeIfNotBoardPage$.next();
-          console.log('-unsubscribed!-');
-        });
-
-
-    this._taskHub.ConnectionState$.pipe(
-      filter(state => state === HubConnectionState.Connected),
-      takeUntil(this.ngUnsubscribe$)
-    ).subscribe(() => this._isConnected = HubConnectionState.Connected);
-
-    this._taskHub.ConnectionState$.pipe(
-      filter(state => state === HubConnectionState.Disconnected),
-      takeUntil(this.ngUnsubscribe$)
-    ).subscribe(() => this.ngUnsubscribeIfSignalRNotConnected$.next());
-
-    // @ts-ignore
-    if (this._connected$) {
-      this._connected$.then(() => {
-        this.router.events
-          .pipe(
-            filter(event => event instanceof NavigationEnd),
-            // @ts-ignore
-            filter(event => event.url === '/board-page'),
-            takeUntil(this.ngUnsubscribe$)
-          )
-          .subscribe(() => {
-            console.log('-subscribed!-');
-            this.getBoard().pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
-              next: (value) => {
-                console.log('-get-boards-: ', value);
-                this._userBoards$.next(value);
-                this._currentBoardId$.pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe((id) => {
-                  console.log(id);
-                  this.switchBoard(id).then(() => {
-                    console.log('getBoard completed');
-                    this.getTasks(this._userBoards$.value[0].boardId).pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
-                      next: (response) => {
-                        console.log('-get-tasks-: ', response);
-                        const newList: TaskB[] = [];
-                        response.forEach(value => {
-                          newList.push(this.taskClient(value))
-                        });
-                        this._TaskList$.next(newList);
-                      },
-                      error: e => console.error(e),
-                      complete: () => {
-                        console.log('getTasks completed');
-                        this.startListening();
-                      }
-                    });
-                  });
-                });
-                this._currentBoardId$.next(value[0].boardId);
-              },
-              error: (err) => console.error(err),
-            });
-          });
+    this.logoutEvents$.subscribe(() => {
+      this.stopHubConnection();
+    });
+    this.signalRConnectedEvents$.subscribe(() => {
+      this.redirectionsOnBoardPage$.pipe(takeUntil(this.ngUnsubscribeIfSignalRNotConnected$)).subscribe(() => {
+        this.loadBoardData();
       });
-    }
+      this.redirectionsFromBoardPage$.pipe(takeUntil(this.ngUnsubscribeIfSignalRNotConnected$)).subscribe(() => {
+        this.stopListening();
+        this.ngUnsubscribeIfNotBoardPage$.next();
+      });
+    });
+    this.signalRDisconnectedEvents$.subscribe(() => {
+      this.ngUnsubscribeIfSignalRNotConnected$.next();
+    });
   }
 
   ngOnDestroy(): void {
@@ -145,12 +111,44 @@ export class BoardService implements OnDestroy {
     return this._TaskList$.asObservable();
   }
 
-  private startHubConnection(): Promise<void> {
-    return this._taskHub.startConnection();
+  private loadBoardData(): void {
+    console.log('-subscribed!-');
+    this.getBoard().pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$), takeUntil(this.ngUnsubscribeIfSignalRNotConnected$), takeUntil(this.ngUnsubscribe$)).subscribe({
+      next: (value) => {
+        console.log('-get-boards-: ', value);
+        this._userBoards$.next(value);
+        this._currentBoardId$.pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$), takeUntil(this.ngUnsubscribeIfSignalRNotConnected$), takeUntil(this.ngUnsubscribe$)).subscribe((id) => {
+          console.log(id);
+          this.switchBoard(id).then(() => {
+            console.log('getBoard completed');
+            this.getTasks(this._userBoards$.value[0].boardId).pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$), takeUntil(this.ngUnsubscribeIfSignalRNotConnected$), takeUntil(this.ngUnsubscribe$)).subscribe({
+              next: (response) => {
+                console.log('-get-tasks-: ', response);
+                const newList: TaskB[] = [];
+                response.forEach(value => {
+                  newList.push(this.taskClient(value))
+                });
+                this._TaskList$.next(newList);
+              },
+              error: e => console.error(e),
+              complete: () => {
+                console.log('getTasks completed');
+                this.startListening();
+              }
+            });
+          });
+        });
+        this._currentBoardId$.next(value[0].boardId);
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  private startHubConnection(): void {
+    this._taskHub.startConnection();
   }
 
   private stopHubConnection(): void {
-    this.stopListening();
     this._taskHub.stopConnection();
   }
 

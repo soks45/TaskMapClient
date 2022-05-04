@@ -30,8 +30,8 @@ export class Hub {
     });
   }
 
-  public startConnection(): Promise<void> {
-    return this._hubConnection
+  public startConnection(): void {
+    this._hubConnection
       .start()
       .then(() => {
         console.log('Connection started');

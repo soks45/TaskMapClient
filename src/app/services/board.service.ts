@@ -244,12 +244,11 @@ export class BoardService implements OnDestroy {
     return this.http.get<Board[]>(`${environment.apiUrl}/Board/get-boards`, { withCredentials: true });
   }
 
-  private deleteBoard(boardId: number): void {
+  deleteBoard(boardId: number): void {
     const options = {
       params: {
         boardId
       },
-      withCredentials: true
     }
 
     this.http.get<void>(`${environment.apiUrl}/Board/delete-board`, options).subscribe({

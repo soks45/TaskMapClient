@@ -15,5 +15,4 @@ export class BoardPageComponent implements OnInit {
   ngOnInit(): void {
     // this.boardService.getBoard();
   }
-
 }

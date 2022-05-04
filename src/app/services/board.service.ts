@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, filter, Observable, Subject, Subscription, takeUntil } from 'rxjs';
+import { BehaviorSubject, filter, Observable, Subject, takeUntil } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Board } from 'src/models/board';
 import { environment } from 'src/environments/environment';
@@ -19,8 +19,11 @@ export class BoardService implements OnDestroy {
   private _currentBoardId$: Subject<number> = new Subject<number>();
   private _userBoards$: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
   private _TaskList$: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
+  private _connected$!: Promise<void>;
+  private _isConnected: HubConnectionState = HubConnectionState.Disconnected;
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfNotBoardPage$: Subject<void> = new Subject<void>();
+  private readonly ngUnsubscribeIfSignalRNotConnected$: Subject<void> = new Subject<void>();
 
   events: Subject<MouseEvent> = new Subject<MouseEvent>();
   private _taskHub: Hub = this.signalRService.hubs[0];
@@ -31,68 +34,89 @@ export class BoardService implements OnDestroy {
     private signalRService: SignalRService,
     private router: Router
   ) {
-    this.authService.user$.pipe(filter(user => user !== null), takeUntil(this.ngUnsubscribe$)).subscribe(() => this.startHubConnection());
-    this.authService.user$.pipe(filter(user => user === null), takeUntil(this.ngUnsubscribe$)).subscribe(() => this.stopHubConnection());
+    this.authService.user$.subscribe(user => console.log('user', user));
+    this.authService.user$.pipe(filter(user => user !== null), takeUntil(this.ngUnsubscribe$)).subscribe(() => this._connected$ = this.startHubConnection());
+    this.authService.user$.pipe(filter(user => user === null), takeUntil(this.ngUnsubscribe$)).subscribe(() => {
+      if (this._taskHub.HubConnection.state === HubConnectionState.Connected) {
+        this.stopHubConnection();
+      }
 
+    });
     this.router.events
         .pipe(
           filter(event => event instanceof NavigationEnd),
           // @ts-ignore
           filter(event => event.url !== '/board-page'),
-          takeUntil(this.ngUnsubscribe$)
-        )
-        .subscribe(() => this.ngUnsubscribeIfNotBoardPage$.next());
-
-    this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          // @ts-ignore
-          filter(event => event.url === '/board-page'),
           takeUntil(this.ngUnsubscribe$)
         )
         .subscribe(() => {
-          this.getBoard().pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
-            next: (value) => {
-              console.log('-get-boards-: ', value);
-              this._userBoards$.next(value);
-            },
-            error: (err) => console.error(err),
-            complete: () => {
-              console.log('getBoard completed');
-              this.getTasks(this._userBoards$.value[0].boardId).pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
-                  next: (response) => {
-                    console.log('-get-tasks-: ', response);
-                    const newList: TaskB[] = [];
-                    response.forEach(value => {
-                      newList.push(this.taskClient(value))
-                    });
-                    this._TaskList$.next(newList);
-                  },
-                  error: e => console.error(e),
-                  complete: () => {
-                    console.log('getTasks completed');
-                    this.startListening();
-                  }
-                }
-              );
-            }
-          });
+          this.stopListening();
+          this.ngUnsubscribeIfNotBoardPage$.next();
+          console.log('-unsubscribed!-');
         });
 
-    this.router.events
-        .pipe(
-          filter(event => event instanceof NavigationEnd),
-          // @ts-ignore
-          filter(event => event.url !== '/board-page'),
-          takeUntil(this.ngUnsubscribe$)
-        )
-        .subscribe((res) => this.stopListening());
+
+    this._taskHub.ConnectionState$.pipe(
+      filter(state => state === HubConnectionState.Connected),
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe(() => this._isConnected = HubConnectionState.Connected);
+
+    this._taskHub.ConnectionState$.pipe(
+      filter(state => state === HubConnectionState.Disconnected),
+      takeUntil(this.ngUnsubscribe$)
+    ).subscribe(() => this.ngUnsubscribeIfSignalRNotConnected$.next());
+
+    // @ts-ignore
+    if (this._connected$) {
+      this._connected$.then(() => {
+        this.router.events
+          .pipe(
+            filter(event => event instanceof NavigationEnd),
+            // @ts-ignore
+            filter(event => event.url === '/board-page'),
+            takeUntil(this.ngUnsubscribe$)
+          )
+          .subscribe(() => {
+            console.log('-subscribed!-');
+            this.getBoard().pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
+              next: (value) => {
+                console.log('-get-boards-: ', value);
+                this._userBoards$.next(value);
+                this._currentBoardId$.pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe((id) => {
+                  console.log(id);
+                  this.switchBoard(id).then(() => {
+                    console.log('getBoard completed');
+                    this.getTasks(this._userBoards$.value[0].boardId).pipe(takeUntil(this.ngUnsubscribeIfNotBoardPage$)).subscribe({
+                      next: (response) => {
+                        console.log('-get-tasks-: ', response);
+                        const newList: TaskB[] = [];
+                        response.forEach(value => {
+                          newList.push(this.taskClient(value))
+                        });
+                        this._TaskList$.next(newList);
+                      },
+                      error: e => console.error(e),
+                      complete: () => {
+                        console.log('getTasks completed');
+                        this.startListening();
+                      }
+                    });
+                  });
+                });
+                this._currentBoardId$.next(value[0].boardId);
+              },
+              error: (err) => console.error(err),
+            });
+          });
+      });
+    }
   }
 
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.unsubscribe();
     this.ngUnsubscribeIfNotBoardPage$.unsubscribe();
+    this.ngUnsubscribeIfSignalRNotConnected$.unsubscribe();
   }
 
   public editTask(task: TaskB): void {
@@ -101,8 +125,8 @@ export class BoardService implements OnDestroy {
     this._taskHub.HubConnection.invoke('NewTaskPosition', this.taskServer(task));
   }
 
-  public switchBoard(boardId: number): void {
-    this._taskHub.HubConnection.invoke('JoinBoard', boardId).catch(e => console.error(e));
+  public switchBoard(boardId: number): Promise<any> {
+    return this._taskHub.HubConnection.invoke('JoinBoard', boardId).then(() => console.log('-switchboard-: ', boardId)).catch(e => console.error(e));
   }
 
   public addNewTask(task: TaskB): void {
@@ -113,8 +137,16 @@ export class BoardService implements OnDestroy {
     this._taskHub.HubConnection.invoke('DeleteTask', this.taskServer(task)).catch(e => console.error(e));
   }
 
-  private startHubConnection(): void {
-    this._taskHub.startConnection();
+  get CurrentBoardId$(): Observable<number> {
+    return this._currentBoardId$.asObservable();
+  }
+
+  get TaskList$(): Observable<TaskB[]> {
+    return this._TaskList$.asObservable();
+  }
+
+  private startHubConnection(): Promise<void> {
+    return this._taskHub.startConnection();
   }
 
   private stopHubConnection(): void {
@@ -132,7 +164,7 @@ export class BoardService implements OnDestroy {
   private taskServer(task: TaskB): TaskBServer {
     return {
       taskLabel: task.taskLabel,
-      userId: task.userId,
+      userId:  task.userId,
       taskId: task.taskId,
       boardId: task.boardId,
       color: task.color,
@@ -171,6 +203,8 @@ export class BoardService implements OnDestroy {
       this._TaskList$.next(newList);
       console.log('Listening newTaskPosition -end-');
     });
+
+
     this._taskHub.HubConnection.on('newTask', (TaskBServer: TaskBServer) => {
       const task = this.taskClient(TaskBServer);
       console.log('Listening newTask -start-');
@@ -179,6 +213,8 @@ export class BoardService implements OnDestroy {
       this._TaskList$.next(newList);
       console.log('Listening newTask -end-');
     });
+
+
     this._taskHub.HubConnection.on('deleteTask', (TaskBServer: TaskBServer) => {
       const task = this.taskClient(TaskBServer);
       console.log('Listening deleteTask -start-');
@@ -204,21 +240,11 @@ export class BoardService implements OnDestroy {
     return this.http.get<TaskBServer[]>(`${environment.apiUrl}/Task`, options);
   }
 
-
-
-  get CurrentBoardId$(): Observable<number> {
-    return this._currentBoardId$.asObservable();
-  }
-
-  get TaskList$(): Observable<TaskB[]> {
-    return this._TaskList$.asObservable();
-  }
-
-  getBoard(): Observable<Board[]> {
+  private getBoard(): Observable<Board[]> {
     return this.http.get<Board[]>(`${environment.apiUrl}/Board/get-boards`, { withCredentials: true });
   }
 
-  deleteBoard(boardId: number): void {
+  private deleteBoard(boardId: number): void {
     const options = {
       params: {
         boardId

@@ -23,7 +23,7 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
       catchError((err) => {
         if (err.status === 401) {
           this.authService.clearLocalStorage();
-          this.router.navigate(['login']);
+          this.router.navigate(['/login-page']);
         }
 
         if (!environment.production) {

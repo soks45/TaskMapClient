@@ -16,11 +16,22 @@ export class Hub {
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Trace)
       .build();
+    this._hubConnection.onreconnected(() => {
+      console.log('Reconnected')
+      this._connectionState$.next(this._hubConnection.state);
+    });
+    this._hubConnection.onclose(() => {
+      console.log('Closed')
+      this._connectionState$.next(this._hubConnection.state);
+    });
+    this._hubConnection.onreconnecting(() => {
+      console.log('Reconnecting')
+      this._connectionState$.next(this._hubConnection.state);
+    });
   }
 
-  public startConnection(): void {
-    this._hubConnection.state
-    this._hubConnection
+  public startConnection(): Promise<void> {
+    return this._hubConnection
       .start()
       .then(() => {
         console.log('Connection started');

@@ -52,6 +52,7 @@ export class LoginPageComponent implements OnInit {
             this.router.navigate(['main-page']);
           },
           () => {
+            this.router.navigate(['login-page']);
             this.loginError = true;
           }
         );

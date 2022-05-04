@@ -1,4 +1,9 @@
 <div class="header-menu">
+  <button matButton mat-raised-button color="primary"
+          *ngIf="user"
+  >
+    User
+  </button>
   <button mat-raised-button
           [routerLink]="'/main-page'"
   >
@@ -17,8 +22,10 @@
     login
   </button>
   <button matButton mat-raised-button color="primary"
+          [routerLink]="'/login-page'"
           (click)="Logout()"
           *ngIf="user"
+
   >
     Logout
   </button>

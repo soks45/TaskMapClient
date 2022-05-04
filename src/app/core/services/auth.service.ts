@@ -15,6 +15,7 @@ interface LoginResult extends User {
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/api/account`;
   private timer: Subscription | null = null;
@@ -80,7 +81,7 @@ export class AuthService implements OnDestroy {
           this.clearLocalStorage();
           this._user.next(null);
           this.stopTokenTimer();
-          this.router.navigate(['login']);
+          this.router.navigate(['/login-page']);
         })
       )
       .subscribe();

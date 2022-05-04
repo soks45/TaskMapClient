@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TaskB } from 'src/models/task-b';
-import { Subject, Subscription } from "rxjs";
+import { Subject, Subscription, takeUntil } from "rxjs";
 import { BoardService } from 'src/app/services/board.service';
 
 @Component({
@@ -13,15 +13,16 @@ export class BoardComponent implements OnInit, OnDestroy {
   taskList: TaskB[];
   events: Subject<MouseEvent>;
   event?: MouseEvent;
-  subscription?: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
     private boardService: BoardService
   ) {
-    this.boardService.CurrentBoardId$.subscribe(id => {
+    this.subscriptions.push(this.boardService.CurrentBoardId$.subscribe(id => {
       this.boardId = id;
       console.log('currentboard -', this.boardId);
-    });
+    }));
+    this.subscriptions.push(this.boardService.TaskList$.subscribe(list => this.taskList = list));
     this.taskList = [];
     this.events = new Subject<MouseEvent>();
   }
@@ -33,14 +34,14 @@ export class BoardComponent implements OnInit, OnDestroy {
     //   this.taskList = res;
     // });
   }
-  //
-  // onRightClick(event: MouseEvent) {
-  //   event.preventDefault();
-  //   this.boardService.events.next(event)
-  //   console.log(event);
-  // }
+
+  onRightClick(event: MouseEvent) {
+    event.preventDefault();
+    this.boardService.events.next(event)
+    console.log(event);
+  }
 
   ngOnDestroy() {
-    this.subscription?.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 }

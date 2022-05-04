@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core';
+import { BoardService } from 'src/app/services/board.service';
 
 
 @Component({
@@ -8,7 +9,7 @@ import { AuthService } from 'src/app/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private boardService: BoardService) {}
 
   ngOnInit(): void {}
 

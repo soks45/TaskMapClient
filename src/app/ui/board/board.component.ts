@@ -20,7 +20,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   ) {
     this.subscriptions.push(this.boardService.CurrentBoardId$.subscribe(id => {
       this.boardId = id;
-      console.log('currentboard -', this.boardId);
     }));
     this.subscriptions.push(this.boardService.TaskList$.subscribe(list => this.taskList = list));
     this.taskList = [];

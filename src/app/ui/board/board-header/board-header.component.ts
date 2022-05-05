@@ -4,6 +4,7 @@ import { Board } from 'src/models/board';
 import { AuthService } from 'src/app/core';
 import { filter, Subscription } from 'rxjs';
 import { User } from 'src/models/user';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-board-header',
@@ -53,6 +54,18 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
   }
 
   deleteBoard() {
-    this.boardService.deleteBoard(7);
+    this.boardService.deleteCurrentBoard(1);
+  }
+
+  editBoard() {
+    const board: Board = {
+      boardId: 19,
+      boardName: 'popa',
+      state: '',
+      boardDescription: 'some desc',
+      userId: this.user.userId,
+      createdDate: `${moment()}`
+    }
+    this.boardService.editBoard(board);
   }
 }

@@ -10,20 +10,17 @@ import { NavigationEnd, Router } from '@angular/router';
   styleUrls: ['./header-menu.component.scss']
 })
 export class HeaderMenuComponent implements OnInit {
-
   public user: User | null = null;
   currentRoute = '';
 
-
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     this.authService.user$.subscribe(res => this.user = res);
     router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(event => {
       // @ts-ignore
       this.currentRoute =  event.url;
-      console.log(this.currentRoute);
     });
   }
 

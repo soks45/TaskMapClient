@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { NGXLogger } from 'ngx-logger';
 
 export class Hub {
   private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
@@ -10,22 +11,23 @@ export class Hub {
 
   constructor(
     private _url: string,
+    private logger: NGXLogger
   ) {
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(_url)
       .withAutomaticReconnect()
-      .configureLogging(LogLevel.Trace)
+      .configureLogging(logger)
       .build();
     this._hubConnection.onreconnected(() => {
-      console.log('Reconnected')
+      logger.log('Reconnected')
       this._connectionState$.next(this._hubConnection.state);
     });
     this._hubConnection.onclose(() => {
-      console.log('Closed')
+      logger.warn('Closed');
       this._connectionState$.next(this._hubConnection.state);
     });
     this._hubConnection.onreconnecting(() => {
-      console.log('Reconnecting')
+      logger.warn('Reconnecting');
       this._connectionState$.next(this._hubConnection.state);
     });
   }
@@ -34,11 +36,11 @@ export class Hub {
     this._hubConnection
       .start()
       .then(() => {
-        console.log('Connection started');
+        this.logger.log('Connection started');
         this._connectionState$.next(this._hubConnection.state);
       })
       .catch(err => {
-        console.log('Error while starting connection: ' + err);
+        this.logger.error('Error while starting connection: ' + err);
         this._connectionState$.next(this._hubConnection.state);
       });
   }
@@ -47,21 +49,17 @@ export class Hub {
     this._hubConnection
       .stop()
       .then(() => {
-        console.log('Connection stopped');
+        this.logger.log('Connection stopped');
         this._connectionState$.next(this._hubConnection.state);
       })
       .catch((err) => {
-        console.log('Error while stopping connection: ' + err);
+        this.logger.error('Error while stopping connection: ' + err);
         this._connectionState$.next(this._hubConnection.state);
       })
   }
 
   public get HubConnection(): signalR.HubConnection {
     return this._hubConnection;
-  }
-
-  public get Url(): string {
-    return this._url;
   }
 
   public get ConnectionState$(): Observable<HubConnectionState> {
@@ -74,23 +72,10 @@ export class Hub {
 })
 
 export class SignalRService {
-  private readonly _hubs: Hub[];
-
-  constructor() {
-    this._hubs = [];
-    this.createHubs();
-  }
-
-  private createHubs(): void {
-    this._hubs.push(this.createHub(environment.signalRHubs.Tasks))
-  }
-
-  private createHub(url: string): Hub {
-    const hub = new Hub(url);
-    return hub;
-  }
-
-  public get hubs(): Hub[] {
-    return this._hubs;
+  public taskHub: Hub;
+  constructor(
+    private logger: NGXLogger
+  ) {
+    this.taskHub = new Hub(environment.signalRHubs.Tasks, this.logger);
   }
 }

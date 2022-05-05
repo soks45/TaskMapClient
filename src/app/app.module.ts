@@ -7,6 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/core/core.module';
 import { HeaderModule } from 'src/app/ui/header/header.module';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -19,9 +21,16 @@ import { HeaderModule } from 'src/app/ui/header/header.module';
     HttpClientModule,
     CoreModule,
     BrowserAnimationsModule,
-    HeaderModule
+    HeaderModule,
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR,
+      colorScheme: ['grey', 'blue', 'yellow', 'blue', 'orange', 'red', 'brown'],
+      serverLoggingUrl: environment.logUrl
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

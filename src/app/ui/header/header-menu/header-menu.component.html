@@ -1,9 +1,4 @@
 <div class="header-menu">
-  <button matButton mat-raised-button color="primary"
-          *ngIf="user"
-  >
-    User
-  </button>
   <button mat-raised-button
           [routerLink]="'/main-page'"
   >
@@ -15,21 +10,8 @@
   >
     Your Boards
   </button>
-  <button mat-raised-button
-          [routerLink]="'/login-page'"
-          *ngIf="!user"
-  >
-    login
-  </button>
-  <button matButton mat-raised-button color="primary"
-          [routerLink]="'/login-page'"
-          (click)="Logout()"
-          *ngIf="user"
-
-  >
-    Logout
-  </button>
-  <app-profile-multiselect-menu-button></app-profile-multiselect-menu-button>
+  <app-profile-multiselect-menu-button>
+  </app-profile-multiselect-menu-button>
 </div>
 
 

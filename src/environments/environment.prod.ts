@@ -4,5 +4,5 @@ export const environment = {
   signalRHubs: {
     Tasks: 'https://localhost:5001/hub/Task',
   },
-  logUrl: 'https://localhost:5001/log'
+  logUrl: 'https://localhost:5001/ClientLog/log'
 };

@@ -22,6 +22,7 @@
     "@angular/router": "~13.2.0",
     "@microsoft/signalr": "^6.0.3",
     "chart.js": "^3.7.1",
+    "md5-typescript": "^1.0.5",
     "moment": "^2.29.1",
     "ngx-logger": "^5.0.9",
     "rxjs": "~7.5.0",

@@ -10,7 +10,8 @@ const loggedOptions: string[] = [
 ]
 
 const notLoggedOptions: string[] = [
-  'Login'
+  'Login',
+  'Sign Up'
 ]
 
 @Component({
@@ -57,6 +58,9 @@ export class ProfileMultiselectMenuButtonComponent implements OnInit, OnDestroy 
     }
     if (option === 'Login') {
       this.router.navigate(['/login-page']);
+    }
+    if (option === 'Sign Up') {
+      this.router.navigate(['/sign-up-page']);
     }
   }
 }

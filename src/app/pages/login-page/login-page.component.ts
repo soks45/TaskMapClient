@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/core';
 import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-login-page',
@@ -19,7 +19,8 @@ export class LoginPageComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private logger: NGXLogger
   ) { }
 
   ngOnInit(): void {
@@ -38,23 +39,27 @@ export class LoginPageComponent implements OnInit {
     this.subscription?.unsubscribe();
   }
 
-  onLogin() {
-    console.log(this.username, 1, this.password, 2);
-    console.log(this.route.snapshot);
+  onLogin(): void {
+    this.logger.log(this.username, this.password);
+    this.logger.log(this.route.snapshot);
     if (!this.username || !this.password) {
       return;
     }
     const returnUrl = this.route.snapshot.queryParams['main-page'] || '';
     this.authService
-        .login(this.username, this.password)
-        .subscribe(
-          () => {
-            this.router.navigate(['main-page']);
-          },
-          () => {
-            this.router.navigate(['login-page']);
-            this.loginError = true;
-          }
-        );
+      .login(this.username, this.password)
+      .subscribe(
+        () => {
+          this.router.navigate(['main-page']);
+        },
+        () => {
+          this.router.navigate(['login-page']);
+          this.loginError = true;
+        }
+      );
+  }
+
+  MD5log(): void {
+    this.logger.log(this.password);
   }
 }

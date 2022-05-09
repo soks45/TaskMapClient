@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { map, tap, delay, finalize } from 'rxjs/operators';
-
+import { Md5 } from "md5-typescript";
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
 import { NGXLogger } from 'ngx-logger';
@@ -36,7 +36,6 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            avatar: x.avatar,
             lastName: x.lastName
           });
         });
@@ -52,18 +51,23 @@ export class AuthService implements OnDestroy {
     window.removeEventListener('storage', this.storageEventListener.bind(this));
   }
 
-  login(username: string, password: string) {
-    this.logger.info('--login--');
+  signup(user: User, password: string): Observable<LoginResult> {
+    this.logger.info('--sign-up--');
+    const options = {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      md5PasswordHash: Md5.init(password)
+    }
     return this.http
-      .post<LoginResult>(`${this.apiUrl}/login`, { username, password })
-      .pipe(
-        map((x) => {
-          this.logger.info(x);
-          this._user.next({
+      .post<LoginResult>(`${this.apiUrl}/register`, options)
+        .pipe(
+          map((x: LoginResult) => {
+            this.logger.info(x);
+            this._user.next({
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            avatar: x.avatar,
             lastName: x.lastName
           });
           this.setLocalStorage(x);
@@ -73,7 +77,28 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  logout() {
+  login(username: string, password: string): Observable<LoginResult> {
+    const MD5Hash = Md5.init(password);
+    this.logger.info('--login--');
+    return this.http
+      .post<LoginResult>(`${this.apiUrl}/login`, { username, MD5Hash })
+      .pipe(
+        map((x: LoginResult) => {
+          this.logger.info(x);
+          this._user.next({
+            userId: x.userId,
+            firstName: x.firstName,
+            email: x.email,
+            lastName: x.lastName
+          });
+          this.setLocalStorage(x);
+          this.startTokenTimer();
+          return x;
+        })
+      );
+  }
+
+  logout(): void {
     this.logger.info('--logout--');
     this.http
       .post<unknown>(`${this.apiUrl}/logout`, {})
@@ -104,7 +129,6 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            avatar: x.avatar,
             lastName: x.lastName
           });
           this.setLocalStorage(x);
@@ -114,19 +138,19 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  setLocalStorage(x: LoginResult) {
+  setLocalStorage(x: LoginResult): void {
     localStorage.setItem('access_token', x.accessToken);
     localStorage.setItem('refresh_token', x.refreshToken);
     localStorage.setItem('login-event', 'login' + Math.random());
   }
 
-  clearLocalStorage() {
+  clearLocalStorage(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.setItem('logout-event', 'logout' + Math.random());
   }
 
-  private getTokenRemainingTime() {
+  private getTokenRemainingTime(): number {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
       return 0;
@@ -136,7 +160,7 @@ export class AuthService implements OnDestroy {
     return expires.getTime() - Date.now();
   }
 
-  private startTokenTimer() {
+  private startTokenTimer(): void {
     const timeout = this.getTokenRemainingTime();
     this.timer = of(true)
       .pipe(
@@ -148,7 +172,7 @@ export class AuthService implements OnDestroy {
       .subscribe();
   }
 
-  private stopTokenTimer() {
+  private stopTokenTimer(): void {
     this.timer?.unsubscribe();
   }
 }

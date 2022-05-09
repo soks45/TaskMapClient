@@ -23,9 +23,9 @@ import { environment } from 'src/environments/environment';
     LoggerModule.forRoot({
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR,
-      colorScheme: ['blue', 'green', 'purple', 'red', 'black', 'black', 'black'],
+      colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
       serverLoggingUrl: environment.logUrl,
-      proxiedSteps: 1
+      proxiedSteps: 0
     })
   ],
   providers: [],

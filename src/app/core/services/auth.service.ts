@@ -6,6 +6,7 @@ import { map, tap, delay, finalize } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
+import { NGXLogger } from 'ngx-logger';
 
 interface LoginResult extends User {
   accessToken: string;
@@ -43,7 +44,7 @@ export class AuthService implements OnDestroy {
     }
   }
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private logger: NGXLogger) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
   }
 
@@ -52,12 +53,12 @@ export class AuthService implements OnDestroy {
   }
 
   login(username: string, password: string) {
-    console.log('--login--');
+    this.logger.info('--login--');
     return this.http
       .post<LoginResult>(`${this.apiUrl}/login`, { username, password })
       .pipe(
         map((x) => {
-          console.log(x);
+          this.logger.info(x);
           this._user.next({
             userId: x.userId,
             firstName: x.firstName,
@@ -73,7 +74,7 @@ export class AuthService implements OnDestroy {
   }
 
   logout() {
-    console.log('--logout--');
+    this.logger.info('--logout--');
     this.http
       .post<unknown>(`${this.apiUrl}/logout`, {})
       .pipe(
@@ -88,7 +89,7 @@ export class AuthService implements OnDestroy {
   }
 
   refreshToken(): Observable<LoginResult | null> {
-    console.log('--refresh token--');
+    this.logger.info('--refresh token--');
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
       this.clearLocalStorage();

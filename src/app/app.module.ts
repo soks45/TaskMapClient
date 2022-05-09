@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/core/core.module';
@@ -17,16 +16,16 @@ import { environment } from 'src/environments/environment';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgChartsModule,
     HttpClientModule,
     CoreModule,
     BrowserAnimationsModule,
     HeaderModule,
     LoggerModule.forRoot({
-      level: NgxLoggerLevel.DEBUG,
+      level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR,
-      colorScheme: ['grey', 'blue', 'yellow', 'blue', 'orange', 'red', 'brown'],
-      serverLoggingUrl: environment.logUrl
+      colorScheme: ['blue', 'green', 'purple', 'red', 'black', 'black', 'black'],
+      serverLoggingUrl: environment.logUrl,
+      proxiedSteps: 1
     })
   ],
   providers: [],

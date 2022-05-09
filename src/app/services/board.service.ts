@@ -18,7 +18,6 @@ import { map } from 'rxjs/operators';
 
 export class BoardService implements OnDestroy {
   private _taskHub: Hub = this.signalRService.taskHub;
-  private err = (e: Error) => this.logger.error(e);
 
   private _currentBoardId$: Subject<number> = new Subject<number>();
   private _userBoards$: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
@@ -31,8 +30,17 @@ export class BoardService implements OnDestroy {
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfNotBoardPage$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfSignalRNotConnected$: Subject<void> = new Subject<void>();
-  private readonly loginEvents$: Observable<User | null> = this.authService.user$.pipe(filter(user => user !== null), takeUntil(this.ngUnsubscribe$));
-  private readonly logoutEvents$: Observable<User | null> = this.authService.user$.pipe(filter(user => user === null), takeUntil(this.ngUnsubscribe$));
+  private readonly loginEvents$: Observable<User | null> = this.authService.user$.
+  pipe(
+    filter(user => user !== null),
+    takeUntil(this.ngUnsubscribe$));
+  private readonly logoutEvents$: Observable<User | null> = this.authService.user$.
+  pipe(
+    pairwise(),
+    filter(users => users[0] !== null),
+    filter(users => users[1] === null),
+    map(users => users[1]),
+    takeUntil(this.ngUnsubscribe$));
   // @ts-ignore
   private readonly redirectionsOnBoardPage$: Observable<Event_2> = this.router.events.
   pipe(
@@ -94,19 +102,19 @@ export class BoardService implements OnDestroy {
   public editTask(task: TaskB): Promise<any> {
     task.coordinates.x = Math.floor(task.coordinates.x);
     task.coordinates.y = Math.floor(task.coordinates.y);
-    return  this._taskHub.HubConnection.invoke('NewTaskPosition', BoardService.taskServer(task));
+    return this._taskHub.HubConnection.invoke('NewTaskPosition', BoardService.taskServer(task));
   }
 
   public switchBoard(boardId: number): Promise<any> {
-    return this._taskHub.HubConnection.invoke('JoinBoard', boardId).then(() => this.logger.log('-switchboard-: ', boardId)).catch(this.err);
+    return this._taskHub.HubConnection.invoke('JoinBoard', boardId).then(() => this.logger.trace('-switchboard-: ', boardId)).catch((e) => this.logger.error(e));
   }
 
   public addNewTask(task: TaskB): Promise<any> {
-    return this._taskHub.HubConnection.invoke('AddNewTask', BoardService.taskServer(task)).catch(this.err);
+    return this._taskHub.HubConnection.invoke('AddNewTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
   }
 
   public deleteTask(task: TaskB): Promise<any> {
-    return this._taskHub.HubConnection.invoke('DeleteTask', BoardService.taskServer(task)).catch(this.err);
+    return this._taskHub.HubConnection.invoke('DeleteTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
   }
 
   get CurrentBoardId$(): Observable<number> {
@@ -115,6 +123,13 @@ export class BoardService implements OnDestroy {
 
   get TaskList$(): Observable<TaskB[]> {
     return this._taskList$.asObservable();
+  }
+
+  public deleteCurrentBoard(id: number): void {
+    this.switchBoard(3)
+        .then(() => this.deleteBoard(id))
+        .catch((e) => this.logger.error(e))
+        .catch((e) => this.logger.error(e));
   }
 
   private dataSetup(): void {
@@ -148,19 +163,19 @@ export class BoardService implements OnDestroy {
   }
 
   private loadBoardPageData(): void {
-    this.logger.log('-subscribed!-');
+    this.logger.trace('-subscribed!-');
     this.getBoardsRequest$.subscribe({
       next: (value) => {
-        this.logger.log('-get-boards-: ', value);
+        this.logger.trace('-get-boards-: ', value);
         this._userBoards$.next(value);
         this.currentBoardChangeEvents$.subscribe((id) => {
-          this.logger.log('board - ', id);
+          this.logger.trace('board - ', id);
           this.loadBoardTasks(id);
         });
         this._currentBoardId$.next(value[0].boardId);
       },
-      error: (err) => this.logger.error(err),
-      complete: () => this.logger.log('getBoard completed')
+      error: (e) => this.logger.error(e),
+      complete: () => this.logger.trace('getBoard completed')
     });
   }
 
@@ -173,16 +188,16 @@ export class BoardService implements OnDestroy {
         takeUntil(this.ngUnsubscribe$))
       .subscribe({
         next: (response) => {
-          this.logger.log('-get-tasks-: ', response);
+          this.logger.trace('-get-tasks-: ', response);
           this.loadTasks(response);
         },
-        error: e => this.logger.error(e),
+        error: (e) => this.logger.error(e),
         complete: () => {
-          this.logger.log('getTasks completed');
+          this.logger.trace('getTasks completed');
           this.startListening();
         }
       });
-    }).catch(this.err);
+    }).catch((e) => this.logger.error(e));
   }
 
   private loadTasks(tasks: TaskBServer[]): void {
@@ -202,7 +217,7 @@ export class BoardService implements OnDestroy {
   }
 
   private stopListening() {
-    this.logger.log('-Listening stopped-');
+    this.logger.trace('-Listening stopped-');
     this._taskHub.HubConnection.off('newTaskPosition');
     this._taskHub.HubConnection.off('newTask');
     this._taskHub.HubConnection.off('deleteTask');
@@ -237,10 +252,10 @@ export class BoardService implements OnDestroy {
   }
 
   private startListening(): void {
-    this.logger.log('Listening started');
+    this.logger.trace('Listening started');
     this._taskHub.HubConnection.on('newTaskPosition', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
-      this.logger.log('Listening newTaskPosition -start-');
+      this.logger.trace('Listening newTaskPosition -start-');
       const newList = this._taskList$.value;
       for (let i = 0; i < newList.length; i++) {
         if (newList[i].taskId === task.taskId) {
@@ -248,31 +263,31 @@ export class BoardService implements OnDestroy {
         }
       }
       this._taskList$.next(newList);
-      this.logger.log('Listening newTaskPosition -end-');
+      this.logger.trace('Listening newTaskPosition -end-');
     });
 
     this._taskHub.HubConnection.on('newTask', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
-      this.logger.log('Listening newTask -start-');
+      this.logger.trace('Listening newTask -start-');
       const newList = this._taskList$.value;
       newList.push(task);
       this._taskList$.next(newList);
-      this.logger.log('Listening newTask -end-');
+      this.logger.trace('Listening newTask -end-');
     });
 
     this._taskHub.HubConnection.on('deleteTask', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
-      this.logger.log('Listening deleteTask -start-');
+      this.logger.trace('Listening deleteTask -start-');
       let newList = this._taskList$.value;
       this._taskList$.value.findIndex((currentTask, index) => {
         if (currentTask.taskId === task.taskId) {
           newList.splice(index, 1);
         }
       });
-      this.logger.log(this._taskList$.value);
-      this.logger.log(newList);
+      this.logger.trace(this._taskList$.value);
+      this.logger.trace(newList);
       this._taskList$.next(newList);
-      this.logger.log('Listening deleteTask -end-');
+      this.logger.trace('Listening deleteTask -end-');
     });
   }
 
@@ -289,13 +304,6 @@ export class BoardService implements OnDestroy {
     return this.http.get<Board[]>(`${environment.apiUrl}/Board/get-boards`, { withCredentials: true });
   }
 
-  public deleteCurrentBoard(id: number): void {
-    this.switchBoard(3)
-        .then(() => this.deleteBoard(id))
-        .catch(this.err)
-        .catch(this.err);
-  }
-
   private deleteBoard(boardId: number): void {
     const options = {
       params: {
@@ -307,9 +315,7 @@ export class BoardService implements OnDestroy {
         const index = this._userBoards$.value.findIndex(board => board.boardId === boardId);
         this._userBoards$.next(this._userBoards$.value.splice(index, 1));
       },
-      error: (e) => {
-        this.logger.error(e)
-      }
+      error: (e) => this.logger.error(e)
     });
   }
 

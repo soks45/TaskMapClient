@@ -23,7 +23,6 @@
     "@microsoft/signalr": "^6.0.3",
     "chart.js": "^3.7.1",
     "moment": "^2.29.1",
-    "ng2-charts": "^3.0.8",
     "ngx-logger": "^5.0.9",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

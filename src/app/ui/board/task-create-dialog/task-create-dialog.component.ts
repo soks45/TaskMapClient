@@ -7,6 +7,7 @@ import { formatDate } from '@angular/common';
 import { AuthService } from 'src/app/core';
 import { User } from 'src/models/user';
 import { filter, Subject, takeUntil } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
 
 export interface TemplateFormDialogData {
   template?: TaskB;
@@ -24,7 +25,6 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
 
   formGroup: FormGroup;
   isNew = true;
-  boardId: number = 1;
   currentUser: User | null = null;
 
   constructor(
@@ -34,13 +34,13 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private authService: AuthService,
     private boardService: BoardService,
+    private logger: NGXLogger
   ) {
     this.formGroup = this.fb.group({
       taskLabel: ['', [Validators.required]],
       taskText: ['',[Validators.required]],
       color: ['', [Validators.required]]
     });
-    this.boardService.CurrentBoardId$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(id => this.boardId = id);
     // @ts-ignore
     this.authService.user$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(res => this.currentUser = res);
   }
@@ -53,11 +53,11 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
   }
 
   private setupForm(): void {
-    console.log(this.data.template);
+    this.logger.log(this.data.template);
     if (this.data.template?.taskId !== undefined) {
       this.isNew = false;
     }
-    console.log(this.isNew);
+    this.logger.log(this.isNew);
   }
 
   onCloseDialog() {
@@ -66,7 +66,7 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.formGroup.updateValueAndValidity();
-    console.log(this.isNew, 'isNew');
+    this.logger.log(this.isNew, 'isNew');
     if (this.isNew) {
       this.addTask();
     } else {
@@ -75,21 +75,22 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
   }
 
   addTask() {
-    if (this.data.template && this.currentUser !== null) {
+    if (this.data.template && this.currentUser !== null && this.boardService.CurrentBoardId !== -1) {
       if ('userId' in this.currentUser) {
         const task: TaskB = {
           taskLabel: this.formGroup.value.taskLabel,
           taskText: this.formGroup.value.taskText,
           color: this.formGroup.value.color,
           userId: this.currentUser.userId,
-          boardId: this.boardId,
+          boardId: this.boardService.CurrentBoardId,
           taskId: 0,
           createdDate: '',
           state: 0,
           coordinates: { x: this.data.template.coordinates.x, y: this.data.template.coordinates.y }
         };
-        this.boardService.addNewTask(task);
-        this.dialogRef.close(task);
+        this.boardService.addNewTask(task).then(
+          () => this.dialogRef.close(task)
+        ).catch((e) => this.logger.error(e));
       }
     }
   }
@@ -99,9 +100,9 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
       this.data.template.taskLabel = this.formGroup.value.taskLabel;
       this.data.template.taskText = this.formGroup.value.taskText;
       this.data.template.color = this.formGroup.value.color;
-      this.boardService.editTask(this.data.template);
+      this.boardService.editTask(this.data.template).then(() => this.dialogRef.close(this.data.template))
+          .catch((e) => this.logger.error(e));
     }
-    this.dialogRef.close(this.data.template);
   }
 
   ngOnDestroy() {

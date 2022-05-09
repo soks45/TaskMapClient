@@ -4,8 +4,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 
 const loggedOptions: string[] = [
-  'Profile',
-  'Boards',
   'Logout'
 ]
 
@@ -20,19 +18,18 @@ const notLoggedOptions: string[] = [
   styleUrls: ['./profile-multiselect-menu-button.component.scss']
 })
 
-export class ProfileMultiselectMenuButtonComponent implements OnInit, OnDestroy {
+export class ProfileMultiselectMenuButtonComponent implements OnDestroy {
   private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  options: string[] = [
-
-  ]
+  options: string[] = []
   constructor(
     private auth: AuthService,
     private router: Router
   ) {
     auth.user$.pipe(takeUntil(this.ngUnsubscribe)).subscribe(user => {
       if (user) {
-        this.options = loggedOptions;
+        this.options.push(`${user.firstName} ${user.lastName}`);
+        loggedOptions.forEach(value => this.options.push(value))
       } else {
         this.options = notLoggedOptions;
       }
@@ -42,14 +39,6 @@ export class ProfileMultiselectMenuButtonComponent implements OnInit, OnDestroy 
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.unsubscribe();
-  }
-
-  ngOnInit(): void {
-
-  }
-
-  showMenu(): void {
-
   }
 
   onItemSelect(option: string) {

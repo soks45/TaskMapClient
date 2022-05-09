@@ -7,6 +7,7 @@ import { ProfileMultiselectMenuButtonComponent } from './header-menu/profile-mul
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
+import { BoardsMultiselectMenuButtonComponent } from './header-menu/boards-multiselect-menu-button/boards-multiselect-menu-button.component';
 
 
 
@@ -14,7 +15,8 @@ import { MatMenuModule } from '@angular/material/menu';
   declarations: [
     HeaderComponent,
     HeaderMenuComponent,
-    ProfileMultiselectMenuButtonComponent
+    ProfileMultiselectMenuButtonComponent,
+    BoardsMultiselectMenuButtonComponent
   ],
   exports: [
     HeaderComponent,

@@ -4,14 +4,8 @@
   >
     Dashboard
   </button>
-  <button mat-raised-button
-          [routerLink]="'/board-page'"
-          *ngIf="user"
-  >
-    Your Boards
-  </button>
-  <app-profile-multiselect-menu-button>
-  </app-profile-multiselect-menu-button>
+  <app-boards-multiselect-menu-button *ngIf="user"></app-boards-multiselect-menu-button>
+  <app-profile-multiselect-menu-button></app-profile-multiselect-menu-button>
 </div>
 
 

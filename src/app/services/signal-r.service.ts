@@ -16,7 +16,7 @@ export class Hub {
     this._hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(_url)
       .withAutomaticReconnect()
-      .configureLogging(logger)
+      .configureLogging(LogLevel.Error)
       .build();
     this._hubConnection.onreconnected(() => {
       logger.log('Reconnected')

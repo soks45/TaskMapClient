@@ -22,10 +22,11 @@ export class BoardService implements OnDestroy {
   private _currentBoardId$: Subject<number> = new Subject<number>();
   private _userBoards$: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
   private _taskList$: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
-
   private _currentBoardId: number | null = null;
   private _userBoards: Board[] = [];
   private _taskList: TaskB[] = [];
+  private _currentRoute: string = '/main-page';
+
 
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfNotBoardPage$: Subject<void> = new Subject<void>();
@@ -54,6 +55,12 @@ export class BoardService implements OnDestroy {
     filter(event => event instanceof NavigationEnd),
     // @ts-ignore
     filter(event => event.url !== '/board-page'),
+    takeUntil(this.ngUnsubscribe$));
+  // @ts-ignore
+  private readonly redirections$: Observable<Event_2> = this.router.events.
+  pipe(
+    filter(event => event instanceof NavigationEnd),
+    // @ts-ignore
     takeUntil(this.ngUnsubscribe$));
   private readonly signalRConnectedEvents$: Observable<HubConnectionState> = this._taskHub.ConnectionState$.
   pipe(
@@ -87,9 +94,9 @@ export class BoardService implements OnDestroy {
     private router: Router,
     private logger: NGXLogger
   ) {
+    this.dataSetup();
     this.loginLogicSetup();
     this.signalRLogicSetup();
-    this.dataSetup();
   }
 
   ngOnDestroy(): void {
@@ -117,8 +124,27 @@ export class BoardService implements OnDestroy {
     return this._taskHub.HubConnection.invoke('DeleteTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
   }
 
+  // @ts-ignore
+  get CurrentRoute$(): Observable<Event_2> {
+    return this.redirections$;
+  }
+
   get CurrentBoardId$(): Observable<number> {
     return this._currentBoardId$.asObservable();
+  }
+
+  get UserBoards(): Board[] {
+    return this._userBoards;
+  }
+
+  get UserBoards$(): Observable<Board[]> {
+    return this._userBoards$.asObservable();
+  }
+
+  get CurrentBoardId(): number {
+    if (this._currentBoardId)
+      return this._currentBoardId;
+    return -1;
   }
 
   get TaskList$(): Observable<TaskB[]> {
@@ -133,9 +159,19 @@ export class BoardService implements OnDestroy {
   }
 
   private dataSetup(): void {
-    this._currentBoardId$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(id => this._currentBoardId = id);
-    this._userBoards$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(boards => this._userBoards = boards);
-    this._taskList$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(tasks => this._taskList = tasks);
+    this.redirections$.subscribe(event => this._currentRoute = event.url);
+    this._currentBoardId$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(id => {
+      this.logger.trace('-current board id-', id);
+      this._currentBoardId = id;
+    });
+    this._userBoards$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(boards => {
+      this.logger.trace('-current user boards', boards);
+      this._userBoards = boards;
+    });
+    this._taskList$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(tasks => {
+      this.logger.trace('-current task list-', tasks);
+      this._taskList = tasks;
+    });
   }
 
   private loginLogicSetup(): void {
@@ -179,8 +215,10 @@ export class BoardService implements OnDestroy {
     });
   }
 
-  private loadBoardTasks(id: number): void {
+  public loadBoardTasks(id: number): void {
+    this.logger.trace('-loadBoardTasks-');
     this.switchBoard(id).then(() => {
+      this.logger.trace('-switchBoard completed-');
       this.getTasks(this._userBoards$.value[0].boardId).
       pipe(
         takeUntil(this.ngUnsubscribeIfNotBoardPage$),

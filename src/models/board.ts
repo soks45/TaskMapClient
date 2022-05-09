@@ -4,5 +4,4 @@ export interface Board {
   createdDate: string,
   boardName: string,
   boardDescription: string,
-  state: string
 }

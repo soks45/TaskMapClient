@@ -323,7 +323,6 @@ export class BoardService implements OnDestroy {
     const options = {
       boardId: board.boardId,
       userId: board.userId,
-      state: board.state,
       boardName: board.boardName,
       createdDate: board.createdDate,
       boardDescription: board.boardDescription,
@@ -343,7 +342,6 @@ export class BoardService implements OnDestroy {
     const options = {
       boardId: board.boardId,
       userId: board.userId,
-      state: board.state,
       boardName: board.boardName,
       createdDate: board.createdDate,
       boardDescription: board.boardDescription,

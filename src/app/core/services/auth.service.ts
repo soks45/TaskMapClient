@@ -53,14 +53,13 @@ export class AuthService implements OnDestroy {
 
   signup(user: User, password: string): Observable<LoginResult> {
     this.logger.info('--sign-up--');
-    const options = {
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      md5PasswordHash: Md5.init(password)
-    }
+    const userId = 0;
+    const email = user.email;
+    const firstName = user.firstName;
+    const lastName = user.lastName;
+    const md5PasswordHash = Md5.init(password);
     return this.http
-      .post<LoginResult>(`${this.apiUrl}/register`, options)
+      .post<LoginResult>(`${this.apiUrl}/register`, { userId, email, firstName, lastName, md5PasswordHash })
         .pipe(
           map((x: LoginResult) => {
             this.logger.info(x);
@@ -77,11 +76,11 @@ export class AuthService implements OnDestroy {
       );
   }
 
-  login(username: string, password: string): Observable<LoginResult> {
-    const MD5Hash = Md5.init(password);
+  login(username: string, _password: string): Observable<LoginResult> {
+    const password = Md5.init(_password);
     this.logger.info('--login--');
     return this.http
-      .post<LoginResult>(`${this.apiUrl}/login`, { username, MD5Hash })
+      .post<LoginResult>(`${this.apiUrl}/login`, { username, password })
       .pipe(
         map((x: LoginResult) => {
           this.logger.info(x);
@@ -160,7 +159,7 @@ export class AuthService implements OnDestroy {
     return expires.getTime() - Date.now();
   }
 
-  private startTokenTimer(): void {
+  private startTokenTimer() {
     const timeout = this.getTokenRemainingTime();
     this.timer = of(true)
       .pipe(

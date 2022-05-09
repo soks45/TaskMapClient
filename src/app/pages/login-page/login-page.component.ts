@@ -45,7 +45,6 @@ export class LoginPageComponent implements OnInit {
     if (!this.username || !this.password) {
       return;
     }
-    const returnUrl = this.route.snapshot.queryParams['main-page'] || '';
     this.authService
       .login(this.username, this.password)
       .subscribe(

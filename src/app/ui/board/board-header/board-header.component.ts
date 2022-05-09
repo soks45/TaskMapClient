@@ -37,7 +37,6 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
     const board: Board = {
       boardId: 0,
       userId: this.user.userId,
-      state: 'vsemq',
       boardName: 'dada',
       createdDate: '',
       boardDescription: 'dada',
@@ -61,7 +60,6 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
     const board: Board = {
       boardId: 19,
       boardName: 'popa',
-      state: '',
       boardDescription: 'some desc',
       userId: this.user.userId,
       createdDate: `${moment()}`

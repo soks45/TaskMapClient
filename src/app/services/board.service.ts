@@ -113,7 +113,12 @@ export class BoardService implements OnDestroy {
   }
 
   public switchBoard(boardId: number): Promise<any> {
-    return this._taskHub.HubConnection.invoke('JoinBoard', boardId).then(() => this.logger.trace('-switchboard-: ', boardId)).catch((e) => this.logger.error(e));
+    return this._taskHub.HubConnection.invoke('JoinBoard', boardId)
+      .then(() => {
+        this.logger.trace('-switchboard-: ', boardId);
+        this._currentBoardId = boardId;
+      })
+      .catch((e) => this.logger.error(e));
   }
 
   public addNewTask(task: TaskB): Promise<any> {
@@ -219,7 +224,7 @@ export class BoardService implements OnDestroy {
     this.logger.trace('-loadBoardTasks-');
     this.switchBoard(id).then(() => {
       this.logger.trace('-switchBoard completed-');
-      this.getTasks(this._userBoards$.value[0].boardId).
+      this.getTasks(id).
       pipe(
         takeUntil(this.ngUnsubscribeIfNotBoardPage$),
         takeUntil(this.ngUnsubscribeIfSignalRNotConnected$),
@@ -290,6 +295,7 @@ export class BoardService implements OnDestroy {
   }
 
   private startListening(): void {
+    this.stopListening();
     this.logger.trace('Listening started');
     this._taskHub.HubConnection.on('newTaskPosition', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
@@ -366,8 +372,9 @@ export class BoardService implements OnDestroy {
       boardDescription: board.boardDescription,
       withCredentials: true
     };
-    this.http.post<Board>(`${environment.apiUrl}/Board/add-board`, options).subscribe({
-      next: () => {
+    this.http.post<number>(`${environment.apiUrl}/Board/add-board`, options).subscribe({
+      next: (boardId) => {
+        board.boardId = boardId;
         let boards = this._userBoards$.value;
         boards.push(board);
         this._userBoards$.next(boards);

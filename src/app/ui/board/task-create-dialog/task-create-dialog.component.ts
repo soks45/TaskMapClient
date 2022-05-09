@@ -22,6 +22,7 @@ export interface TemplateFormDialogData {
 export class TaskCreateDialogComponent implements OnInit, OnDestroy {
 
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
+  private id: number = -1;
 
   formGroup: FormGroup;
   isNew = true;
@@ -43,6 +44,7 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
     });
     // @ts-ignore
     this.authService.user$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(res => this.currentUser = res);
+    this.boardService.CurrentBoardId$.pipe(takeUntil(this.ngUnsubscribe$)).subscribe(id => this.id = id);
   }
 
   ngOnInit(): void {
@@ -75,6 +77,7 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
   }
 
   addTask() {
+    this.logger.log(this.data.template, this.currentUser, this.boardService.CurrentBoardId);
     if (this.data.template && this.currentUser !== null && this.boardService.CurrentBoardId !== -1) {
       if ('userId' in this.currentUser) {
         const task: TaskB = {

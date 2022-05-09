@@ -37,7 +37,7 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
     const board: Board = {
       boardId: 0,
       userId: this.user.userId,
-      boardName: 'dada',
+      boardName: 'vsem q',
       createdDate: '',
       boardDescription: 'dada',
     }

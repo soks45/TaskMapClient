@@ -3,10 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TaskB } from "src/models/task-b";
 import { BoardService } from "src/app/services/board.service";
-import { formatDate } from '@angular/common';
 import { AuthService } from 'src/app/core';
 import { User } from 'src/models/user';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 export interface TemplateFormDialogData {
@@ -20,13 +19,12 @@ export interface TemplateFormDialogData {
 })
 
 export class TaskCreateDialogComponent implements OnInit, OnDestroy {
-
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private id: number = -1;
+  private currentUser: User | null = null;
 
   formGroup: FormGroup;
   isNew = true;
-  currentUser: User | null = null;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: TemplateFormDialogData,
@@ -68,7 +66,7 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.formGroup.updateValueAndValidity();
-    this.logger.log(this.isNew, 'isNew');
+    this.logger.trace(this.isNew, 'isNew');
     if (this.isNew) {
       this.addTask();
     } else {

@@ -112,11 +112,10 @@ export class BoardService implements OnDestroy {
     return this._taskHub.HubConnection.invoke('NewTaskPosition', BoardService.taskServer(task));
   }
 
-  public switchBoard(boardId: number): Promise<any> {
+  private switchBoard(boardId: number): Promise<any> {
     return this._taskHub.HubConnection.invoke('JoinBoard', boardId)
       .then(() => {
         this.logger.trace('-switchboard-: ', boardId);
-        this._currentBoardId = boardId;
       })
       .catch((e) => this.logger.error(e));
   }
@@ -156,11 +155,15 @@ export class BoardService implements OnDestroy {
     return this._taskList$.asObservable();
   }
 
-  public deleteCurrentBoard(id: number): void {
-    this.switchBoard(3)
-        .then(() => this.deleteBoard(id))
-        .catch((e) => this.logger.error(e))
-        .catch((e) => this.logger.error(e));
+  public deleteBoard(board: Board): void {
+    if (this.UserBoards.length < 2) {
+      this.logger.warn('The last board can not be deleted!');
+      return
+    }
+    this.deleteBoardById(board.boardId);
+    if (this._currentBoardId === board.boardId) {
+      this.switchBoard(this.UserBoards[0].boardId)
+    }
   }
 
   private dataSetup(): void {
@@ -348,7 +351,7 @@ export class BoardService implements OnDestroy {
     return this.http.get<Board[]>(`${environment.apiUrl}/Board/get-boards`, { withCredentials: true });
   }
 
-  private deleteBoard(boardId: number): void {
+  private deleteBoardById(boardId: number): void {
     const options = {
       params: {
         boardId
@@ -357,7 +360,9 @@ export class BoardService implements OnDestroy {
     this.http.get<void>(`${environment.apiUrl}/Board/delete-board`, options).subscribe({
       next: () => {
         const index = this._userBoards$.value.findIndex(board => board.boardId === boardId);
-        this._userBoards$.next(this._userBoards$.value.splice(index, 1));
+        const newList = this._userBoards$.value
+        newList.splice(index, 1);
+        this._userBoards$.next(newList);
       },
       error: (e) => this.logger.error(e)
     });
@@ -392,7 +397,7 @@ export class BoardService implements OnDestroy {
       boardDescription: board.boardDescription,
       withCredentials: true
     };
-    this.http.post<Board>(`${environment.apiUrl}/Board/change-board`, options).subscribe({
+    this.http.post<void>(`${environment.apiUrl}/Board/change-board`, options).subscribe({
       next: () => {
         let boards = this._userBoards$.value;
         boards[boards.findIndex(b => b.boardId === board.boardId)] = board;

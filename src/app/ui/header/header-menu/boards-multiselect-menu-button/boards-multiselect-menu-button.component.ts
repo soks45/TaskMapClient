@@ -1,7 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { BoardService } from 'src/app/services/board.service';
 import { Board } from 'src/models/board';
 import { Subscription } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  BoardCreateDialogComponent
+} from 'src/app/ui/header/header-menu/board-create-dialog/board-create-dialog.component';
+import { TaskB } from 'src/models/task-b';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-boards-multiselect-menu-button',
@@ -16,6 +22,8 @@ export class BoardsMultiselectMenuButtonComponent implements OnDestroy {
 
   constructor(
     private boardsService: BoardService,
+    private dialog: MatDialog,
+    private logger: NGXLogger
   ) {
     this.subs.push(this.boardsService.CurrentRoute$.subscribe(evt => {
       this.currentRoute = evt.url
@@ -40,5 +48,20 @@ export class BoardsMultiselectMenuButtonComponent implements OnDestroy {
 
   showCurrentBoards() {
     console.log(this.boards);
+  }
+
+  deleteBoard(board: Board) {
+    this.boardsService.deleteBoard(board);
+  }
+
+  newBoard() {
+    const dr = this.dialog.open(BoardCreateDialogComponent, {
+      panelClass: 'std-dialog-panel',
+      backdropClass: 'std-dialog-backdrop231',
+      disableClose: true,
+      closeOnNavigation: true,
+      data: {}
+    });
+    dr.afterClosed().subscribe(res => this.logger.trace(res));
   }
 }

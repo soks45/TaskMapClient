@@ -17,10 +17,20 @@
 >
   <section class="mat-menu-panel">
     <div class="mat-menu-item"
-                   *ngFor="let board of boards"
-                   (click)="onItemSelect(board)"
+         (click)="newBoard()"
+    >
+    New Board
+    </div>
+    <div class="mat-menu-item"
+         *ngFor="let board of boards"
+         (click)="onItemSelect(board)"
     >
       {{ board.boardName }}
+      <button mat-icon-button
+              (click)="deleteBoard(board)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </section>
 </mat-menu>

@@ -8,21 +8,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MatMenuModule } from '@angular/material/menu';
 import { BoardsMultiselectMenuButtonComponent } from './header-menu/boards-multiselect-menu-button/boards-multiselect-menu-button.component';
-
-
+import { BoardCreateDialogModule } from 'src/app/ui/header/header-menu/board-create-dialog/board-create-dialog.module';
 
 @NgModule({
   declarations: [
     HeaderComponent,
     HeaderMenuComponent,
     ProfileMultiselectMenuButtonComponent,
-    BoardsMultiselectMenuButtonComponent
+    BoardsMultiselectMenuButtonComponent,
   ],
   exports: [
     HeaderComponent,
     HeaderMenuComponent
   ],
   imports: [
+    BoardCreateDialogModule,
     CommonModule,
     MatButtonModule,
     MatIconModule,

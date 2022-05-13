@@ -8,6 +8,7 @@ import { CoreModule } from 'src/app/core/core.module';
 import { HeaderModule } from 'src/app/ui/header/header.module';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [

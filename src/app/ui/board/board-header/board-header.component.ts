@@ -44,18 +44,6 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
     this.boardService.addBoard(board);
   }
 
-  nextBoard() {
-
-  }
-
-  previousBoard() {
-
-  }
-
-  deleteBoard() {
-    this.boardService.deleteCurrentBoard(1);
-  }
-
   editBoard() {
     const board: Board = {
       boardId: 19,

@@ -31,6 +31,7 @@ export class BoardService implements OnDestroy {
   private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfNotBoardPage$: Subject<void> = new Subject<void>();
   private readonly ngUnsubscribeIfSignalRNotConnected$: Subject<void> = new Subject<void>();
+
   private readonly loginEvents$: Observable<User | null> = this.authService.user$.
   pipe(
     filter(user => user !== null),

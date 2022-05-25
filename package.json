@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "benchmark": "node ./benchmark.js"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +42,7 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "nodemark": "^0.3.0",
     "typescript": "~4.5.2"
   }
 }

@@ -6,8 +6,8 @@ const routes: Routes = [
   {
     path: '',
     component: MainPageComponent,
-    // children: [
-    // ],
+    children: [
+    ],
   },
 ];
 

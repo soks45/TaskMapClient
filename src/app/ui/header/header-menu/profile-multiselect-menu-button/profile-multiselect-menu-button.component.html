@@ -1,0 +1,21 @@
+<button mat-icon-button
+          [matMenuTriggerFor]="appMenu"
+          #menuTrigger="matMenuTrigger"
+>
+  <mat-icon>account_circle</mat-icon>
+</button>
+
+<mat-menu #appMenu="matMenu"
+          [overlapTrigger]="false"
+          [yPosition]="'below'"
+          [class]="'dropdown dropdown--menu'"
+>
+  <section class="mat-menu-panel">
+    <div class="mat-menu-item"
+         *ngFor="let option of options"
+         (click)="onItemSelect(option)"
+    >
+      {{ option }}
+    </div>
+  </section>
+</mat-menu>

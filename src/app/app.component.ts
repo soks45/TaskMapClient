@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SignalRService } from 'src/app/services/signal-r.service';
-import { HttpClient } from '@angular/common/http';
+import { AuthService } from 'src/app/core';
+import { BoardService } from 'src/app/services/board.service';
+
 
 @Component({
   selector: 'app-root',
@@ -8,17 +9,11 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  constructor(private authService: AuthService, private boardService: BoardService) {}
 
-  constructor(public signalRService: SignalRService, private http: HttpClient) { }
+  ngOnInit(): void {}
 
-  ngOnInit() {
-     this.signalRService.startConnection();
+  logout() {
+    this.authService.logout();
   }
-  onClickFirst(): void {
-    // this.signalRService.broadcastChartData();
-  }
-  onClickSecond(): void {
-    // this.signalRService.addTransferChartDataListener();
-  }
-
 }

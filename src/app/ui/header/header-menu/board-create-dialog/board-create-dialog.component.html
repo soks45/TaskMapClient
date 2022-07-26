@@ -1,0 +1,24 @@
+<form [formGroup]="formGroup">
+  <header>
+    <h1 mat-dialog-title *ngIf="isNew">Добавить доску</h1>
+    <h1 mat-dialog-title *ngIf="!isNew">Редактировать доску</h1>
+    <button mat-raised-button color="primary" (click)="onCloseDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+  <div mat-dialog-content>
+    <section>
+      <mat-form-field>
+        <input matInput type="text" required formControlName="boardName" placeholder="board label">
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput type="text" required formControlName="boardDescription" placeholder="board description">
+      </mat-form-field>
+    </section>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-raised-button color="accent" (click)="onSubmit()">Отправить</button>
+    <button mat-raised-button color="accent" (click)="onCloseDialog()">Отменить</button>
+  </div>
+</form>

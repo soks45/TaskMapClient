@@ -1,0 +1,36 @@
+<button mat-raised-button
+        *ngIf="!isBoardPage"
+        [routerLink]="'/board-page'"
+>Your Boards</button>
+
+<button mat-raised-button
+        [matMenuTriggerFor]="appMenu"
+        #menuTrigger="matMenuTrigger"
+        *ngIf="isBoardPage"
+        (click)="showCurrentBoards()"
+>Your Boards</button>
+
+<mat-menu #appMenu="matMenu"
+          [overlapTrigger]="false"
+          [yPosition]="'below'"
+          [class]="'dropdown dropdown--menu'"
+>
+  <section class="mat-menu-panel">
+    <div class="mat-menu-item"
+         (click)="newBoard()"
+    >
+    New Board
+    </div>
+    <div class="mat-menu-item"
+         *ngFor="let board of boards"
+         (click)="onItemSelect(board)"
+    >
+      {{ board.boardName }}
+      <button mat-icon-button
+              (click)="deleteBoard(board)"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  </section>
+</mat-menu>

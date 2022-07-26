@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "benchmark": "node ./benchmark.js"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +23,9 @@
     "@angular/router": "~13.2.0",
     "@microsoft/signalr": "^6.0.3",
     "chart.js": "^3.7.1",
-    "ng2-charts": "^3.0.8",
+    "md5-typescript": "^1.0.5",
+    "moment": "^2.29.1",
+    "ngx-logger": "^5.0.9",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -39,6 +42,7 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "nodemark": "^0.3.0",
     "typescript": "~4.5.2"
   }
 }

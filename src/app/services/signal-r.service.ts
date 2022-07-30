@@ -4,78 +4,61 @@ import { HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NGXLogger } from 'ngx-logger';
+import { UnsubscribeAllOnDestroy } from '../decorators/auto-unsubscribe';
 
-export class Hub {
-  private _connectionState$ = new BehaviorSubject<HubConnectionState>(HubConnectionState.Disconnected);
-  private readonly _hubConnection: signalR.HubConnection;
+export interface ModifiedHub {
+  readonly hubConnection: signalR.HubConnection;
+  connectionState: Observable<HubConnectionState>;
+  startConnection(): void;
+  stopConnection(): void;
+}
+class Hub implements ModifiedHub {
+  readonly hubConnection: signalR.HubConnection;
 
-  constructor(
-    private _url: string,
-    private logger: NGXLogger
-  ) {
-    this._hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(_url)
+  public connectionState: Observable<HubConnectionState>;
+  private connectionStateSource$: BehaviorSubject<HubConnectionState>;
+  private newConnectionStateCallback = () => this.connectionStateSource$.next(this.hubConnection.state);
+
+
+  constructor(private url: string) {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl(url)
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Error)
       .build();
-    this._hubConnection.onreconnected(() => {
-      logger.log('Reconnected')
-      this._connectionState$.next(this._hubConnection.state);
-    });
-    this._hubConnection.onclose(() => {
-      logger.warn('Closed');
-      this._connectionState$.next(this._hubConnection.state);
-    });
-    this._hubConnection.onreconnecting(() => {
-      logger.warn('Reconnecting');
-      this._connectionState$.next(this._hubConnection.state);
-    });
+
+    this.connectionStateSource$ = new BehaviorSubject<HubConnectionState>(this.hubConnection.state);
+    this.connectionState = this.connectionStateSource$.asObservable();
+    this.connectionStateChangesOnEvents();
   }
 
   public startConnection(): void {
-    this._hubConnection
-      .start()
-      .then(() => {
-        this.logger.log('Connection started');
-        this._connectionState$.next(this._hubConnection.state);
-      })
-      .catch(err => {
-        this.logger.error('Error while starting connection: ' + err);
-        this._connectionState$.next(this._hubConnection.state);
-      });
+    this.hubConnection.start()
+      .then(this.newConnectionStateCallback)
   }
 
   public stopConnection(): void {
-    this._hubConnection
-      .stop()
-      .then(() => {
-        this.logger.log('Connection stopped');
-        this._connectionState$.next(this._hubConnection.state);
-      })
-      .catch((err) => {
-        this.logger.error('Error while stopping connection: ' + err);
-        this._connectionState$.next(this._hubConnection.state);
-      })
+    this.hubConnection.stop()
+      .then(this.newConnectionStateCallback)
   }
 
-  public get HubConnection(): signalR.HubConnection {
-    return this._hubConnection;
-  }
-
-  public get ConnectionState$(): Observable<HubConnectionState> {
-    return this._connectionState$.asObservable();
+  private connectionStateChangesOnEvents(): void {
+    this.hubConnection.onreconnected(this.newConnectionStateCallback);
+    this.hubConnection.onclose(this.newConnectionStateCallback);
+    this.hubConnection.onreconnecting(this.newConnectionStateCallback);
   }
 }
 
 @Injectable({
   providedIn: 'root'
 })
-
+@UnsubscribeAllOnDestroy()
 export class SignalRService {
   public taskHub: Hub;
   constructor(
     private logger: NGXLogger
   ) {
-    this.taskHub = new Hub(environment.signalRHubs.Tasks, this.logger);
+    this.taskHub = new Hub(environment.signalRHubs.Tasks);
+    this.taskHub.connectionState.subscribe(state => this.logger.log(`[SignalRService]: new connection state: ${state}`));
   }
 }

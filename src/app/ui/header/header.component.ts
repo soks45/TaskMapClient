@@ -8,8 +8,8 @@ import { Board } from 'src/models/board';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnDestroy {
-  private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
+export class HeaderComponent /*implements OnDestroy*/ {
+  /*private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private boards:  Board[] = [];
   private id:  number | undefined = undefined;
   private route: string = '';
@@ -32,6 +32,6 @@ export class HeaderComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.unsubscribe();
-  }
+  }*/
 
 }

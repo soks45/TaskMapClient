@@ -18,7 +18,7 @@ interface LoginResult extends User {
 })
 
 export class AuthService implements OnDestroy {
-  private readonly apiUrl = `${environment.apiUrl}/api/account`;
+  private readonly apiUrl = `${environment.apiUrl}/account`;
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
   user$ = this._user.asObservable();
@@ -121,7 +121,7 @@ export class AuthService implements OnDestroy {
     }
 
     return this.http
-      .post<LoginResult>(`${this.apiUrl}/refresh-token`, { refreshToken })
+      .post<LoginResult>(`${this.apiUrl}/account/refresh-token`, { refreshToken })
       .pipe(
         map((x) => {
           this._user.next({

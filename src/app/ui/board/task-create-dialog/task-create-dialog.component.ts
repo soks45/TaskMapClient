@@ -18,8 +18,8 @@ export interface TemplateFormDialogData {
   styleUrls: ['./task-create-dialog.component.scss']
 })
 
-export class TaskCreateDialogComponent implements OnInit, OnDestroy {
-  private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
+export class TaskCreateDialogComponent /*implements OnInit, OnDestroy*/ {
+  /*private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   private id: number = -1;
   private currentUser: User | null = null;
 
@@ -109,5 +109,5 @@ export class TaskCreateDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.unsubscribe();
-  }
+  }*/
 }

@@ -5,7 +5,7 @@ import { Board } from 'src/models/board';
 import { environment } from 'src/environments/environment';
 import { TaskB, TaskBServer } from 'src/models/task-b';
 import { AuthService } from 'src/app/core';
-import { Hub, SignalRService } from 'src/app/services/signal-r.service';
+import { ModifiedHub, SignalRService } from 'src/app/services/signal-r.service';
 import { HubConnectionState } from '@microsoft/signalr';
 import { NavigationEnd, Router } from '@angular/router';
 import { User } from 'src/models/user';
@@ -16,8 +16,8 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 
-export class BoardService implements OnDestroy {
-  private _taskHub: Hub = this.signalRService.taskHub;
+export class BoardService /*implements OnDestroy*/ {
+  /*private taskHub: ModifiedHub = this.signalRService.taskHub;
 
   private _currentBoardId$: Subject<number> = new Subject<number>();
   private _userBoards$: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
@@ -63,14 +63,15 @@ export class BoardService implements OnDestroy {
     filter(event => event instanceof NavigationEnd),
     // @ts-ignore
     takeUntil(this.ngUnsubscribe$));
-  private readonly signalRConnectedEvents$: Observable<HubConnectionState> = this._taskHub.ConnectionState$.
+  private readonly signalRConnectedEvents$: Observable<HubConnectionState> = this.taskHub.connectionState.
   pipe(
     filter(state => state === HubConnectionState.Connected),
     takeUntil(this.ngUnsubscribe$));
-  private readonly signalRDisconnectedEvents$: Observable<HubConnectionState> = this._taskHub.ConnectionState$.
+  private readonly signalRDisconnectedEvents$: Observable<HubConnectionState> = this.taskHub.connectionState.
   pipe(
     pairwise(),
     filter(pair => pair[0] === HubConnectionState.Connected),
+    filter(pair => pair[1] !== HubConnectionState.Connected),
     filter(pair => pair[1] !== HubConnectionState.Connected),
     map(pair => pair[1]),
     takeUntil(this.ngUnsubscribe$));
@@ -110,11 +111,11 @@ export class BoardService implements OnDestroy {
   public editTask(task: TaskB): Promise<any> {
     task.coordinates.x = Math.floor(task.coordinates.x);
     task.coordinates.y = Math.floor(task.coordinates.y);
-    return this._taskHub.HubConnection.invoke('NewTaskPosition', BoardService.taskServer(task));
+    return this.taskHub.hubConnection.invoke('NewTaskPosition', BoardService.taskServer(task));
   }
 
   private switchBoard(boardId: number): Promise<any> {
-    return this._taskHub.HubConnection.invoke('JoinBoard', boardId)
+    return this.taskHub.hubConnection.invoke('JoinBoard', boardId)
       .then(() => {
         this.logger.trace('-switchboard-: ', boardId);
       })
@@ -122,11 +123,11 @@ export class BoardService implements OnDestroy {
   }
 
   public addNewTask(task: TaskB): Promise<any> {
-    return this._taskHub.HubConnection.invoke('AddNewTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
+    return this.taskHub.hubConnection.invoke('AddNewTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
   }
 
   public deleteTask(task: TaskB): Promise<any> {
-    return this._taskHub.HubConnection.invoke('DeleteTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
+    return this.taskHub.hubConnection.invoke('DeleteTask', BoardService.taskServer(task)).catch((e) => this.logger.error(e));
   }
 
   // @ts-ignore
@@ -185,10 +186,10 @@ export class BoardService implements OnDestroy {
 
   private loginLogicSetup(): void {
     this.loginEvents$.subscribe(() => {
-      this.startHubConnection();
+      this.starthubConnection();
     });
     this.logoutEvents$.subscribe(() => {
-      this.stopHubConnection();
+      this.stophubConnection();
     });
   }
 
@@ -255,19 +256,19 @@ export class BoardService implements OnDestroy {
     this._taskList$.next(newList);
   }
 
-  private startHubConnection(): void {
-    this._taskHub.startConnection();
+  private starthubConnection(): void {
+    this.taskHub.startConnection();
   }
 
-  private stopHubConnection(): void {
-    this._taskHub.stopConnection();
+  private stophubConnection(): void {
+    this.taskHub.stopConnection();
   }
 
   private stopListening() {
     this.logger.trace('-Listening stopped-');
-    this._taskHub.HubConnection.off('newTaskPosition');
-    this._taskHub.HubConnection.off('newTask');
-    this._taskHub.HubConnection.off('deleteTask');
+    this.taskHub.hubConnection.off('newTaskPosition');
+    this.taskHub.hubConnection.off('newTask');
+    this.taskHub.hubConnection.off('deleteTask');
   }
 
   private static taskServer(task: TaskB): TaskBServer {
@@ -301,7 +302,7 @@ export class BoardService implements OnDestroy {
   private startListening(): void {
     this.stopListening();
     this.logger.trace('Listening started');
-    this._taskHub.HubConnection.on('newTaskPosition', (TaskBServer: TaskBServer) => {
+    this.taskHub.hubConnection.on('newTaskPosition', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
       this.logger.trace('Listening newTaskPosition -start-');
       const newList = this._taskList$.value;
@@ -314,7 +315,7 @@ export class BoardService implements OnDestroy {
       this.logger.trace('Listening newTaskPosition -end-');
     });
 
-    this._taskHub.HubConnection.on('newTask', (TaskBServer: TaskBServer) => {
+    this.taskHub.hubConnection.on('newTask', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
       this.logger.trace('Listening newTask -start-');
       const newList = this._taskList$.value;
@@ -323,7 +324,7 @@ export class BoardService implements OnDestroy {
       this.logger.trace('Listening newTask -end-');
     });
 
-    this._taskHub.HubConnection.on('deleteTask', (TaskBServer: TaskBServer) => {
+    this.taskHub.hubConnection.on('deleteTask', (TaskBServer: TaskBServer) => {
       const task = BoardService.taskClient(TaskBServer);
       this.logger.trace('Listening deleteTask -start-');
       let newList = this._taskList$.value;
@@ -406,5 +407,5 @@ export class BoardService implements OnDestroy {
       },
       error: (e) => this.logger.error(e)
     });
-  }
+  }*/
 }

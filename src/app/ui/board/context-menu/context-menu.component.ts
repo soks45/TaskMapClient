@@ -11,8 +11,8 @@ import { BoardService } from 'src/app/services/board.service';
   templateUrl: './context-menu.component.html',
   styleUrls: ['./context-menu.component.scss']
 })
-export class ContextMenuComponent implements OnInit, OnDestroy {
-  events: Observable<MouseEvent>;
+export class ContextMenuComponent /*implements OnInit, OnDestroy*/ {
+  /*events: Observable<MouseEvent>;
   subscription?: Subscription;
 
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger?: MatMenuTrigger;
@@ -60,5 +60,5 @@ export class ContextMenuComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription?.unsubscribe();
-  }
+  }*/
 }

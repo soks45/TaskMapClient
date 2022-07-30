@@ -14,8 +14,8 @@ import { NGXLogger } from 'ngx-logger';
   templateUrl: './boards-multiselect-menu-button.component.html',
   styleUrls: ['./boards-multiselect-menu-button.component.scss']
 })
-export class BoardsMultiselectMenuButtonComponent implements OnDestroy {
-  boards: Board[] = [];
+export class BoardsMultiselectMenuButtonComponent /*implements OnDestroy*/ {
+  /*boards: Board[] = [];
 
   private currentRoute: string = '';
   private subs: Subscription[] = [];
@@ -63,5 +63,5 @@ export class BoardsMultiselectMenuButtonComponent implements OnDestroy {
       data: {}
     });
     dr.afterClosed().subscribe(res => this.logger.trace(res));
-  }
+  }*/
 }

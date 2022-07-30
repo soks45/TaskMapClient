@@ -15,8 +15,8 @@ import { BoardService } from 'src/app/services/board.service';
   styleUrls: ['./task-card.component.scss']
 })
 
-export class TaskCardComponent implements OnInit {
-  @Input() task!: TaskB;
+export class TaskCardComponent /*implements OnInit*/ {
+  /*@Input() task!: TaskB;
 
   private _dragEvents$: Subject<TaskB>;
 
@@ -67,5 +67,5 @@ export class TaskCardComponent implements OnInit {
 
   deleteTask() {
     this.boardService.deleteTask(this.task);
-  }
+  }*/
 }

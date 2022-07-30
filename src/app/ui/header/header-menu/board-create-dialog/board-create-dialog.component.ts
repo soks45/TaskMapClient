@@ -19,8 +19,8 @@ export interface FormDialogData {
   styleUrls: ['./board-create-dialog.component.scss']
 })
 
-export class BoardCreateDialogComponent implements OnInit {
-  private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
+export class BoardCreateDialogComponent /*implements OnInit*/ {
+ /* private readonly ngUnsubscribe$: Subject<void> = new Subject<void>();
   formGroup: FormGroup;
   isNew: boolean = true;
   private currentUser: User | null = null;
@@ -99,5 +99,5 @@ export class BoardCreateDialogComponent implements OnInit {
   ngOnDestroy() {
     this.ngUnsubscribe$.next();
     this.ngUnsubscribe$.unsubscribe();
-  }
+  }*/
 }

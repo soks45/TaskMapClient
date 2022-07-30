@@ -6,9 +6,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/core/core.module';
 import { HeaderModule } from 'src/app/ui/header/header.module';
-import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { LoggerModule, NgxLoggerLevel, NGXLogger } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
-import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -25,11 +25,10 @@ import { ReactiveFormsModule } from '@angular/forms';
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR,
       colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
-      serverLoggingUrl: environment.logUrl,
-      proxiedSteps: 0
+      serverLoggingUrl: environment.logUrl
     })
   ],
-  providers: [],
+  providers: [NGXLogger],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

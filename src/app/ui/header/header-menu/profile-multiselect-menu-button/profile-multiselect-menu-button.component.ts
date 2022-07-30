@@ -18,8 +18,8 @@ const notLoggedOptions: string[] = [
   styleUrls: ['./profile-multiselect-menu-button.component.scss']
 })
 
-export class ProfileMultiselectMenuButtonComponent implements OnDestroy {
-  private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
+export class ProfileMultiselectMenuButtonComponent /*implements OnDestroy*/ {
+  /*private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
 
   options: string[] = []
   constructor(
@@ -51,5 +51,5 @@ export class ProfileMultiselectMenuButtonComponent implements OnDestroy {
     if (option === 'Sign Up') {
       this.router.navigate(['/sign-up-page']);
     }
-  }
+  }*/
 }

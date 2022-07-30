@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/core';
-import { BoardService } from 'src/app/services/board.service';
+import { SignalRService } from './services/signal-r.service';
 
 
 @Component({
@@ -9,11 +9,9 @@ import { BoardService } from 'src/app/services/board.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(private authService: AuthService, private boardService: BoardService) {}
+  constructor(private authService: AuthService, private signalR: SignalRService) {}
 
-  ngOnInit(): void {}
-
-  logout() {
-    this.authService.logout();
+  ngOnInit(): void {
+    this.signalR.taskHub.startConnection();
   }
 }

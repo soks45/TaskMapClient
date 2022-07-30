@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TaskB } from 'src/models/task-b';
-import { Subject, Subscription, takeUntil } from "rxjs";
+import { Subject, Subscription } from "rxjs";
 import { BoardService } from 'src/app/services/board.service';
 
 @Component({
@@ -8,8 +8,8 @@ import { BoardService } from 'src/app/services/board.service';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
-export class BoardComponent implements OnInit, OnDestroy {
-  boardId!: number
+export class BoardComponent /*implements OnInit*/ {
+  /*boardId!: number
   taskList: TaskB[];
   events: Subject<MouseEvent>;
   event?: MouseEvent;
@@ -38,9 +38,5 @@ export class BoardComponent implements OnInit, OnDestroy {
     event.preventDefault();
     this.boardService.events.next(event)
     console.log(event);
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.forEach(sub => sub.unsubscribe());
-  }
+  }*/
 }

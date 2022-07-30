@@ -9,8 +9,8 @@ import { NavigationEnd, Router } from '@angular/router';
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.scss']
 })
-export class HeaderMenuComponent implements OnInit {
-  public user: User | null = null;
+export class HeaderMenuComponent /*implements OnInit*/ {
+/*  public user: User | null = null;
   currentRoute = '';
 
   constructor(
@@ -29,5 +29,5 @@ export class HeaderMenuComponent implements OnInit {
 
   Logout(): void {
     this.authService.logout();
-  }
+  }*/
 }

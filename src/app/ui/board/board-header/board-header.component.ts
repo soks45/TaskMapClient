@@ -11,9 +11,9 @@ import * as moment from 'moment';
   templateUrl: './board-header.component.html',
   styleUrls: ['./board-header.component.scss']
 })
-export class BoardHeaderComponent implements OnInit, OnDestroy {
+export class BoardHeaderComponent /*implements OnInit, OnDestroy*/ {
 
-  user!: User;
+  /*user!: User;
   private readonly subs: Subscription[] = [];
 
   constructor(
@@ -53,5 +53,5 @@ export class BoardHeaderComponent implements OnInit, OnDestroy {
       createdDate: `${moment()}`
     }
     this.boardService.editBoard(board);
-  }
+  }*/
 }

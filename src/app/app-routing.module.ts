@@ -14,6 +14,7 @@ const routes: Routes = [
   {
     path: 'main-page',
     loadChildren: () => import('./pages/main-page/main-page.module').then(m => m.MainPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'board-page',

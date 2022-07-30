@@ -121,7 +121,7 @@ export class AuthService implements OnDestroy {
     }
 
     return this.http
-      .post<LoginResult>(`${this.apiUrl}/account/refresh-token`, { refreshToken })
+      .post<LoginResult>(`${this.apiUrl}/refresh-token`, { refreshToken })
       .pipe(
         map((x) => {
           this._user.next({

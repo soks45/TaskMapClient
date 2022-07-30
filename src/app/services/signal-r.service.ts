@@ -4,7 +4,6 @@ import { HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { NGXLogger } from 'ngx-logger';
-import { UnsubscribeAllOnDestroy } from '../decorators/auto-unsubscribe';
 
 export interface ModifiedHub {
   readonly hubConnection: signalR.HubConnection;
@@ -12,6 +11,7 @@ export interface ModifiedHub {
   startConnection(): void;
   stopConnection(): void;
 }
+
 class Hub implements ModifiedHub {
   readonly hubConnection: signalR.HubConnection;
 
@@ -52,7 +52,6 @@ class Hub implements ModifiedHub {
 @Injectable({
   providedIn: 'root'
 })
-@UnsubscribeAllOnDestroy()
 export class SignalRService {
   public taskHub: Hub;
   constructor(

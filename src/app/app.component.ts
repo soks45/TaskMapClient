@@ -12,6 +12,14 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService, private signalR: SignalRService) {}
 
   ngOnInit(): void {
-    this.signalR.taskHub.startConnection();
+    this.authService.user$.subscribe(user => {
+      console.log(user)
+      if (user) {
+        this.signalR.taskHub.startConnection();
+        return;
+      }
+
+      this.signalR.taskHub.stopConnection();
+    });
   }
 }

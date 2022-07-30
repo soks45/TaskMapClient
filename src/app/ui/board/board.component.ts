@@ -2,12 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { TaskB } from 'src/models/task-b';
 import { Subject, Subscription } from "rxjs";
 import { BoardService } from 'src/app/services/board.service';
+import { UnsubscribeAllOnDestroy } from '../../decorators/auto-unsubscribe';
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.scss']
 })
+@UnsubscribeAllOnDestroy()
 export class BoardComponent /*implements OnInit*/ {
   /*boardId!: number
   taskList: TaskB[];

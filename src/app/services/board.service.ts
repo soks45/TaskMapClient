@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { TaskService } from 'src/app/services/task-service';
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,7 @@ export class BoardService {
   ) {
     this.currentBoardSource$ = new Subject<Board>();
     this.currentBoard$ = this.currentBoardSource$
-      .pipe(tap(board => this.taskService.loadTasks(board)));
+      .pipe(tap(board => this.taskService.loadTasks(board).subscribe()));
 
     this.boardsSource$ = new BehaviorSubject<Board[]>([]);
     this.boards$ = this.boardsSource$.asObservable();
@@ -39,17 +39,17 @@ export class BoardService {
 
   public addBoard(board: Board): Observable<Board> {
     return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
-      .pipe(tap(board => this.addBoardClient(board)));
+      .pipe(tap(addedBoard => this.addBoardClient(addedBoard)));
   }
 
   public editBoard(board: Board): Observable<Board> {
     return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
-      .pipe(tap(board => this.editBoardClient(board)));
+      .pipe(tap(editedBoard => this.editBoardClient(editedBoard)));
   }
 
-  public deleteBoard(board: Board): Observable<Board> {
-    return this.http.delete<Board>(`${environment.apiUrl}/board/delete-board/${board.boardId}`,  { withCredentials: true })
-      .pipe(tap(board => this.deleteBoardClient(board)));
+  public deleteBoard(board: Board): Observable<number> {
+    return this.http.delete<number>(`${environment.apiUrl}/board/delete-board/${board.boardId}`,  { withCredentials: true })
+      .pipe(tap(deletedId => this.deleteBoardClient(deletedId)));
   }
 
   private getBoardsClient(boards: Board[]): void {
@@ -65,14 +65,20 @@ export class BoardService {
   private editBoardClient(board: Board): void {
     let needReload = false;
     const boards = this.boardsSource$.getValue()
-      .map(item => item.boardId === board.boardId ? (needReload = true, board) : item);
+      .map(item => {
+        if (item.boardId === board.boardId) {
+          needReload = true;
+          item = board;
+        }
+        return item;
+      });
     if (needReload)
       this.boardsSource$.next(boards);
   }
 
-  private deleteBoardClient(board: Board): void {
+  private deleteBoardClient(id: number): void {
     const currentBoards = this.boardsSource$.getValue();
-    const boards = currentBoards.filter(item => item.boardId !== board.boardId);
+    const boards = currentBoards.filter(item => item.boardId !== id);
     if (currentBoards.length !== boards.length) {
       this.boardsSource$.next(boards);
     }

@@ -51,11 +51,12 @@ export class TaskService implements HasBoard {
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.loadTasks, board.boardId))
       .pipe(
         map((tasksServer: TaskBServer[]) => tasksServer.map(task => this.taskBClient(task))),
-        tap(tasks => this.newBoard(board, tasks)));
+        tap(tasks => this.loadTasksClient(board, tasks)));
   }
 
   @ForCurrentBoardOnly()
   addTask(task: TaskB): Observable<TaskB> {
+    console.log(task);
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)))
       .pipe(
         map(task => this.taskBClient(task)),
@@ -104,7 +105,7 @@ export class TaskService implements HasBoard {
     }
   }
 
-  private newBoard(board: Board, tasks: TaskB[]): void {
+  private loadTasksClient(board: Board, tasks: TaskB[]): void {
     this.currentBoard = board;
     this.tasksSource$.next(tasks);
   }

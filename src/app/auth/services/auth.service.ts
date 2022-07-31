@@ -22,12 +22,6 @@ export class AuthService implements OnDestroy {
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
   user$ = this._user.asObservable();
-  login$ = this._user.pipe(
-    pairwise(),
-    filter(users => users[0] !== null),
-    filter(users => users[1] === null),
-    map(users => users[1]),
-  );
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea === localStorage) {
@@ -59,7 +53,6 @@ export class AuthService implements OnDestroy {
   }
 
   signup(user: User, password: string): Observable<LoginResult> {
-    this.logger.info('--sign-up--');
     const userId = 0;
     const email = user.email;
     const firstName = user.firstName;
@@ -86,7 +79,6 @@ export class AuthService implements OnDestroy {
 
   login(username: string, _password: string): Observable<LoginResult> {
     const password = Md5.init(_password);
-    this.logger.info('--login--');
     return this.http
       .post<LoginResult>(`${this.apiUrl}/login`, { username, password })
       .pipe(
@@ -107,7 +99,6 @@ export class AuthService implements OnDestroy {
   }
 
   logout(): void {
-    this.logger.info('--logout--');
     this.http
       .post<unknown>(`${this.apiUrl}/logout`, {})
       .pipe(
@@ -122,7 +113,6 @@ export class AuthService implements OnDestroy {
   }
 
   refreshToken(): Observable<LoginResult | null> {
-    this.logger.info('--refresh token--');
     const refreshToken = localStorage.getItem('refresh_token');
     if (!refreshToken) {
       this.clearLocalStorage();
@@ -183,5 +173,29 @@ export class AuthService implements OnDestroy {
 
   private stopTokenTimer(): void {
     this.timer?.unsubscribe();
+  }
+
+  private isSameUser(user1: User | null, user2: User | null): boolean {
+    console.log(user1, user2);
+    if (user1 === null && user2 === null) {
+      return true;
+    }
+
+    if ((user1 === null && user2 !== null) || (user2 === null && user1 !== null)) {
+      return false;
+    }
+
+    return (
+      // @ts-ignore
+      user1.userId === user2.userId &&
+      // @ts-ignore
+      user1.email === user2.email &&
+      // @ts-ignore
+      user1.lastBoardId === user2.lastBoardId &&
+      // @ts-ignore
+      user1.firstName === user2.firstName &&
+      // @ts-ignore
+      user1.lastName === user2.lastName
+    )
   }
 }

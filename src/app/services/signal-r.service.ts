@@ -6,16 +6,16 @@ import { environment } from 'src/environments/environment';
 import { NGXLogger } from 'ngx-logger';
 
 export interface ModifiedHub {
+  connectionState$: Observable<HubConnectionState>;
   readonly hubConnection: signalR.HubConnection;
-  connectionState: Observable<HubConnectionState>;
   startConnection(): void;
   stopConnection(): void;
 }
 
 class Hub implements ModifiedHub {
+  public connectionState$: Observable<HubConnectionState>;
   readonly hubConnection: signalR.HubConnection;
 
-  public connectionState: Observable<HubConnectionState>;
   private connectionStateSource$: BehaviorSubject<HubConnectionState>;
   private newConnectionStateCallback = () => this.connectionStateSource$.next(this.hubConnection.state);
 
@@ -28,7 +28,7 @@ class Hub implements ModifiedHub {
       .build();
 
     this.connectionStateSource$ = new BehaviorSubject<HubConnectionState>(this.hubConnection.state);
-    this.connectionState = this.connectionStateSource$.asObservable();
+    this.connectionState$ = this.connectionStateSource$.asObservable();
     this.connectionStateChangesOnEvents();
   }
 
@@ -58,6 +58,6 @@ export class SignalRService {
     private logger: NGXLogger
   ) {
     this.taskHub = new Hub(environment.signalRHubs.Tasks);
-    this.taskHub.connectionState.subscribe(state => this.logger.log(`[SignalRService]: new connection state: ${state}`));
+    this.taskHub.connectionState$.subscribe(state => this.logger.log(`[SignalRService]: new connection state: ${state}`));
   }
 }

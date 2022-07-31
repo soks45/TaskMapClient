@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BoardService } from 'src/app/services/board.service';
 import { Board } from 'src/models/board';
-import { AuthService } from 'src/app/core';
+import { AuthService } from 'src/app/auth';
 import { filter, Subscription } from 'rxjs';
 import { User } from 'src/models/user';
 import * as moment from 'moment';

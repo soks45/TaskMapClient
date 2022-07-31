@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, Observable, of, pairwise, Subscription } from 'rxjs';
 import { map, tap, delay, finalize } from 'rxjs/operators';
 import { Md5 } from "md5-typescript";
 import { environment } from 'src/environments/environment';
@@ -22,6 +22,12 @@ export class AuthService implements OnDestroy {
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
   user$ = this._user.asObservable();
+  login$ = this._user.pipe(
+    pairwise(),
+    filter(users => users[0] !== null),
+    filter(users => users[1] === null),
+    map(users => users[1]),
+  );
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea === localStorage) {
@@ -36,7 +42,8 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            lastName: x.lastName
+            lastName: x.lastName,
+            lastBoardId: x.lastBoardId
           });
         });
       }
@@ -67,7 +74,8 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            lastName: x.lastName
+            lastName: x.lastName,
+            lastBoardId: x.lastBoardId
           });
           this.setLocalStorage(x);
           this.startTokenTimer();
@@ -88,7 +96,8 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            lastName: x.lastName
+            lastName: x.lastName,
+            lastBoardId: x.lastBoardId
           });
           this.setLocalStorage(x);
           this.startTokenTimer();
@@ -128,7 +137,8 @@ export class AuthService implements OnDestroy {
             userId: x.userId,
             firstName: x.firstName,
             email: x.email,
-            lastName: x.lastName
+            lastName: x.lastName,
+            lastBoardId: x.lastBoardId
           });
           this.setLocalStorage(x);
           this.startTokenTimer();

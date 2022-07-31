@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/core';
+import { AuthService } from 'src/app/auth';
 import { Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 

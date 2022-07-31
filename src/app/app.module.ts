@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { InterceptorsModule } from 'src/app/interceptors/interceptors.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from 'src/app/core/core.module';
+import { CoreModule } from 'src/app/auth/core.module';
 import { HeaderModule } from 'src/app/ui/header/header.module';
 import { LoggerModule, NgxLoggerLevel, NGXLogger } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
@@ -21,6 +22,7 @@ import { environment } from 'src/environments/environment';
     CoreModule,
     BrowserAnimationsModule,
     HeaderModule,
+    InterceptorsModule,
     LoggerModule.forRoot({
       level: NgxLoggerLevel.TRACE,
       serverLogLevel: NgxLoggerLevel.ERROR,

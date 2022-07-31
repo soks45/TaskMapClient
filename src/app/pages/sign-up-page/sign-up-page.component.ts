@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/core';
+import { AuthService } from 'src/app/auth';
 import { User } from 'src/models/user';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -48,17 +48,18 @@ export class SignUpPageComponent implements OnInit, OnDestroy {
       userId: 0,
       email: this.email,
       lastName: this.LName,
-      firstName: this.fName
+      firstName: this.fName,
+      lastBoardId: 0
     }
     this.auth.signup(user, this.password)
-        .subscribe(
-          () => {
+        .subscribe({
+          next: () => {
             this.router.navigate(['main-page']);
           },
-          () => {
+          error: () => {
             this.router.navigate(['sign-up-page']);
             this.loginError = true;
           }
-        );
+        });
   }
 }

@@ -1,116 +1,80 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from 'src/app/core';
-import { SignalRService } from 'src/app/services/signal-r.service';
-import { Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { Observable, Subject } from 'rxjs';
-import { Board } from '../../models/board';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { TaskService } from 'src/app/services/task-service';
+import { environment } from 'src/environments/environment';
+import { Board } from 'src/models/board';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BoardService /*implements OnDestroy*/ {
+export class BoardService {
+  boards$: Observable<Board[]>;
   currentBoard$: Observable<Board>;
+
   private currentBoardSource$: Subject<Board>;
+  private boardsSource$: BehaviorSubject<Board[]>;
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService,
-    private signalRService: SignalRService,
-    private router: Router,
-    private logger: NGXLogger
+    private taskService: TaskService
   ) {
     this.currentBoardSource$ = new Subject<Board>();
-    this.currentBoard$ = this.currentBoardSource$.asObservable();
-    this.currentBoard$.subscribe(res => console.log(res));
-    setTimeout(() => this.currentBoardSource$.next({
-      boardId: 3,
-      createdDate: '31',
-      userId: 3,
-      boardDescription: 'dwa',
-      boardName: 'daw'
-    }), 100);
+    this.currentBoard$ = this.currentBoardSource$
+      .pipe(tap(board => this.taskService.loadTasks(board)));
 
+    this.boardsSource$ = new BehaviorSubject<Board[]>([]);
+    this.boards$ = this.boardsSource$.asObservable();
   }
 
+  public switchBoard(board: Board): void {
+    this.currentBoardSource$.next(board);
+  }
 
-  // private switchBoard(boardId: number): Promise<any> {
-  //   return this.taskHub.hubConnection.invoke('JoinBoard', boardId)
-  //     .then(() => {
-  //       this.logger.trace('-switchboard-: ', boardId);
-  //     })
-  //     .catch((e) => this.logger.error(e));
-  // }
-  //
-  // public deleteBoard(board: Board): void {
-  //   if (this.UserBoards.length < 2) {
-  //     this.logger.warn('The last board can not be deleted!');
-  //     return
-  //   }
-  //   this.deleteBoardById(board.boardId);
-  //   if (this._currentBoardId === board.boardId) {
-  //     this.switchBoard(this.UserBoards[0].boardId)
-  //   }
-  // }
-  //
-  // private getBoard(): Observable<Board[]> {
-  //   return this.http.get<Board[]>(`${environment.apiUrl}/Board/get-boards`, { withCredentials: true });
-  // }
-  //
-  // private deleteBoardById(boardId: number): void {
-  //   const options = {
-  //     params: {
-  //       boardId
-  //     },
-  //   }
-  //   this.http.get<void>(`${environment.apiUrl}/Board/delete-board`, options).subscribe({
-  //     next: () => {
-  //       const index = this._userBoards$.value.findIndex(board => board.boardId === boardId);
-  //       const newList = this._userBoards$.value
-  //       newList.splice(index, 1);
-  //       this._userBoards$.next(newList);
-  //     },
-  //     error: (e) => this.logger.error(e)
-  //   });
-  // }
-  //
-  // addBoard(board: Board): void {
-  //   const options = {
-  //     boardId: board.boardId,
-  //     userId: board.userId,
-  //     boardName: board.boardName,
-  //     createdDate: board.createdDate,
-  //     boardDescription: board.boardDescription,
-  //     withCredentials: true
-  //   };
-  //   this.http.post<number>(`${environment.apiUrl}/Board/add-board`, options).subscribe({
-  //     next: (boardId) => {
-  //       board.boardId = boardId;
-  //       let boards = this._userBoards$.value;
-  //       boards.push(board);
-  //       this._userBoards$.next(boards);
-  //     },
-  //     error: (e) => this.logger.error(e)
-  //   });
-  // }
-  //
-  // editBoard(board: Board): void {
-  //   const options = {
-  //     boardId: board.boardId,
-  //     userId: board.userId,
-  //     boardName: board.boardName,
-  //     createdDate: board.createdDate,
-  //     boardDescription: board.boardDescription,
-  //     withCredentials: true
-  //   };
-  //   this.http.post<void>(`${environment.apiUrl}/Board/change-board`, options).subscribe({
-  //     next: () => {
-  //       let boards = this._userBoards$.value;
-  //       boards[boards.findIndex(b => b.boardId === board.boardId)] = board;
-  //       this._userBoards$.next(boards);
-  //     },
-  //     error: (e) => this.logger.error(e)
-  //   });
-  // }
+  public getBoards(): Observable<Board[]> {
+    return this.http.get<Board[]>(`${environment.apiUrl}/board/get-boards`)
+      .pipe(tap(boards => this.getBoardsClient(boards)));
+  }
+
+  public addBoard(board: Board): Observable<Board> {
+    return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
+      .pipe(tap(board => this.addBoardClient(board)));
+  }
+
+  public editBoard(board: Board): Observable<Board> {
+    return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
+      .pipe(tap(board => this.editBoardClient(board)));
+  }
+
+  public deleteBoard(board: Board): Observable<Board> {
+    return this.http.delete<Board>(`${environment.apiUrl}/board/delete-board/${board.boardId}`,  { withCredentials: true })
+      .pipe(tap(board => this.deleteBoardClient(board)));
+  }
+
+  private getBoardsClient(boards: Board[]): void {
+    this.boardsSource$.next(boards);
+  }
+
+  private addBoardClient(board: Board): void {
+    const currentBoards = this.boardsSource$.getValue();
+    currentBoards.push(board);
+    this.boardsSource$.next(currentBoards);
+  }
+
+  private editBoardClient(board: Board): void {
+    let needReload = false;
+    const boards = this.boardsSource$.getValue()
+      .map(item => item.boardId === board.boardId ? (needReload = true, board) : item);
+    if (needReload)
+      this.boardsSource$.next(boards);
+  }
+
+  private deleteBoardClient(board: Board): void {
+    const currentBoards = this.boardsSource$.getValue();
+    const boards = currentBoards.filter(item => item.boardId !== board.boardId);
+    if (currentBoards.length !== boards.length) {
+      this.boardsSource$.next(boards);
+    }
+  }
 }

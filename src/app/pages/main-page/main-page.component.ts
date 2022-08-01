@@ -57,7 +57,7 @@ export class MainPageComponent {
       createdDate: 'dawt',
       userId: 2,
       boardDescription: 'descri[t'
-    });
+    }).subscribe();
   }
 
   logBoard(): void {

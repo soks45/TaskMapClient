@@ -5,6 +5,7 @@ import {
   BehaviorSubject,
   Observable,
 } from 'rxjs';
+import { ConvertData, LoadData } from 'src/app/decorators/requests';
 import { ModifiedHub, SignalRService } from 'src/app/services/signal-r.service';
 import { TaskB, TaskBServer } from 'src/models/task-b';
 import { map, tap } from 'rxjs/operators';
@@ -54,29 +55,26 @@ export class TaskService implements HasBoard {
         tap(tasks => this.loadTasksClient(board, tasks)));
   }
 
+  @LoadData('addTaskClient')
+  @ConvertData('taskBClient')
   @ForCurrentBoardOnly()
   addTask(task: TaskB): Observable<TaskB> {
-    console.log(task);
-    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)))
-      .pipe(
-        map(task => this.taskBClient(task)),
-        tap(task => this.addTaskClient(task)));
+    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)));
   }
 
+  @LoadData('editTaskClient')
+  @ConvertData('taskBClient')
   @ForCurrentBoardOnly()
   editTask(task: TaskB): Observable<TaskB> {
-    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task)))
-      .pipe(
-        map(task => this.taskBClient(task)),
-        tap(task => this.editTaskClient(task)));
+    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task)));
   }
 
+  @LoadData('deleteTaskClient')
+  @ConvertData('taskBClient')
   @ForCurrentBoardOnly()
   deleteTask(task: TaskB): Observable<TaskB> {
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.deleteTask, this.taskBServer(task)))
-      .pipe(
-        map(task => this.taskBClient(task)),
-        tap(task => this.deleteTaskClient(task)));
+      .pipe(map(task => this.taskBClient(task)));
   }
 
   @ForCurrentBoardOnly()

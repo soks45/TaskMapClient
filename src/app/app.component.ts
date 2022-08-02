@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/auth';
+import { BoardService } from 'src/app/services/board.service';
 import { SignalRService } from './services/signal-r.service';
 
 

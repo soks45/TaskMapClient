@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, take } from 'rxjs';
-import { finalize, map, tap } from 'rxjs/operators';
-import { Cached, ConvertData, LoadData } from 'src/app/decorators/requests';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Cached, ClearCache } from 'src/app/decorators/requests';
 import { TaskService } from 'src/app/services/task-service';
 import { environment } from 'src/environments/environment';
 import { Board } from 'src/models/board';
-import ClearCache = Cached.ClearCache;
-import CachedIn = Cached.CachedIn;
 
 @Injectable({
   providedIn: 'root'
@@ -18,46 +16,48 @@ export class BoardService {
 
   private currentBoardSource$: Subject<Board>;
   private boardsSource$: BehaviorSubject<Board[]>;
-  private boardsCache$?: Observable<Board[]>;
 
   constructor(
     private http: HttpClient,
     private taskService: TaskService
   ) {
     this.currentBoardSource$ = new Subject<Board>();
-    this.currentBoard$ = this.currentBoardSource$
-      .pipe(tap(board => this.taskService.loadTasks(board).subscribe()));
+    this.currentBoard$ = this.currentBoardSource$;
 
     this.boardsSource$ = new BehaviorSubject<Board[]>([]);
     this.boards$ = this.boardsSource$.asObservable();
   }
 
-  @ClearCache('boardsCache$')
-  @LoadData('switchBoardClient')
+
+  @Cached() @ClearCache('getBoards')
   public switchBoard(board: Board): Observable<Board> {
     return this.taskService.loadTasks(board)
-      .pipe(map(() => board));
+      .pipe(
+        map(() => board),
+        tap(board => this.switchBoardClient(board)));
   }
 
-  @CachedIn('boardsCache$')
-  @LoadData('getBoardsClient')
+  @Cached()
   public getBoards(): Observable<Board[]> {
-    return this.http.get<Board[]>(`${environment.apiUrl}/board/get-boards`);
+    return this.http.get<Board[]>(`${environment.apiUrl}/board/get-boards`)
+      .pipe(tap(boards => this.getBoardsClient(boards)));
   }
 
-  @LoadData('addBoardClient')
   public addBoard(board: Board): Observable<Board> {
-    return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true });
+    return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
+      .pipe(tap(board => this.addBoardClient(board)));
   }
 
-  @LoadData('editBoardClient')
+  @Cached()
   public editBoard(board: Board): Observable<Board> {
-    return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true });
+    return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
+      .pipe(tap(board => this.editBoardClient(board)));
   }
 
-  @LoadData('deleteBoardClient')
+  @Cached()
   public deleteBoard(board: Board): Observable<number> {
-    return this.http.delete<number>(`${environment.apiUrl}/board/delete-board/${board.boardId}`,  { withCredentials: true });
+    return this.http.delete<number>(`${environment.apiUrl}/board/delete-board/${board.boardId}`,  { withCredentials: true })
+      .pipe(tap(id => this.deleteBoardClient(id)));
   }
 
   private getBoardsClient(boards: Board[]): void {

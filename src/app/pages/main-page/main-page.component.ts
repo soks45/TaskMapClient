@@ -50,10 +50,20 @@ export class MainPageComponent {
     }).subscribe();
   }
 
-  switchBoard(): void {
+  switchBoard1(): void {
     this.boardService.switchBoard({
-      boardId: 4,
+      boardId: 2,
       boardName: 'NAMEDDD',
+      createdDate: 'dawt',
+      userId: 2,
+      boardDescription: 'descri[t'
+    }).subscribe();
+  }
+
+  switchBoard2(): void {
+    this.boardService.switchBoard({
+      boardId: 2,
+      boardName: 'NAMEDD',
       createdDate: 'dawt',
       userId: 2,
       boardDescription: 'descri[t'
@@ -85,13 +95,31 @@ export class MainPageComponent {
   editTask(): void {
     if (this.taskService.currentBoard)
       this.taskService.editTask({
-        taskId: 4,
+        taskId: 10,
         userId: 2,
         coordinates: {
           x: -1,
           y: 0.123
         },
         boardId: this.taskService.currentBoard.boardId,
+        state: 1,
+        taskText: 'dawda',
+        createdDate: 'dwadawadw',
+        color: 'red',
+        taskLabel: 'label'
+      }).subscribe();
+  }
+
+  deleteTask1(): void {
+    if (this.taskService.currentBoard)
+      this.taskService.deleteTask({
+        taskId: 10,
+        userId: 2,
+        coordinates: {
+          x: -1,
+          y: 0.123
+        },
+        boardId: 5,
         state: 1,
         taskText: 'ddawda',
         createdDate: 'dwadawadw',
@@ -100,10 +128,10 @@ export class MainPageComponent {
       }).subscribe();
   }
 
-  deleteTask(): void {
+  deleteTask2(): void {
     if (this.taskService.currentBoard)
       this.taskService.deleteTask({
-        taskId: 5,
+        taskId: 11,
         userId: 2,
         coordinates: {
           x: -1,

@@ -1,27 +1,26 @@
 import { Injectable } from '@angular/core';
-import { ForCurrentBoardOnly } from 'src/app/decorators/for-current-board-only';
 import {
   from,
   BehaviorSubject,
   Observable,
 } from 'rxjs';
-import { ConvertData, LoadData } from 'src/app/decorators/requests';
+import { Cached, ForCurrentBoardOnly } from 'src/app/decorators/requests';
 import { ModifiedHub, SignalRService } from 'src/app/services/signal-r.service';
 import { TaskB, TaskBServer } from 'src/models/task-b';
 import { map, tap } from 'rxjs/operators';
 import { Board } from 'src/models/board';
 
-enum TaskMethodsServer {
-  addTask = 'AddNewTask',
-  editTask = 'newTaskPosition',
-  deleteTask = 'DeleteTask',
-  loadTasks = 'JoinBoard'
-}
-
 enum TaskMethodsClient {
   addTask = 'newTask',
   editTask = 'editTask',
   deleteTask = 'deleteTask'
+}
+
+enum TaskMethodsServer {
+  addTask = 'AddNewTask',
+  editTask = 'EditTask',
+  deleteTask = 'DeleteTask',
+  loadTasks = 'JoinBoard'
 }
 
 export interface HasBoard {
@@ -48,6 +47,7 @@ export class TaskService implements HasBoard {
     this.taskHub.hubConnection.on(TaskMethodsClient.deleteTask, (taskBServer: TaskBServer) => this.deleteTaskClient(this.taskBClient(taskBServer)));
   }
 
+  @Cached()
   loadTasks(board: Board): Observable<TaskB[]> {
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.loadTasks, board.boardId))
       .pipe(
@@ -55,36 +55,38 @@ export class TaskService implements HasBoard {
         tap(tasks => this.loadTasksClient(board, tasks)));
   }
 
-  @LoadData('addTaskClient')
-  @ConvertData('taskBClient')
   @ForCurrentBoardOnly()
   addTask(task: TaskB): Observable<TaskB> {
-    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)));
+    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)))
+      .pipe(
+        map(taskServer => this.taskBClient(taskServer)),
+        tap(task => this.addTaskClient(task)));
   }
 
-  @LoadData('editTaskClient')
-  @ConvertData('taskBClient')
+  @Cached()
   @ForCurrentBoardOnly()
   editTask(task: TaskB): Observable<TaskB> {
-    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task)));
+    return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task)))
+      .pipe(
+        map(taskServer => this.taskBClient(taskServer)),
+        tap(task => this.editTaskClient(task)));
   }
 
-  @LoadData('deleteTaskClient')
-  @ConvertData('taskBClient')
+  @Cached()
   @ForCurrentBoardOnly()
   deleteTask(task: TaskB): Observable<TaskB> {
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.deleteTask, this.taskBServer(task)))
-      .pipe(map(task => this.taskBClient(task)));
+      .pipe(
+        map(taskServer => this.taskBClient(taskServer)),
+        tap(task => this.deleteTaskClient(task)));
   }
 
-  @ForCurrentBoardOnly()
   private addTaskClient (task: TaskB): void {
     const tasks = this.tasksSource$.getValue();
     tasks.push(task);
     this.tasksSource$.next(tasks);
   }
 
-  @ForCurrentBoardOnly()
   private editTaskClient(task: TaskB): void {
     const tasks = this.tasksSource$.getValue();
     const index = tasks.findIndex((item => item.taskId === task.taskId));
@@ -94,7 +96,6 @@ export class TaskService implements HasBoard {
     }
   }
 
-  @ForCurrentBoardOnly()
   private deleteTaskClient(task: TaskB): void {
     const currentTasks = this.tasksSource$.getValue();
     const newTasks = currentTasks.filter(item => task.taskId !== item.taskId);
@@ -109,6 +110,7 @@ export class TaskService implements HasBoard {
   }
 
   private taskBClient(task: TaskBServer): TaskB {
+    console.log(task)
     return <TaskB> {
       ...task,
       coordinates: JSON.parse(task.coordinates)
@@ -116,7 +118,7 @@ export class TaskService implements HasBoard {
   }
 
   private taskBServer(task: TaskB): TaskBServer {
-    [task.coordinates.x, task.coordinates.y] = [Math.floor(task.coordinates.x), Math.floor(task.coordinates.y)];
+    [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
     return <TaskBServer> {
       ...task,
       coordinates: JSON.stringify(task.coordinates)

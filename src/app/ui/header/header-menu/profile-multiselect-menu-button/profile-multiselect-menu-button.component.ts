@@ -13,7 +13,7 @@ const notLoggedOptions: string[] = [
 ]
 
 @Component({
-  selector: 'app-profile-multiselect-menu-button',
+  selector: 'tm-profile-multiselect-menu-button',
   templateUrl: './profile-multiselect-menu-button.component.html',
   styleUrls: ['./profile-multiselect-menu-button.component.scss']
 })

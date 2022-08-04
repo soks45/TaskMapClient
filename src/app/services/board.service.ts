@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Cached, ClearCache } from 'src/app/decorators/requests';
 import { TaskService } from 'src/app/services/task-service';
@@ -11,23 +11,14 @@ import { Board } from 'src/models/board';
   providedIn: 'root'
 })
 export class BoardService {
-  boards$: Observable<Board[]>;
-  currentBoard$: Observable<Board>;
-
-  private currentBoardSource$: Subject<Board>;
-  private boardsSource$: BehaviorSubject<Board[]>;
+  readonly boards: Board[] = [];
+  currentBoard?: Board = undefined;
 
   constructor(
     private http: HttpClient,
     private taskService: TaskService
   ) {
-    this.currentBoardSource$ = new Subject<Board>();
-    this.currentBoard$ = this.currentBoardSource$;
-
-    this.boardsSource$ = new BehaviorSubject<Board[]>([]);
-    this.boards$ = this.boardsSource$.asObservable();
   }
-
 
   @Cached() @ClearCache('getBoards')
   public switchBoard(board: Board): Observable<Board> {
@@ -43,13 +34,11 @@ export class BoardService {
       .pipe(tap(boards => this.getBoardsClient(boards)));
   }
 
-  @Cached()
   public addBoard(board: Board): Observable<Board> {
     return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
       .pipe(tap(board => this.addBoardClient(board)));
   }
 
-  @Cached()
   public editBoard(board: Board): Observable<Board> {
     return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
       .pipe(tap(board => this.editBoardClient(board)));
@@ -62,38 +51,29 @@ export class BoardService {
   }
 
   private getBoardsClient(boards: Board[]): void {
-    this.boardsSource$.next(boards);
+    this.boards.splice(0, this.boards.length);
+    boards.forEach(board => this.boards.push(board));
   }
 
   private addBoardClient(board: Board): void {
-    const currentBoards = this.boardsSource$.getValue();
-    currentBoards.push(board);
-    this.boardsSource$.next(currentBoards);
+    this.boards.push(board);
   }
 
   private editBoardClient(board: Board): void {
-    let needReload = false;
-    const boards = this.boardsSource$.getValue()
-      .map(item => {
-        if (item.boardId === board.boardId) {
-          needReload = true;
-          item = board;
-        }
-        return item;
-      });
-    if (needReload)
-      this.boardsSource$.next(boards);
+    const index = this.boards.findIndex((item => item.boardId === board.boardId));
+    if (index !== -1) {
+      this.boards[index] = board;
+    }
   }
 
   private deleteBoardClient(id: number): void {
-    const currentBoards = this.boardsSource$.getValue();
-    const boards = currentBoards.filter(item => item.boardId !== id);
-    if (currentBoards.length !== boards.length) {
-      this.boardsSource$.next(boards);
+    const index = this.boards.findIndex((item => item.boardId === id));
+    if (index !== -1) {
+      this.boards.splice(index, 1);
     }
   }
 
   private switchBoardClient(board: Board): void {
-    this.currentBoardSource$.next(board);
+    this.currentBoard = board;
   }
 }

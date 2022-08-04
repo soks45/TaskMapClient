@@ -10,7 +10,7 @@ import { TaskB } from 'src/models/task-b';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'app-boards-multiselect-menu-button',
+  selector: 'tm-boards-multiselect-menu-button',
   templateUrl: './boards-multiselect-menu-button.component.html',
   styleUrls: ['./boards-multiselect-menu-button.component.scss']
 })

@@ -15,7 +15,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "task-map",
+      "prefix": "tm",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",

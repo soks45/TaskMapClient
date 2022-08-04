@@ -14,7 +14,7 @@ export interface FormDialogData {
 }
 
 @Component({
-  selector: 'app-board-create-dialog',
+  selector: 'tm-board-create-dialog',
   templateUrl: './board-create-dialog.component.html',
   styleUrls: ['./board-create-dialog.component.scss']
 })

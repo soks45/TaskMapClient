@@ -5,7 +5,7 @@ import { filter } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-header-menu',
+  selector: 'tm-menu',
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.scss']
 })

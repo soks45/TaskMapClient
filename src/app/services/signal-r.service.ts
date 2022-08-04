@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { HubConnectionState, LogLevel } from '@microsoft/signalr';
-import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, from, Observable, switchMap, tap } from 'rxjs';
 import { Cached } from 'src/app/decorators/requests';
 import { environment } from 'src/environments/environment';
-import { NGXLogger } from 'ngx-logger';
 
 export interface ModifiedHub {
   connectionState$: Observable<HubConnectionState>;
@@ -43,6 +43,12 @@ class Hub implements ModifiedHub {
   public stopConnection(): Observable<void> {
     return from(this.hubConnection.stop())
       .pipe(tap(this.newConnectionStateCallback));
+  }
+
+  public smartInvoke<T>(methodName: string, arg: any): Observable<T> {
+    return this.hubConnection.state === HubConnectionState.Connected ?
+      from(this.hubConnection.invoke<T>(methodName, arg)) :
+      this.startConnection().pipe(switchMap(() => from(this.hubConnection.invoke<T>(methodName, arg))));
   }
 
   private connectionStateChangesOnEvents(): void {

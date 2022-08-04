@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { NGXLogger } from 'ngx-logger';
 
 @Component({
-  selector: 'task-map-login-page',
+  selector: 'tm-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss']
 })

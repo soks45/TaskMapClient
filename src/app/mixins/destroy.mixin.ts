@@ -1,8 +1,9 @@
-import { OnDestroy } from '@angular/core';
+import { Directive, OnDestroy } from '@angular/core';
 import { Constructor } from 'src/app/mixins/mixins';
 import { Observable, Subject } from 'rxjs';
 
 export function DestroyMixin<TBase extends Constructor>(Base: TBase) {
+  @Directive()
   abstract class DestroyMixinClass extends Base implements OnDestroy {
     protected destroyed$: Observable<void>;
     private destroySource = new Subject<void>();

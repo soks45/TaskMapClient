@@ -1,8 +1,6 @@
 import { multicast, Observable, refCount, Subject, throwError } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 import * as clone from 'clone';
-import { HasBoard } from 'src/app/services/task-service';
-import { TaskB } from 'src/models/task-b';
 import equal from 'fast-deep-equal';
 
 const cacheName = 'cache'
@@ -17,6 +15,7 @@ export function Cached(): MethodDecorator {
       const cache = propertyName + cacheName;
       // @ts-ignore
       if (this[cache] && equal(this[cache].args, args)) {
+        console.log('cached', propertyName)
         // @ts-ignore
         return this[cache].request;
       }
@@ -58,22 +57,6 @@ export function ClearCache(cachedMethod: string): MethodDecorator {
     return descriptor;
   }
 }
-
-export function ForCurrentBoardOnly(necessarily: boolean = true): MethodDecorator {
-  return function (target: HasBoard, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-    const originalMethod: Function = descriptor.value;
-    descriptor.value = function (task: TaskB) {
-      // @ts-ignore
-      if (!!this.currentBoard && task.boardId !== this.currentBoard.boardId && necessarily) {
-        const errorMethod = function(): Observable<any> { return throwError(() => 'This board does not match the current one!') };
-        return errorMethod.apply(this);
-      }
-      const result = originalMethod.bind(this)(task);
-      return result;
-    };
-    return descriptor;
-  };
-};
 
 
 

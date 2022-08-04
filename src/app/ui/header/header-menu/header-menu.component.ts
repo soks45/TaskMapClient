@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/auth';
+import { AuthService } from 'src/app/services/auth';
 import { User } from 'src/models/user';
 import { filter } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router';

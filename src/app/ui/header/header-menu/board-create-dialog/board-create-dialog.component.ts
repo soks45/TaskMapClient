@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Board } from 'src/models/board';
 import { Subject, takeUntil } from 'rxjs';
-import { AuthService } from 'src/app/auth';
+import { AuthService } from 'src/app/services/auth';
 import { BoardService } from 'src/app/services/board.service';
 import { NGXLogger } from 'ngx-logger';
 import { User } from 'src/models/user';

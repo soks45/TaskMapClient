@@ -3,6 +3,7 @@ import { catchError, finalize } from 'rxjs/operators';
 import * as clone from 'clone';
 import { HasBoard } from 'src/app/services/task-service';
 import { TaskB } from 'src/models/task-b';
+import equal from 'fast-deep-equal';
 
 const cacheName = 'cache'
 
@@ -15,12 +16,10 @@ export function Cached(): MethodDecorator {
       const propertyName = typeof propertyKey === 'symbol' ? propertyKey.toString() : propertyKey;
       const cache = propertyName + cacheName;
       // @ts-ignore
-      if (this[cache] && JSON.stringify(this[cache].args) === JSON.stringify(args)) {
-        console.log('cached')
+      if (this[cache] && equal(this[cache].args, args)) {
         // @ts-ignore
         return this[cache].request;
       }
-      console.log('new req', propertyName)
       const subject = new Subject();
       // @ts-ignore
       this[cache] = {
@@ -53,7 +52,6 @@ export function ClearCache(cachedMethod: string): MethodDecorator {
       const cache = cachedMethod + cacheName;
       // @ts-ignore
       this[cache] = undefined;
-
       return originalMethod.apply(this, args);
     }
 
@@ -70,7 +68,6 @@ export function ForCurrentBoardOnly(necessarily: boolean = true): MethodDecorato
         const errorMethod = function(): Observable<any> { return throwError(() => 'This board does not match the current one!') };
         return errorMethod.apply(this);
       }
-      console.log('forcurrentonly')
       const result = originalMethod.bind(this)(task);
       return result;
     };

@@ -4,7 +4,7 @@ import { Observable  } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable()
-export class GlobalHttpIterceptor implements HttpInterceptor {
+export class GlobalHttpInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err, caught) => {

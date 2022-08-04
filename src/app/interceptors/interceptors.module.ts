@@ -1,7 +1,7 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GlobalHttpIterceptor } from 'src/app/interceptors/global-http.iterceptor';
+import { GlobalHttpInterceptor } from 'src/app/interceptors/global-http.iterceptor';
 
 
 
@@ -13,7 +13,7 @@ import { GlobalHttpIterceptor } from 'src/app/interceptors/global-http.itercepto
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: GlobalHttpIterceptor,
+      useClass: GlobalHttpInterceptor,
       multi: true,
     },
   ]

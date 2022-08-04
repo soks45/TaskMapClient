@@ -5,15 +5,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CoreModule } from 'src/app/auth/core.module';
+import { CoreModule } from 'src/app/services/auth/core.module';
 import { HeaderModule } from 'src/app/ui/header/header.module';
 import { LoggerModule, NgxLoggerLevel, NGXLogger } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +29,8 @@ import { environment } from 'src/environments/environment';
       serverLogLevel: NgxLoggerLevel.ERROR,
       colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
       serverLoggingUrl: environment.logUrl
-    })
+    }),
+    DragDropModule
   ],
   providers: [NGXLogger],
   bootstrap: [AppComponent]

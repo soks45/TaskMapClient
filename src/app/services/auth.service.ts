@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, filter, Observable, of, pairwise, Subscription } from 'rxjs';
+import { BehaviorSubject, distinct, filter, Observable, of, pairwise, Subscription } from 'rxjs';
 import { map, tap, delay, finalize } from 'rxjs/operators';
 import { Md5 } from "md5-typescript";
+import { SignalRService } from 'src/app/services/signal-r.service';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
 import { NGXLogger } from 'ngx-logger';
@@ -21,7 +22,13 @@ export class AuthService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/account`;
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
-  user$ = this._user.asObservable();
+  user$ = this._user
+    .pipe(
+      distinct(),
+      tap((user) => user ?
+        this.signalRService.taskHub.startConnection().subscribe() :
+        this.signalRService.taskHub.stopConnection().subscribe())
+    );
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea === localStorage) {
@@ -31,20 +38,17 @@ export class AuthService implements OnDestroy {
       }
       if (event.key === 'login-event') {
         this.stopTokenTimer();
-        this.http.get<LoginResult>(`${this.apiUrl}/user`).subscribe((x) => {
-          this._user.next({
-            userId: x.userId,
-            firstName: x.firstName,
-            email: x.email,
-            lastName: x.lastName,
-            lastBoardId: x.lastBoardId
-          });
-        });
+        this.http.get<LoginResult>(`${this.apiUrl}/user`).subscribe((x) => this._user.next({ ...x }));
       }
     }
   }
 
-  constructor(private router: Router, private http: HttpClient, private logger: NGXLogger) {
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private logger: NGXLogger,
+    private signalRService: SignalRService
+  ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
   }
 
@@ -61,20 +65,13 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<LoginResult>(`${this.apiUrl}/register`, { userId, email, firstName, lastName, md5PasswordHash })
         .pipe(
-          map((x: LoginResult) => {
+          tap((x: LoginResult) => {
             this.logger.info(x);
-            this._user.next({
-            userId: x.userId,
-            firstName: x.firstName,
-            email: x.email,
-            lastName: x.lastName,
-            lastBoardId: x.lastBoardId
-          });
-          this.setLocalStorage(x);
-          this.startTokenTimer();
-          return x;
-        })
-      );
+            this._user.next({ ...x });
+            this.setLocalStorage(x);
+            this.startTokenTimer();
+            return x;
+          }));
   }
 
   login(username: string, _password: string): Observable<LoginResult> {
@@ -82,20 +79,12 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<LoginResult>(`${this.apiUrl}/login`, { username, password })
       .pipe(
-        map((x: LoginResult) => {
-          this.logger.info(x);
-          this._user.next({
-            userId: x.userId,
-            firstName: x.firstName,
-            email: x.email,
-            lastName: x.lastName,
-            lastBoardId: x.lastBoardId
-          });
+        tap((x: LoginResult) => {
+          this._user.next({ ...x });
           this.setLocalStorage(x);
           this.startTokenTimer();
           return x;
-        })
-      );
+        }));
   }
 
   logout(): void {
@@ -122,14 +111,8 @@ export class AuthService implements OnDestroy {
     return this.http
       .post<LoginResult>(`${this.apiUrl}/refresh-token`, { refreshToken })
       .pipe(
-        map((x) => {
-          this._user.next({
-            userId: x.userId,
-            firstName: x.firstName,
-            email: x.email,
-            lastName: x.lastName,
-            lastBoardId: x.lastBoardId
-          });
+        tap((x) => {
+          this._user.next({ ...x });
           this.setLocalStorage(x);
           this.startTokenTimer();
           return x;
@@ -162,40 +145,11 @@ export class AuthService implements OnDestroy {
   private startTokenTimer() {
     const timeout = this.getTokenRemainingTime();
     this.timer = of(true)
-      .pipe(
-        delay(timeout),
-        tap({
-          next: () => this.refreshToken().subscribe(),
-        })
-      )
+      .pipe(delay(timeout), tap(() => this.refreshToken().subscribe()))
       .subscribe();
   }
 
   private stopTokenTimer(): void {
     this.timer?.unsubscribe();
-  }
-
-  private isSameUser(user1: User | null, user2: User | null): boolean {
-    console.log(user1, user2);
-    if (user1 === null && user2 === null) {
-      return true;
-    }
-
-    if ((user1 === null && user2 !== null) || (user2 === null && user1 !== null)) {
-      return false;
-    }
-
-    return (
-      // @ts-ignore
-      user1.userId === user2.userId &&
-      // @ts-ignore
-      user1.email === user2.email &&
-      // @ts-ignore
-      user1.lastBoardId === user2.lastBoardId &&
-      // @ts-ignore
-      user1.firstName === user2.firstName &&
-      // @ts-ignore
-      user1.lastName === user2.lastName
-    )
   }
 }

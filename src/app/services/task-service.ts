@@ -55,6 +55,7 @@ export class TaskService implements HasBoard {
         tap(tasks => this.loadTasksClient(board, tasks)));
   }
 
+  @Cached()
   @ForCurrentBoardOnly()
   addTask(task: TaskB): Observable<TaskB> {
     return from(this.taskHub.hubConnection.invoke(TaskMethodsServer.addTask, this.taskBServer(task)))

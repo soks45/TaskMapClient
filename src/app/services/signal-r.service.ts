@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { HubConnectionState, LogLevel } from '@microsoft/signalr';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, from, Observable, tap } from 'rxjs';
+import { Cached } from 'src/app/decorators/requests';
 import { environment } from 'src/environments/environment';
 import { NGXLogger } from 'ngx-logger';
 
@@ -32,14 +33,16 @@ class Hub implements ModifiedHub {
     this.connectionStateChangesOnEvents();
   }
 
-  public startConnection(): void {
-    this.hubConnection.start()
-      .then(this.newConnectionStateCallback)
+  @Cached()
+  public startConnection(): Observable<void> {
+    return from(this.hubConnection.start())
+      .pipe(tap(this.newConnectionStateCallback));
   }
 
-  public stopConnection(): void {
-    this.hubConnection.stop()
-      .then(this.newConnectionStateCallback)
+  @Cached()
+  public stopConnection(): Observable<void> {
+    return from(this.hubConnection.stop())
+      .pipe(tap(this.newConnectionStateCallback));
   }
 
   private connectionStateChangesOnEvents(): void {

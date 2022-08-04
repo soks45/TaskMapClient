@@ -1,16 +1,15 @@
 import { Component } from '@angular/core';
-import { AuthService } from 'src/app/auth';
+import { AuthService } from 'src/app/services/auth';
 import { BoardService } from 'src/app/services/board.service';
 import { TaskService } from '../../services/task-service';
 
 @Component({
-  selector: 'app-main-page',
+  selector: 'task-map-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent {
   constructor(private taskService: TaskService, private boardService: BoardService, private auth: AuthService) {
-    this.auth.user$.subscribe(res => console.log('user$', res));
     this.taskService.tasks$.subscribe(res => console.log('tasks$', res));
     this.boardService.currentBoard$.subscribe(res => console.log('currentBoard$', res));
     this.boardService.boards$.subscribe(res => console.log('boards$', res));

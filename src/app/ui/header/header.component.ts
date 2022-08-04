@@ -4,7 +4,7 @@ import { BoardService } from 'src/app/services/board.service';
 import { Board } from 'src/models/board';
 
 @Component({
-  selector: 'app-header',
+  selector: 'task-map-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

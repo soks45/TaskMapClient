@@ -1,10 +1,10 @@
 import { NgModule, APP_INITIALIZER, Optional, SkipSelf } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthService } from './services/auth.service';
-import { appInitializer } from './services/app-initializer';
-import { JwtInterceptor } from './interceptors/jwt.interceptor';
-import { UnauthorizedInterceptor } from './interceptors/unauthorized.interceptor';
+import { AuthService } from 'src/app/services/auth.service';
+import { appInitializer } from 'src/app/services/auth/services/app-initializer';
+import { JwtInterceptor } from 'src/app/services/auth/interceptors/jwt.interceptor';
+import { UnauthorizedInterceptor } from 'src/app/services/auth/interceptors/unauthorized.interceptor';
 
 @NgModule({
   declarations: [],

@@ -43,6 +43,7 @@ export class BoardService {
       .pipe(tap(boards => this.getBoardsClient(boards)));
   }
 
+  @Cached()
   public addBoard(board: Board): Observable<Board> {
     return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
       .pipe(tap(board => this.addBoardClient(board)));

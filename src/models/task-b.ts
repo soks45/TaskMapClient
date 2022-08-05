@@ -1,4 +1,3 @@
-import { Moment } from 'moment';
 import { ChartModel } from 'src/models/chart-model';
 
 enum State {

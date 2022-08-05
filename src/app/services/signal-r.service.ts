@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { NGXLogger } from 'ngx-logger';
-import { BehaviorSubject, from, Observable, switchMap, tap } from 'rxjs';
-import { Cached } from 'src/app/decorators/requests';
+import { BehaviorSubject, from, Observable, retryWhen, switchMap, take, tap } from 'rxjs';
+import { delay } from 'rxjs/operators';
+import { Cached } from 'src/app/decorators/cached';
 import { environment } from 'src/environments/environment';
 
 export interface ModifiedHub {
@@ -20,8 +21,10 @@ class Hub implements ModifiedHub {
   private connectionStateSource$: BehaviorSubject<HubConnectionState>;
   private newConnectionStateCallback = () => this.connectionStateSource$.next(this.hubConnection.state);
 
-
-  constructor(private url: string) {
+  constructor(
+    private url: string,
+    private logger: NGXLogger
+  ) {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(url)
       .withAutomaticReconnect()
@@ -36,19 +39,26 @@ class Hub implements ModifiedHub {
   @Cached()
   public startConnection(): Observable<void> {
     return from(this.hubConnection.start())
-      .pipe(tap(this.newConnectionStateCallback));
+      .pipe(
+        retryWhen(errors => errors
+          .pipe(
+            tap((errorValue) => this.logger.error(`[SignalRService]: reconnecting...`)),
+            delay(6000),
+            take(10))),
+        tap(this.newConnectionStateCallback));
   }
 
   @Cached()
   public stopConnection(): Observable<void> {
     return from(this.hubConnection.stop())
-      .pipe(tap(this.newConnectionStateCallback));
+      .pipe(
+        tap(this.newConnectionStateCallback));
   }
 
-  public smartInvoke<T>(methodName: string, arg: any): Observable<T> {
+  public safeInvoke<T>(methodName: string, arg: any): Observable<T> {
     return this.hubConnection.state === HubConnectionState.Connected ?
       from(this.hubConnection.invoke<T>(methodName, arg)) :
-      this.startConnection().pipe(switchMap(() => from(this.hubConnection.invoke<T>(methodName, arg))));
+      this.startConnection().pipe(switchMap(() => from(this.hubConnection.invoke<T>(methodName, arg))))
   }
 
   private connectionStateChangesOnEvents(): void {
@@ -66,7 +76,7 @@ export class SignalRService {
   constructor(
     private logger: NGXLogger
   ) {
-    this.taskHub = new Hub(environment.signalRHubs.Tasks);
+    this.taskHub = new Hub(environment.signalRHubs.Tasks, logger);
     this.taskHub.connectionState$.subscribe(state => this.logger.log(`[SignalRService]: new connection state: ${state}`));
   }
 }

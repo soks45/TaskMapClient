@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, ReplaySubject, switchMap, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Cached, ClearCache } from 'src/app/decorators/requests';
+import { Cached } from 'src/app/decorators/cached';
 import { TaskService } from 'src/app/services/task-service';
 import { environment } from 'src/environments/environment';
 import { Board } from 'src/models/board';
@@ -12,19 +12,27 @@ import { Board } from 'src/models/board';
 })
 export class BoardService {
   readonly boards: Board[] = [];
-  currentBoard?: Board = undefined;
+  readonly currentBoard$: Observable<Board>;
+  private readonly currentBoardSource$: ReplaySubject<Board>;
 
   constructor(
     private http: HttpClient,
     private taskService: TaskService
   ) {
+    this.currentBoardSource$ = new ReplaySubject<Board>(1);
+    this.currentBoard$ = this.currentBoardSource$.asObservable();
   }
 
-  @Cached() @ClearCache('getBoards')
-  public switchBoard(board: Board): Observable<Board> {
-    return this.taskService.loadTasks(board)
+  @Cached()
+  public switchBoard(boardId: number): Observable<Board> {
+    return this.taskService.loadTasks(boardId)
       .pipe(
-        map(() => board),
+        switchMap(() =>
+          this.getBoards()
+            .pipe(map(boards => {
+                const board = boards.find(board => board.boardId === boardId);
+                return board ? board : boards[0]; // TODO Make logic for error
+              }))),
         tap(board => this.switchBoardClient(board)));
   }
 
@@ -34,11 +42,13 @@ export class BoardService {
       .pipe(tap(boards => this.getBoardsClient(boards)));
   }
 
+  @Cached()
   public addBoard(board: Board): Observable<Board> {
     return this.http.post<Board>(`${environment.apiUrl}/board/add-board`, board,{ withCredentials: true })
       .pipe(tap(board => this.addBoardClient(board)));
   }
 
+  @Cached()
   public editBoard(board: Board): Observable<Board> {
     return this.http.put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
       .pipe(tap(board => this.editBoardClient(board)));
@@ -74,6 +84,6 @@ export class BoardService {
   }
 
   private switchBoardClient(board: Board): void {
-    this.currentBoard = board;
+    this.currentBoardSource$.next(board);
   }
 }

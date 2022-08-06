@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BoardComponent } from 'src/app/pages/board-page/components/board/board.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CardModule } from 'src/app/pages/board-page/components/board/card/card.module';
+import {
+  EditCardDialogModule
+} from 'src/app/pages/board-page/components/board/edit-card-dialog/edit-card-dialog.module';
 
 
 
@@ -12,8 +15,9 @@ import { CardModule } from 'src/app/pages/board-page/components/board/card/card.
   ],
   imports: [
     CommonModule,
-    DragDropModule,
-    CardModule
+    CardModule,
+    MatDialogModule,
+    EditCardDialogModule
   ],
   exports: [
     BoardComponent

@@ -1,5 +1,11 @@
 <div class="board-page">
-  123
-  {{ (currentBoard$ | async)?.boardName }}
+  <button (click)="createTask()">create new task</button>
+  <header>{{(currentBoard$ | async)?.boardName}}</header>
+  <div *ngIf="(currentBoard$ | async); else empty">
+    <tm-board [Board]="currentBoard!"></tm-board>
+  </div>
+  <ng-template #empty>
+    You have no boards
+  </ng-template>
 </div>
 

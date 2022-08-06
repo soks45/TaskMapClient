@@ -1,6 +1,6 @@
 import { ChartModel } from 'src/models/chart-model';
 
-enum State {
+export enum State {
   Main,
   Short,
 }

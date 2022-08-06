@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { asyncScheduler, firstValueFrom, lastValueFrom, Observable, Subject, throttleTime } from 'rxjs';
+import { HubConnectionState } from '@microsoft/signalr';
+import { Observable, Subject, throttleTime } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Cached } from 'src/app/decorators/cached';
 import { ModifiedHub, SignalRService } from 'src/app/services/signal-r.service';
@@ -23,23 +24,20 @@ enum TaskMethodsServer {
 })
 export class TaskService {
   readonly tasks: TaskB[] = [];
+  readonly taskMovesSource$: Subject<TaskB>;
+
   private readonly taskHub: ModifiedHub;
-  private readonly taskMovesSource$: Subject<TaskB>;
-  private readonly taskMoves$: Observable<TaskB>;
 
   constructor(private signalRService: SignalRService) {
     this.taskHub = this.signalRService.taskHub;
-
     this.taskMovesSource$ = new Subject<TaskB>();
-    this.taskMoves$ = this.taskMovesSource$
-      .pipe(
-        throttleTime(17, asyncScheduler, { leading: true, trailing: true }),
-        tap((task) => firstValueFrom(this.moveTask(task))));
-    lastValueFrom(this.taskMoves$);
 
     this.taskHub.hubConnection.on(TaskMethodsClient.addTask, (taskBServer: TaskBServer) => this.addTaskClient(this.taskBClient(taskBServer)));
     this.taskHub.hubConnection.on(TaskMethodsClient.editTask, (taskBServer: TaskBServer) => this.editTaskClient(this.taskBClient(taskBServer)));
     this.taskHub.hubConnection.on(TaskMethodsClient.deleteTask, (taskBServer: TaskBServer) => this.deleteTaskClient(this.taskBClient(taskBServer)));
+
+    this.taskMovesSource$.pipe(throttleTime(15))
+      .subscribe(task => this.moveTask(task));
   }
 
   @Cached()
@@ -73,9 +71,11 @@ export class TaskService {
         tap(task => this.deleteTaskClient(task)));
   }
 
-  private moveTask(task: TaskB): Observable<TaskB> {
-    return this.signalRService.taskHub.safeInvoke<TaskBServer>(TaskMethodsServer.editTask, this.taskBServer(task))
-      .pipe(map(taskServer => this.taskBClient(taskServer)));
+  private moveTask(task: TaskB): void {
+    if (this.signalRService.taskHub.hubConnection.state !== HubConnectionState.Connected) {
+      return;
+    }
+    this.signalRService.taskHub.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task));
   }
 
   private addTaskClient (task: TaskB): void {

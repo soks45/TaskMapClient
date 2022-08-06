@@ -1,0 +1,22 @@
+.edit-card-dialog {
+  display: flex;
+  flex-direction: column;
+  min-width: 300px;
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

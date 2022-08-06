@@ -21,9 +21,9 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<unknown>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        if (err.status >= 400) {
+        if (err.status === 403) {
           this.authService.clearLocalStorage();
-          this.router.navigate(['/login-page']);
+          this.router.navigate(['/login']);
         }
         if (!environment.production) {
           console.error(err);

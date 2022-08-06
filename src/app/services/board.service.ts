@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject, switchMap, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, ReplaySubject, tap } from 'rxjs';
 import { Cached } from 'src/app/decorators/cached';
 import { TaskService } from 'src/app/services/task-service';
 import { environment } from 'src/environments/environment';
 import { Board } from 'src/models/board';
+import { TaskB } from 'src/models/task-b';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class BoardService {
   readonly boards: Board[] = [];
   readonly currentBoard$: Observable<Board>;
   private readonly currentBoardSource$: ReplaySubject<Board>;
+  lastBoardId?: number;
 
   constructor(
     private http: HttpClient,
@@ -24,16 +25,9 @@ export class BoardService {
   }
 
   @Cached()
-  public switchBoard(boardId: number): Observable<Board> {
-    return this.taskService.loadTasks(boardId)
-      .pipe(
-        switchMap(() =>
-          this.getBoards()
-            .pipe(map(boards => {
-                const board = boards.find(board => board.boardId === boardId);
-                return board ? board : boards[0]; // TODO Make logic for error
-              }))),
-        tap(board => this.switchBoardClient(board)));
+  public switchBoard(board: Board): Observable<TaskB[]> {
+    return this.taskService.loadTasks(board.boardId)
+      .pipe(tap(() => this.switchBoardClient(board)));
   }
 
   @Cached()

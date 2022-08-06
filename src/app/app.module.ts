@@ -6,10 +6,8 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from 'src/app/services/auth/core.module';
-import { HeaderModule } from 'src/app/ui/header/header.module';
 import { LoggerModule, NgxLoggerLevel, NGXLogger } from 'ngx-logger';
 import { environment } from 'src/environments/environment';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -22,7 +20,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     HttpClientModule,
     CoreModule,
     BrowserAnimationsModule,
-    HeaderModule,
     InterceptorsModule,
     LoggerModule.forRoot({
       level: NgxLoggerLevel.TRACE,
@@ -30,7 +27,6 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
       colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
       serverLoggingUrl: environment.logUrl
     }),
-    DragDropModule
   ],
   providers: [NGXLogger],
   bootstrap: [AppComponent]

@@ -1,8 +1,8 @@
 import { Target } from '@angular/compiler';
-import { multicast, Observable, refCount, Subject, throwError } from 'rxjs';
+import { multicast, Observable, refCount, share, Subject, throwError, timer } from 'rxjs';
 import { catchError, finalize } from 'rxjs/operators';
 
-export function Cached(): MethodDecorator {
+export function Cached(expirationTime?: number): MethodDecorator {
   return function (target: Target, propertyKey: PropertyKey, descriptor: PropertyDescriptor) {
     const originalMethod: () => Observable<any> = descriptor.value;
     descriptor.value = function (...args: any) {
@@ -10,19 +10,16 @@ export function Cached(): MethodDecorator {
       if (args) {
         cacheKey += JSON.stringify(args);
       }
+      if (expirationTime) {
+      // TODO implement expiration time for cache
+      }
       if (memoryStorage.getItem(cacheKey) === undefined) {
         const subject = new Subject();
         memoryStorage.setItem(
           cacheKey,
           originalMethod.apply(this, args)
             .pipe(
-              multicast(subject),
-              refCount(),
-              catchError((err) => {
-                subject.complete();
-                memoryStorage.removeItem(cacheKey);
-                return throwError(err);
-              }),
+              share({ connector: () => subject, resetOnError: false, resetOnComplete: false, resetOnRefCountZero: false }),
               finalize(() => memoryStorage.removeItem(cacheKey))
             ));
       }

@@ -1,11 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, distinct, firstValueFrom, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, distinct, Observable, of, Subscription } from 'rxjs';
 import { tap, delay, finalize } from 'rxjs/operators';
 import { Md5 } from "md5-typescript";
 import { BoardService } from 'src/app/services/board.service';
-import { SignalRService } from 'src/app/services/signal-r.service';
+import { TaskHubService } from 'src/app/services/task-hub.service';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
 import { NGXLogger } from 'ngx-logger';
@@ -28,10 +28,10 @@ export class AuthService implements OnDestroy {
       distinct(),
       tap((user) => {
         if (!user) {
-          firstValueFrom(this.signalRService.taskHub.stopConnection());
+          this.signalRService.stopConnection().subscribe();
           return;
         }
-        firstValueFrom(this.signalRService.taskHub.startConnection());
+        this.signalRService.startConnection().subscribe();
         this.boardService.lastBoardId = user.lastBoardId;
       }));
 
@@ -52,7 +52,7 @@ export class AuthService implements OnDestroy {
     private router: Router,
     private http: HttpClient,
     private logger: NGXLogger,
-    private signalRService: SignalRService,
+    private signalRService: TaskHubService,
     private boardService: BoardService
   ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));

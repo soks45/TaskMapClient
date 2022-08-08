@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/services/auth';
+import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/models/user';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -25,15 +25,6 @@ export class SignUpPageComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-/*    this.subscription = this.auth.user$.subscribe((x) => {
-      if (true) {
-        const accessToken = localStorage.getItem('access_token');
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (x && accessToken && refreshToken) {
-          this.router.navigate(['main-page']);
-        }
-      } // optional touch-up: if a tab shows login page, then refresh the page to reduce duplicate login
-    });*/
   }
 
   ngOnDestroy(): void {
@@ -57,7 +48,7 @@ export class SignUpPageComponent implements OnInit, OnDestroy {
             this.router.navigate(['main-page']);
           },
           error: () => {
-            this.router.navigate(['sign-up-page']);
+            this.router.navigate(['signup']);
             this.loginError = true;
           }
         });

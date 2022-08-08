@@ -1,0 +1,90 @@
+$white: #fff;
+
+.header {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  background-color: bisque;
+
+  &__content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__left {
+    margin-left: 5vh;
+    display: flex;
+    align-items: center;
+  }
+
+  &__right {
+    margin-right: 3vh;
+    display: flex;
+    align-items: center;
+  }
+
+  &__routes {
+    height: 100px;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0 100px;
+  }
+}
+
+.menu-item {
+  $b: '.menu-item';
+  height: 60px;
+  font-size: 25px;
+  position: relative;
+  text-transform: uppercase;
+  margin: 20px;
+  padding: 10px 40px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+
+  a {
+    padding: 10px 40px;
+    border-radius: 0px;
+    color: #0f2027;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .menu4 li span {
+    z-index: 100;
+    color: #111;
+    transition: all 500ms cubic-bezier(0.075, 0.81, 0.165, 1);
+  }
+
+  .menu4 li::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: calc(100% - 4px);
+    height: 0;
+    right: 0;
+    bottom: 0;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    transition: all 500ms cubic-bezier(0.075, 0.81, 0.165, 1);
+  }
+
+}
+
+.btn-4 {
+
+
+
+
+
+}
+
+

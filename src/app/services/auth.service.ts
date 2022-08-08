@@ -23,17 +23,7 @@ export class AuthService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/account`;
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
-  user$ = this._user
-    .pipe(
-      distinct(),
-      tap((user) => {
-        if (!user) {
-          this.signalRService.stopConnection().subscribe();
-          return;
-        }
-        this.signalRService.startConnection().subscribe();
-        this.boardService.lastBoardId = user.lastBoardId;
-      }));
+  user$ = this._user.pipe(distinct());
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea === localStorage) {
@@ -51,9 +41,7 @@ export class AuthService implements OnDestroy {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private logger: NGXLogger,
-    private signalRService: TaskHubService,
-    private boardService: BoardService
+    private logger: NGXLogger
   ) {
     window.addEventListener('storage', this.storageEventListener.bind(this));
   }

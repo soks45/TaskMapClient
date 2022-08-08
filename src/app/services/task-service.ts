@@ -1,3 +1,4 @@
+import { createLogErrorHandler } from '@angular/compiler-cli/ngcc/src/execution/tasks/completion';
 import { Injectable } from '@angular/core';
 import { HubConnectionState } from '@microsoft/signalr';
 import { Observable, Subject, throttleTime } from 'rxjs';
@@ -13,7 +14,7 @@ enum TaskMethodsClient {
 }
 
 enum TaskMethodsServer {
-  addTask = 'AddNewTask',
+  addTask = 'AddTask',
   editTask = 'EditTask',
   deleteTask = 'DeleteTask',
   loadTasks = 'JoinBoard'
@@ -29,9 +30,9 @@ export class TaskService {
   constructor(private signalRService: TaskHubService) {
     this.taskMovesSource$ = new Subject<TaskB>();
 
-    this.signalRService.hubConnection.on(TaskMethodsClient.addTask, (taskBServer: TaskBServer) => this.addTaskClient(this.taskBClient(taskBServer)));
-    this.signalRService.hubConnection.on(TaskMethodsClient.editTask, (taskBServer: TaskBServer) => this.editTaskClient(this.taskBClient(taskBServer)));
-    this.signalRService.hubConnection.on(TaskMethodsClient.deleteTask, (taskBServer: TaskBServer) => this.deleteTaskClient(this.taskBClient(taskBServer)));
+    this.signalRService.on(TaskMethodsClient.addTask, (taskBServer: TaskBServer) => this.addTaskClient(this.taskBClient(taskBServer)));
+    this.signalRService.on(TaskMethodsClient.editTask, (taskBServer: TaskBServer) => this.editTaskClient(this.taskBClient(taskBServer)));
+    this.signalRService.on(TaskMethodsClient.deleteTask, (taskBServer: TaskBServer) => this.deleteTaskClient(this.taskBClient(taskBServer)));
 
     this.taskMovesSource$.pipe(throttleTime(15))
       .subscribe(task => this.moveTask(task));
@@ -70,10 +71,7 @@ export class TaskService {
   }
 
   private moveTask(task: TaskB): void {
-    if (this.signalRService.state !== HubConnectionState.Connected) {
-      return;
-    }
-    this.signalRService.hubConnection.invoke(TaskMethodsServer.editTask, this.taskBServer(task));
+    this.signalRService.safeInvoke(TaskMethodsServer.editTask, this.taskBServer(task)).subscribe();
   }
 
   private addTaskClient (task: TaskB): void {
@@ -110,6 +108,7 @@ export class TaskService {
     [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
     return <TaskBServer> {
       ...task,
+      createdDate: '', // TODO remove this after imlementing on server
       coordinates: JSON.stringify(task.coordinates)
     }
   }

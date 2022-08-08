@@ -58,7 +58,7 @@ export class EditCardDialogComponent {
         .subscribe();
       return;
     }
-    console.log(editedTask);
+
     this.taskService.editTask(editedTask)
       .pipe(finalize(() => this.dialogRef.close(true)))
       .subscribe();

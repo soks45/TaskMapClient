@@ -10,7 +10,7 @@ import { TaskB } from 'src/models/task-b';
 })
 export class BoardComponent {
   tasks: TaskB[];
-  @Input() Board!: Board;
+  @Input() Board: Board | null = null;
 
   constructor(
     private taskService: TaskService
@@ -18,8 +18,7 @@ export class BoardComponent {
     this.tasks = this.taskService.tasks;
   }
 
-  @HostListener('contextmenu', ['$event'])
-  createTask(event: Event): void {
+  contextMenu(event: Event): void {
     event.stopPropagation();
     event.preventDefault();
   }

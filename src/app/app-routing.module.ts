@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './services/auth';
-
+import { AuthGuard } from 'src/app/guards/auth.guard';
 const routes: Routes = [
   {
     path: 'signup',

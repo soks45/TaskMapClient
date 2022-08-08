@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CustomIconsService } from 'src/app/services/custom-icons.service';
 
 
 @Component({
@@ -7,5 +8,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor() {}
+  constructor(private icons: CustomIconsService) {
+    this.icons.init();
+  }
 }

@@ -44,7 +44,7 @@ export class TaskHubService implements ModifiedHub {
 
   @Cached()
   public startConnection(): Observable<void> {
-    return from(this.hubConnection.start())
+    return from(this.hubConnection.start().then(() => console.log('new start conn')))
       .pipe(tap(this.newConnectionStateCallback));
   }
 

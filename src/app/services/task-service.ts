@@ -1,6 +1,4 @@
-import { createLogErrorHandler } from '@angular/compiler-cli/ngcc/src/execution/tasks/completion';
 import { Injectable } from '@angular/core';
-import { HubConnectionState } from '@microsoft/signalr';
 import { Observable, Subject, throttleTime } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Cached } from 'src/app/decorators/cached';
@@ -63,11 +61,9 @@ export class TaskService {
   }
 
   @Cached()
-  deleteTask(task: TaskB): Observable<TaskB> {
-    return this.signalRService.safeInvoke<TaskBServer>(TaskMethodsServer.deleteTask, this.taskBServer(task))
-      .pipe(
-        map(taskServer => this.taskBClient(taskServer)),
-        tap(task => this.deleteTaskClient(task)));
+  deleteTask(task: TaskB): Observable<boolean> {
+    return this.signalRService.safeInvoke<boolean>(TaskMethodsServer.deleteTask, this.taskBServer(task))
+      .pipe(tap(() => this.deleteTaskClient(task)));
   }
 
   private moveTask(task: TaskB): void {
@@ -108,7 +104,7 @@ export class TaskService {
     [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
     return <TaskBServer> {
       ...task,
-      createdDate: '', // TODO remove this after imlementing on server
+      color: 'red', // TODO remove this after error fix on server
       coordinates: JSON.stringify(task.coordinates)
     }
   }

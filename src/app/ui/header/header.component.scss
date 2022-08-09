@@ -1,12 +1,18 @@
 $white: #fff;
 
 .header {
-  width: 100%;
+  max-width: 100%;
   min-height: 100px;
   display: flex;
   justify-content: center;
   background-color: $white;
   font-size: x-large;
+
+  &__title {
+    padding-left: 5vh;
+    font-size: larger;
+    font-weight: normal;
+  }
 
   &__content {
     width: 100%;
@@ -14,7 +20,6 @@ $white: #fff;
     flex-direction: row;
     justify-content: space-between;
   }
-
 
   &__left {
     margin-left: 5vh;
@@ -25,6 +30,7 @@ $white: #fff;
   &__right {
     display: flex;
     align-items: center;
+    padding-right: 35px;
   }
 
   &__routes {
@@ -35,9 +41,10 @@ $white: #fff;
   }
 
   &__user {
+    height: 50px;
+    width: 50px;
     background-color: black;
     border-radius: 50%;
-    margin-right: 35px;
   }
 }
 
@@ -56,5 +63,9 @@ $white: #fff;
   }
 }
 
+.account-icon {
+  height: 50px;
+  width: 50px;
+}
 
 

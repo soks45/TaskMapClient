@@ -8,14 +8,18 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class CustomIconsService {
   constructor(
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
   ) {
   }
 
   init(): void {
-    this.matIconRegistry.addSvgIcon(
-      'account',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/account/svg')
-    ); // TODO implement this service
+    this.registerIcon('account', 'account');
+  }
+
+  private registerIcon(name: string, filename: string) {
+      this.matIconRegistry.addSvgIcon(
+        name,
+        this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`)
+      );
   }
 }

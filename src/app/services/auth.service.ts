@@ -1,11 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, distinct, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { tap, delay, finalize } from 'rxjs/operators';
 import { Md5 } from "md5-typescript";
-import { BoardService } from 'src/app/services/board.service';
-import { TaskHubService } from 'src/app/services/task-hub.service';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/models/user';
 import { NGXLogger } from 'ngx-logger';
@@ -18,12 +16,12 @@ interface LoginResult extends User {
 @Injectable({
   providedIn: 'root',
 })
-
+// TODO refactor this service
 export class AuthService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/account`;
   private timer: Subscription | null = null;
   private _user = new BehaviorSubject<User | null>(null);
-  user$ = this._user.pipe(distinct());
+  user$ = this._user;
 
   private storageEventListener(event: StorageEvent) {
     if (event.storageArea === localStorage) {
@@ -89,7 +87,7 @@ export class AuthService implements OnDestroy {
           this.clearLocalStorage();
           this._user.next(null);
           this.stopTokenTimer();
-          this.router.navigate(['/login-page']);
+          this.router.navigate(['/login']);
         })
       )
       .subscribe();

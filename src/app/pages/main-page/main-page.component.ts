@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
-import { BoardService } from 'src/app/services/board.service';
-import { TaskService } from '../../services/task-service';
 
 @Component({
   selector: 'tm-main-page',
@@ -9,6 +7,10 @@ import { TaskService } from '../../services/task-service';
   styleUrls: ['./main-page.component.scss']
 })
 export class MainPageComponent {
-  constructor(private taskService: TaskService, private boardService: BoardService, private auth: AuthService) {
+  constructor(private auth: AuthService) {
+  }
+
+  logout(): void {
+    this.auth.logout();
   }
 }

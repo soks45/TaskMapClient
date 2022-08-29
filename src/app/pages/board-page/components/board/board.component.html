@@ -1,12 +1,11 @@
-<div class="board">
-  <div *ngIf="Board; else empty">
-    <div class="board__content container" (contextmenu)="contextMenu($event)">
-      <div *ngFor="let task of tasks">
-        <tm-card [task]="task"></tm-card>
-      </div>
+<div *ngIf="Board; else empty"
+     class="container board__content"
+     (contextmenu)="contextMenu($event)"
+>
+    <div *ngFor="let task of tasks">
+      <tm-card [task]="task"></tm-card>
     </div>
-  </div>
-  <ng-template #empty>
-    You have no boards
-  </ng-template>
 </div>
+<ng-template #empty>
+  You have no boards
+</ng-template>

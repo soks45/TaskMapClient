@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EditCardDialogComponent } from 'src/app/pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 
-describe('CreateCardDialogComponent', () => {
+xdescribe('CreateCardDialogComponent', () => {
     let component: EditCardDialogComponent;
     let fixture: ComponentFixture<EditCardDialogComponent>;
 

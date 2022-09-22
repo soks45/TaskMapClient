@@ -9,7 +9,8 @@
         "test": "ng test",
         "lint": "npx eslint \"src/**/*.{js,jsx,ts,tsx,html}\" --quiet --fix",
         "format": "npx prettier \"src/**/*.{js,jsx,ts,tsx,html,css,scss}\" --write",
-        "lint-format": "npm run format && npm run lint"
+        "lint-format": "npm run format && npm run lint",
+        "prepare": "husky install"
     },
     "private": true,
     "dependencies": {
@@ -55,6 +56,7 @@
         "karma-coverage": "~2.1.0",
         "karma-jasmine": "~4.0.0",
         "karma-jasmine-html-reporter": "~1.7.0",
-        "typescript": "~4.8.3"
+        "typescript": "~4.8.3",
+        "husky": "^8.0.0"
     }
 }

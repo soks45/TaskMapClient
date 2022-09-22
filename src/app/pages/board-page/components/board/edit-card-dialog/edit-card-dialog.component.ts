@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { Colors } from 'src/app/pages/board-page/components/board/card/card.component';
@@ -18,7 +18,7 @@ export interface BaseTask {
   styleUrls: ['./edit-card-dialog.component.scss']
 })
 export class EditCardDialogComponent {
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   Colors = Colors;
   States = [State.Main, State.Short];
   isNew = true;
@@ -27,7 +27,7 @@ export class EditCardDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<Event | TaskB>,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private taskService: TaskService,
     private auth: AuthService,
     @Inject(MAT_DIALOG_DATA) private baseTask: TaskB | BaseTask

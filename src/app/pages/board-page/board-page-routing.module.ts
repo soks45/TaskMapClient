@@ -3,18 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { BoardPageComponent } from 'src/app/pages/board-page/board-page.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: BoardPageComponent,
-    children: [
-    ],
-  }
-]
-
-
+    {
+        path: '',
+        component: BoardPageComponent,
+        children: [],
+    },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class BoardPageRoutingModule { }
+export class BoardPageRoutingModule {}

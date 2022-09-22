@@ -1,54 +1,43 @@
 <div class="header">
-  <div class="header__content">
-    <div class="header__left">
-      <div class="header__logo">
-      </div>
-      <div class="header__title">
-        <div *ngIf="route !== '/board-page'; else boardTitle">Task Map</div>
-        <ng-template #boardTitle>
-          <div *ngIf="currentBoard; else loading">
-            {{ currentBoard.boardName }}
-          </div>
-          <ng-template #loading>
-            Task Map
-          </ng-template>
-        </ng-template>
-      </div>
+    <div class="header__content">
+        <div class="header__left">
+            <div class="header__logo"></div>
+            <div class="header__title">
+                <div *ngIf="route !== '/board-page'; else boardTitle">Task Map</div>
+                <ng-template #boardTitle>
+                    <div *ngIf="currentBoard; else loading">
+                        {{ currentBoard.boardName }}
+                    </div>
+                    <ng-template #loading> Task Map </ng-template>
+                </ng-template>
+            </div>
+        </div>
+        <div class="header__right">
+            <ng-container *ngIf="(user$ | async) !== null; then authed; else notAuthed"></ng-container>
+            <ng-template #authed>
+                <div class="header__routes">
+                    <a class="menu-item" mat-ripple [routerLink]="['/main-page']">
+                        <span class="menu-item__title">Dashboard</span>
+                    </a>
+                    <a class="menu-item" mat-ripple [routerLink]="['/board-page']">
+                        <span class="menu-item__title">Your Boards</span>
+                    </a>
+                </div>
+                <div class="header__user">
+                    <mat-icon svgIcon="account" class="account-icon"></mat-icon>
+                </div>
+            </ng-template>
+            <ng-template #notAuthed>
+                <a class="menu-item" mat-ripple [routerLink]="['/login']">
+                    <span class="menu-item__title">Log In</span>
+                </a>
+                <a class="menu-item" mat-ripple [routerLink]="['/signup']">
+                    <span class="menu-item__title">Sign Up</span>
+                </a>
+                <div class="header__user">
+                    <mat-icon svgIcon="account" class="account-icon"></mat-icon>
+                </div>
+            </ng-template>
+        </div>
     </div>
-    <div class="header__right">
-      <ng-container *ngIf="(user$ | async) !== null; then authed else notAuthed"></ng-container>
-      <ng-template #authed>
-        <div class="header__routes">
-          <a class="menu-item"
-             mat-ripple
-             [routerLink]="['/main-page']">
-            <span class="menu-item__title">Dashboard</span>
-          </a>
-          <a class="menu-item"
-             mat-ripple
-             [routerLink]="['/board-page']">
-            <span class="menu-item__title">Your Boards</span>
-          </a>
-        </div>
-        <div class="header__user">
-          <mat-icon svgIcon="account" class="account-icon"></mat-icon>
-        </div>
-      </ng-template>
-      <ng-template #notAuthed>
-        <a class="menu-item"
-           mat-ripple
-           [routerLink]="['/login']">
-          <span class="menu-item__title">Log In</span>
-        </a>
-        <a class="menu-item"
-           mat-ripple
-           [routerLink]="['/signup']">
-          <span class="menu-item__title">Sign Up</span>
-        </a>
-        <div class="header__user">
-          <mat-icon svgIcon="account" class="account-icon"></mat-icon>
-        </div>
-      </ng-template>
-    </div>
-  </div>
 </div>

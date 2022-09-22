@@ -1,5 +1,4 @@
 <div class="board-page">
-  <button (click)="createTask()">create new task</button>
-  <tm-board [Board]="(currentBoard$ | async)"></tm-board>
+    <button (click)="createTask()">create new task</button>
+    <tm-board [Board]="currentBoard$ | async"></tm-board>
 </div>
-

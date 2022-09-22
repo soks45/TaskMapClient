@@ -6,17 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CardComponent } from 'src/app/pages/board-page/components/board/card/card.component';
 
 @NgModule({
-  declarations: [
-    CardComponent
-  ],
-    imports: [
-      CommonModule,
-      MatIconModule,
-      DragDropModule,
-      MatDialogModule
-    ],
-  exports: [
-    CardComponent
-  ]
+    declarations: [CardComponent],
+    imports: [CommonModule, MatIconModule, DragDropModule, MatDialogModule],
+    exports: [CardComponent],
 })
-export class CardModule { }
+export class CardModule {}

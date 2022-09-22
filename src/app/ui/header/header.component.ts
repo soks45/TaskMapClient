@@ -9,35 +9,27 @@ import { Board } from 'src/models/board';
 import { ShortUser } from 'src/models/user';
 
 @Component({
-  selector: 'tm-header',
-  templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+    selector: 'tm-header',
+    templateUrl: './header.component.html',
+    styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent extends DestroyMixin(BaseObject) implements OnInit {
-  route?: string;
-  currentBoard?: Board;
-  user$: Observable<ShortUser | null>;
+    route?: string;
+    currentBoard?: Board;
+    user$: Observable<ShortUser | null>;
 
-  constructor(
-    private router: Router,
-    private boardService: BoardService,
-    private auth: AuthService
-  ) {
-    super();
-    this.user$ = this.auth.user$;
-  }
+    constructor(private router: Router, private boardService: BoardService, private auth: AuthService) {
+        super();
+        this.user$ = this.auth.user$;
+    }
 
-  ngOnInit(): void {
-    this.boardService.currentBoard$.pipe(takeUntil(this.destroyed$))
-      .subscribe(board => this.currentBoard = board);
+    ngOnInit(): void {
+        this.boardService.currentBoard$.pipe(takeUntil(this.destroyed$)).subscribe((board) => (this.currentBoard = board));
 
-    this.router.events
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(
-        (event: any) => {
-          if (event instanceof NavigationEnd) {
-            this.route = this.router.url;
-          }
+        this.router.events.pipe(takeUntil(this.destroyed$)).subscribe((event: any) => {
+            if (event instanceof NavigationEnd) {
+                this.route = this.router.url;
+            }
         });
-  }
+    }
 }

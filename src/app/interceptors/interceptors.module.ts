@@ -5,25 +5,21 @@ import { GlobalHttpInterceptor } from 'src/app/interceptors/global-http.itercept
 import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
 import { UnauthorizedInterceptor } from 'src/app/interceptors/unauthorized.interceptor';
 
-
-
 @NgModule({
-  declarations: [],
-  imports: [
-    CommonModule
-  ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: GlobalHttpInterceptor,
-      multi: true,
-    },
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: UnauthorizedInterceptor,
-      multi: true,
-    },
-  ]
+    declarations: [],
+    imports: [CommonModule],
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: GlobalHttpInterceptor,
+            multi: true,
+        },
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: UnauthorizedInterceptor,
+            multi: true,
+        },
+    ],
 })
-export class InterceptorsModule { }
+export class InterceptorsModule {}

@@ -5,16 +5,8 @@ import { SignUpPageComponent } from './sign-up-page.component';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
-
 @NgModule({
-  declarations: [
-    SignUpPageComponent
-  ],
-  imports: [
-    CommonModule,
-    SignUpPageRoutingModule,
-    FormsModule,
-    MatButtonModule
-  ]
+    declarations: [SignUpPageComponent],
+    imports: [CommonModule, SignUpPageRoutingModule, FormsModule, MatButtonModule],
 })
-export class SignUpPageModule { }
+export class SignUpPageModule {}

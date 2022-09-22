@@ -10,26 +10,20 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { EditCardDialogComponent } from 'src/app/pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 
-
-
 @NgModule({
-  declarations: [
-    EditCardDialogComponent
-  ],
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatRadioModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-  ],
-  exports: [
-    EditCardDialogComponent
-  ]
+    declarations: [EditCardDialogComponent],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatRadioModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+    ],
+    exports: [EditCardDialogComponent],
 })
-export class EditCardDialogModule { }
+export class EditCardDialogModule {}

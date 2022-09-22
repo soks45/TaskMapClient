@@ -1,7 +1,6 @@
 <p>login-page works!</p>
-<form >
-  <input type="text" [(ngModel)]="username" [ngModelOptions]="{standalone: true}">
-  <input type="text" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
-  <button (click)="MD5log()">MD5 log</button>
-  <button mat-raised-button color="warn" (click)="onLogin()">LOGIN</button>
+<form>
+    <input type="text" [(ngModel)]="username" [ngModelOptions]="{ standalone: true }" />
+    <input type="text" [(ngModel)]="password" [ngModelOptions]="{ standalone: true }" />
+    <button mat-raised-button color="warn" (click)="onLogin()">LOGIN</button>
 </form>

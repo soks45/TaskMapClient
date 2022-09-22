@@ -5,17 +5,8 @@ import { LoginPageRoutingModule } from 'src/app/pages/login-page/login-page-rout
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
-
-
 @NgModule({
-  declarations: [
-    LoginPageComponent
-  ],
-  imports: [
-    CommonModule,
-    LoginPageRoutingModule,
-    FormsModule,
-    MatButtonModule
-  ]
+    declarations: [LoginPageComponent],
+    imports: [CommonModule, LoginPageRoutingModule, FormsModule, MatButtonModule],
 })
-export class LoginPageModule { }
+export class LoginPageModule {}

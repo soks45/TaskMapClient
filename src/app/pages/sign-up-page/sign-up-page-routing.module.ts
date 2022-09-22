@@ -3,16 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { SignUpPageComponent } from 'src/app/pages/sign-up-page/sign-up-page.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    component: SignUpPageComponent,
-    children: [
-    ],
-  }
-]
+    {
+        path: '',
+        component: SignUpPageComponent,
+        children: [],
+    },
+];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule],
 })
-export class SignUpPageRoutingModule { }
+export class SignUpPageRoutingModule {}

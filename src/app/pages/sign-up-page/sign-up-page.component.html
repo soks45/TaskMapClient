@@ -1,9 +1,9 @@
 <p>sign-up-page works!</p>
-<Form >
-  <input type="text" placeholder="first name" [(ngModel)]="fName" [ngModelOptions]="{standalone: true}">
-  <input type="text" placeholder="second name" [(ngModel)]="LName" [ngModelOptions]="{standalone: true}">
-  <input type="email" placeholder="email" [(ngModel)]="email" [ngModelOptions]="{standalone: true}">
-  <input type="password" placeholder="password" [(ngModel)]="password" [ngModelOptions]="{standalone: true}">
-  <input type="password" placeholder="confirm your password" [(ngModel)]="password2" [ngModelOptions]="{standalone: true}">
+<Form>
+    <input type="text" placeholder="first name" [(ngModel)]="fName" [ngModelOptions]="{ standalone: true }" />
+    <input type="text" placeholder="second name" [(ngModel)]="LName" [ngModelOptions]="{ standalone: true }" />
+    <input type="email" placeholder="email" [(ngModel)]="email" [ngModelOptions]="{ standalone: true }" />
+    <input type="password" placeholder="password" [(ngModel)]="password" [ngModelOptions]="{ standalone: true }" />
+    <input type="password" placeholder="confirm your password" [(ngModel)]="password2" [ngModelOptions]="{ standalone: true }" />
 </Form>
 <button mat-raised-button (click)="trySignUp()">Sign Up</button>

@@ -1,0 +1,53 @@
+<form [formGroup]="formGroup" class="sign-up-form">
+    <section class="sign-up-form__content">
+        <mat-form-field appearance="fill">
+            <mat-label>First name</mat-label>
+            <input type="text" matInput formControlName="firstName" autocomplete="true">
+            <mat-error>
+            <span *ngIf="formGroup.controls['firstName'].errors && formGroup.controls['firstName'].errors['required']">
+                This field is required
+            </span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Last name</mat-label>
+            <input type="text" matInput formControlName="lastName">
+            <mat-error>
+            <span *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['required']">
+                This field is required
+            </span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput formControlName="email">
+            <mat-error>
+            <span *ngIf="formGroup.controls['email'].errors && formGroup.controls['email'].errors['required']">
+                This field is required
+            </span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName="password">
+            <mat-error>
+            <span *ngIf="formGroup.controls['password'].errors && formGroup.controls['password'].errors['required']">
+                This field is required
+            </span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+            <mat-label>Password confirm</mat-label>
+            <input type="password" matInput formControlName="passwordConfirm">
+            <mat-error>
+            <span
+                *ngIf="formGroup.controls['passwordConfirm'].errors && formGroup.controls['passwordConfirm'].errors['required']">
+                This field is required
+            </span>
+            </mat-error>
+        </mat-form-field>
+    </section>
+    <div class="sign-up-form__actions">
+        <button mat-button mat-raised-button>sign up</button>
+    </div>
+</form>

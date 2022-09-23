@@ -40,6 +40,9 @@
                 <span *ngIf="formGroup.controls['email'].errors && formGroup.controls['email'].errors['maxlength']">
                     Too many symbols
                 </span>
+                <span *ngIf="formGroup.controls['email'].errors && formGroup.controls['email'].errors['email']">
+                    Wrong format of email
+                </span>
             </mat-error>
         </mat-form-field>
         <div formGroupName="passwords">

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BoardModule } from 'src/app/pages/board-page/components/board/board.module';
+import { BoardModule } from '@pages/board-page/components/board/board.module';
 
 import { BoardPageRoutingModule } from './board-page-routing.module';
 import { BoardPageComponent } from './board-page.component';

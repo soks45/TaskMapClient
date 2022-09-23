@@ -1,7 +1,7 @@
-import { Component, HostListener, Input } from '@angular/core';
-import { TaskService } from 'src/app/services/task-service';
-import { Board } from 'src/models/board';
-import { TaskB } from 'src/models/task-b';
+import { Component, Input } from '@angular/core';
+import { TaskService } from '@services/task-service';
+import { Board } from '@models/board';
+import { TaskB } from '@models/task-b';
 
 @Component({
     selector: 'tm-board',

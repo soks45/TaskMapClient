@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NGXLogger } from 'ngx-logger';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '@services/auth.service';
 
 @Component({
     selector: 'tm-login-page',
@@ -12,7 +11,7 @@ export class LoginPageComponent {
     username = '';
     password = '';
 
-    constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private logger: NGXLogger) {}
+    constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) {}
 
     onLogin(): void {
         if (!this.username || !this.password) {

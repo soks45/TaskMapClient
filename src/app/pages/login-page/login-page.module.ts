@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginPageComponent } from './login-page.component';
-import { LoginPageRoutingModule } from 'src/app/pages/login-page/login-page-routing.module';
+import { LoginPageRoutingModule } from '@pages/login-page/login-page-routing.module';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 

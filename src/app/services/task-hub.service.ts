@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
+import { Cached } from '@decorators/cached';
+import { environment } from '@environments/environment';
 import * as signalR from '@microsoft/signalr';
-import { HubConnection, HubConnectionState, IRetryPolicy, LogLevel, RetryContext } from '@microsoft/signalr';
+import { HubConnectionState, IRetryPolicy, LogLevel, RetryContext } from '@microsoft/signalr';
 import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, distinct, from, Observable, switchMap, tap } from 'rxjs';
-import { Cached } from 'src/app/decorators/cached';
-import { environment } from 'src/environments/environment';
 
 interface ModifiedHub {
     readonly connectionState$: Observable<HubConnectionState>;
+
     startConnection(): Observable<void>;
+
     stopConnection(): Observable<void>;
+
     on(methodName: string, args: any): void;
 }
 

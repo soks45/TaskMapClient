@@ -1,9 +1,9 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GlobalHttpInterceptor } from 'src/app/interceptors/global-http.iterceptor';
-import { JwtInterceptor } from 'src/app/interceptors/jwt.interceptor';
-import { UnauthorizedInterceptor } from 'src/app/interceptors/unauthorized.interceptor';
+import { GlobalHttpInterceptor } from '@interceptors/global-http.iterceptor';
+import { JwtInterceptor } from '@interceptors/jwt.interceptor';
+import { UnauthorizedInterceptor } from '@interceptors/unauthorized.interceptor';
 
 @NgModule({
     declarations: [],

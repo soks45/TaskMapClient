@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, switchMap, takeUntil, throwError } from 'rxjs';
-import { DestroyMixin } from 'src/app/mixins/destroy.mixin';
-import { BaseObject } from 'src/app/mixins/mixins';
-import { BaseTask, EditCardDialogComponent } from 'src/app/pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
-import { AuthService } from 'src/app/services/auth.service';
-import { BoardService } from 'src/app/services/board.service';
-import { TaskService } from 'src/app/services/task-service';
-import { Board } from 'src/models/board';
-import { User } from 'src/models/user';
+import { DestroyMixin } from '@mixins/destroy.mixin';
+import { BaseObject } from '@mixins/mixins';
+import { BaseTask, EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import { AuthService } from '@services/auth.service';
+import { BoardService } from '@services/board.service';
+import { TaskService } from '@services/task-service';
+import { Board } from '@models/board';
+import { User } from '@models/user';
 
 @Component({
     selector: 'tm-board-page',

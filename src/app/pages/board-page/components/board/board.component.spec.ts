@@ -1,7 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { BoardComponent } from 'src/app/pages/board-page/components/board/board.component';
+import { BoardComponent } from '@pages/board-page/components/board/board.component';
 
 xdescribe('BoardComponent', () => {
     let component: BoardComponent;

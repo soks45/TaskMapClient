@@ -1,8 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { AuthService } from 'src/app/services/auth.service';
-import { User } from 'src/models/user';
+import { AuthService } from '@services/auth.service';
+import { User } from '@models/user';
 
 @Component({
     selector: 'tm-sign-up-page',

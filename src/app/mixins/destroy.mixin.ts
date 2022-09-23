@@ -1,5 +1,5 @@
 import { Directive, OnDestroy } from '@angular/core';
-import { Constructor } from 'src/app/mixins/mixins';
+import { Constructor } from '@mixins/mixins';
 import { Observable, Subject } from 'rxjs';
 
 export function DestroyMixin<TBase extends Constructor>(Base: TBase) {

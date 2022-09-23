@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, ReplaySubject, tap } from 'rxjs';
-import { Cached } from 'src/app/decorators/cached';
-import { TaskService } from 'src/app/services/task-service';
-import { environment } from 'src/environments/environment';
-import { Board } from 'src/models/board';
-import { TaskB } from 'src/models/task-b';
+import { Cached } from '@decorators/cached';
+import { TaskService } from '@services/task-service';
+import { environment } from '@environments/environment';
+import { Board } from '@models/board';
+import { TaskB } from '@models/task-b';
 
 @Injectable({
     providedIn: 'root',

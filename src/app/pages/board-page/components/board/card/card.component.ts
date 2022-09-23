@@ -2,11 +2,11 @@ import { CdkDragMove } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { takeUntil } from 'rxjs';
-import { DestroyMixin } from 'src/app/mixins/destroy.mixin';
-import { BaseObject } from 'src/app/mixins/mixins';
-import { EditCardDialogComponent } from 'src/app/pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
-import { TaskService } from 'src/app/services/task-service';
-import { TaskB } from 'src/models/task-b';
+import { DestroyMixin } from '@mixins/destroy.mixin';
+import { BaseObject } from '@mixins/mixins';
+import { EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import { TaskService } from '@services/task-service';
+import { TaskB } from '@models/task-b';
 
 export const Colors = ['purple', 'green', 'red'];
 

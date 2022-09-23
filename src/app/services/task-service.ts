@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Cached } from '@decorators/cached';
+import { TaskB, TaskBServer } from '@models/task-b';
+import { TaskHubService } from '@services/task-hub.service';
 import { Observable, Subject, throttleTime } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Cached } from 'src/app/decorators/cached';
-import { TaskHubService } from 'src/app/services/task-hub.service';
-import { TaskB, TaskBServer } from 'src/models/task-b';
 
 enum TaskMethodsClient {
     addTask = 'newTask',

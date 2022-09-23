@@ -2,10 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
-import { Colors } from 'src/app/pages/board-page/components/board/card/card.component';
-import { AuthService } from 'src/app/services/auth.service';
-import { TaskService } from 'src/app/services/task-service';
-import { State, TaskB } from 'src/models/task-b';
+import { Colors } from '@pages/board-page/components/board/card/card.component';
+import { AuthService } from '@services/auth.service';
+import { TaskService } from '@services/task-service';
+import { State, TaskB } from '@models/task-b';
 
 export interface BaseTask {
     userId: number;

@@ -1,4 +1,4 @@
-import { ChartModel } from 'src/models/chart-model';
+import { ChartModel } from '@models/chart-model';
 
 export enum State {
     Main,

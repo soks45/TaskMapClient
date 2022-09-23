@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { tap, delay, finalize } from 'rxjs/operators';
 import { Md5 } from 'md5-typescript';
-import { environment } from 'src/environments/environment';
-import { User } from 'src/models/user';
+import { environment } from '@environments/environment';
+import { User } from '@models/user';
 import { NGXLogger } from 'ngx-logger';
 
 interface LoginResult extends User {
@@ -50,15 +50,23 @@ export class AuthService implements OnDestroy {
         const firstName = user.firstName;
         const lastName = user.lastName;
         const md5PasswordHash = Md5.init(password);
-        return this.http.post<LoginResult>(`${this.apiUrl}/register`, { userId, email, firstName, lastName, md5PasswordHash }).pipe(
-            tap((x: LoginResult) => {
-                this.logger.info(x);
-                this._user.next({ ...x });
-                this.setLocalStorage(x);
-                this.startTokenTimer();
-                return x;
+        return this.http
+            .post<LoginResult>(`${this.apiUrl}/register`, {
+                userId,
+                email,
+                firstName,
+                lastName,
+                md5PasswordHash,
             })
-        );
+            .pipe(
+                tap((x: LoginResult) => {
+                    this.logger.info(x);
+                    this._user.next({ ...x });
+                    this.setLocalStorage(x);
+                    this.startTokenTimer();
+                    return x;
+                })
+            );
     }
 
     login(username: string, _password: string): Observable<LoginResult> {

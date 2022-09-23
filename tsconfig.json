@@ -33,7 +33,10 @@
                 "environments/*"
             ],
             "@directives/*": [
-                "directives/*"
+                "app/directives/*"
+            ],
+            "@validators/*": [
+                "app/validators/*"
             ]
         },
         "outDir": "./dist/out-tsc",

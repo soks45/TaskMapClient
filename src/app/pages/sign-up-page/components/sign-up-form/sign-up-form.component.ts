@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject, Constructor } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
-import { CustomValidators } from 'app/validators/custom-validators';
+import { CustomValidators } from '@validators/custom-validators';
 import { NGXLogger } from 'ngx-logger';
 import { finalize } from 'rxjs/operators';
 

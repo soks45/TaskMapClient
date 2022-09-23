@@ -1,12 +1,12 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { tap, delay, finalize } from 'rxjs/operators';
-import { Md5 } from 'md5-typescript';
 import { environment } from '@environments/environment';
-import { User } from '@models/user';
+import { InputUser, User } from '@models/user';
+import { Md5 } from 'md5-typescript';
 import { NGXLogger } from 'ngx-logger';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { delay, finalize, tap } from 'rxjs/operators';
 
 interface LoginResult extends User {
     accessToken: string;
@@ -44,7 +44,7 @@ export class AuthService implements OnDestroy {
         window.removeEventListener('storage', this.storageEventListener.bind(this));
     }
 
-    signup(user: User, password: string): Observable<LoginResult> {
+    signup(user: InputUser, password: string): Observable<LoginResult> {
         const userId = 0;
         const email = user.email;
         const firstName = user.firstName;

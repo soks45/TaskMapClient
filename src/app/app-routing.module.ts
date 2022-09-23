@@ -6,7 +6,7 @@ const routes: Routes = [
     {
         path: 'signup',
         loadChildren: () => import('@pages/sign-up-page/sign-up-page.module').then((m) => m.SignUpPageModule),
-    },
+    }, // TODO do not allow people navigate to login and signup after authed
     {
         path: 'login',
         loadChildren: () => import('@pages/login-page/login-page.module').then((m) => m.LoginPageModule),

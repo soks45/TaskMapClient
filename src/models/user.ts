@@ -1,3 +1,9 @@
+export interface InputUser {
+    email: string;
+    firstName: string;
+    lastName: string;
+}
+
 export interface ShortUser {
     userId: number;
     email: string;

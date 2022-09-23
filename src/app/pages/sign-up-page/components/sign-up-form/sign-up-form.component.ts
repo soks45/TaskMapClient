@@ -1,14 +1,21 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject, Constructor } from '@mixins/mixins';
+import { AuthService } from '@services/auth.service';
+import { CustomValidators } from 'app/validators/custom-validators';
+import { NGXLogger } from 'ngx-logger';
+import { finalize } from 'rxjs/operators';
 
 interface SignUpFormControls {
     firstName: string;
     lastName: string;
     email: string;
-    password: string;
-    passwordConfirm: string;
+    passwords: {
+        password: string;
+        passwordConfirm: string;
+    };
 }
 
 @Component({
@@ -18,29 +25,64 @@ interface SignUpFormControls {
     encapsulation: ViewEncapsulation.None,
 })
 export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormControls>(BaseObject) {
-    constructor(private formBuilder: FormBuilder) {
+    isLoading = false;
+
+    constructor(private formBuilder: FormBuilder, private authService: AuthService, private logger: NGXLogger, private router: Router) {
         super();
         this.formGroup = this.formBuilder.group({
             firstName: new FormControl('', {
                 initialValueIsDefault: true,
-                validators: [Validators.required],
+                validators: [Validators.required, Validators.maxLength(255)],
             }),
             lastName: new FormControl('', {
                 initialValueIsDefault: true,
-                validators: [Validators.required],
+                validators: [Validators.required, Validators.maxLength(255)],
             }),
             email: new FormControl('', {
                 initialValueIsDefault: true,
-                validators: [Validators.required, Validators.email],
+                validators: [Validators.required, Validators.email, Validators.maxLength(255)],
             }),
-            password: new FormControl('', {
-                initialValueIsDefault: true,
-                validators: [Validators.required],
-            }),
-            passwordConfirm: new FormControl('', {
-                initialValueIsDefault: true,
-                validators: [Validators.required],
-            }),
+            passwords: new FormGroup(
+                {
+                    password: new FormControl('', {
+                        initialValueIsDefault: true,
+                        validators: [Validators.required, Validators.maxLength(255)],
+                    }),
+                    passwordConfirm: new FormControl('', {
+                        initialValueIsDefault: true,
+                        validators: [Validators.required, Validators.maxLength(255)],
+                    }),
+                },
+                [CustomValidators.MatchValidator('password', 'passwordConfirm')]
+            ),
         });
+    }
+
+    get passwordMatchError() {
+        return this.formGroup.get(['passwords'])!.getError('mismatch') && this.formGroup.get(['passwords', 'passwordConfirm'])?.touched;
+    }
+
+    onSubmit(): void {
+        if (!this.checkForm()) {
+            return;
+        }
+
+        this.authService
+            .signup(
+                {
+                    firstName: this.formGroup.get(['firstName'])!.value,
+                    lastName: this.formGroup.get(['firstName'])!.value,
+                    email: this.formGroup.get(['email'])!.value,
+                },
+                this.formGroup.get(['passwords', 'passwordConfirm'])!.value
+            )
+            .pipe(finalize(() => (this.isLoading = false)))
+            .subscribe({
+                next: () => {
+                    this.logger.info('authed!');
+                    this.router.navigate(['/main-page']);
+                },
+                error: (error) => this.logger.error(error),
+            });
     }
 }

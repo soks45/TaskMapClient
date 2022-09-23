@@ -31,6 +31,9 @@
             ],
             "@environments/*": [
                 "environments/*"
+            ],
+            "@directives/*": [
+                "directives/*"
             ]
         },
         "outDir": "./dist/out-tsc",

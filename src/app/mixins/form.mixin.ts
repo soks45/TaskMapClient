@@ -11,6 +11,10 @@ export function FormMixin<TBase extends Constructor, T extends Record<string, an
     abstract class FormMixinClass extends Base {
         formGroup!: FormGroup<ControlsOf<T>>;
 
+        abstract onSubmit(): void;
+
+        abstract isLoading: boolean;
+
         protected constructor(...args: any[]) {
             super(args);
         }

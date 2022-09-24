@@ -1,12 +1,12 @@
 export interface InputUser {
-    email: string;
+    username: string;
     firstName: string;
     lastName: string;
 }
 
 export interface ShortUser {
     userId: number;
-    email: string;
+    username: string;
     firstName: string;
     lastName: string;
     lastBoardId: number;

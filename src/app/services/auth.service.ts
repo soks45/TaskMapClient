@@ -46,16 +46,11 @@ export class AuthService implements OnDestroy {
 
     signup(user: InputUser, password: string): Observable<LoginResult> {
         const userId = 0;
-        const email = user.email;
-        const firstName = user.firstName;
-        const lastName = user.lastName;
         const md5PasswordHash = Md5.init(password);
         return this.http
             .post<LoginResult>(`${this.apiUrl}/register`, {
                 userId,
-                email,
-                firstName,
-                lastName,
+                ...user,
                 md5PasswordHash,
             })
             .pipe(

@@ -11,7 +11,7 @@ import { finalize } from 'rxjs/operators';
 interface SignUpFormControls {
     firstName: string;
     lastName: string;
-    email: string;
+    username: string;
     passwords: {
         password: string;
         passwordConfirm: string;
@@ -38,9 +38,9 @@ export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormContro
                 initialValueIsDefault: true,
                 validators: [Validators.required, Validators.maxLength(255)],
             }),
-            email: new FormControl('', {
+            username: new FormControl('', {
                 initialValueIsDefault: true,
-                validators: [Validators.required, Validators.email, Validators.maxLength(255)],
+                validators: [Validators.required, Validators.maxLength(255)],
             }),
             passwords: new FormGroup(
                 {
@@ -71,8 +71,8 @@ export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormContro
             .signup(
                 {
                     firstName: this.formGroup.get(['firstName'])!.value,
-                    lastName: this.formGroup.get(['firstName'])!.value,
-                    email: this.formGroup.get(['email'])!.value,
+                    lastName: this.formGroup.get(['lastName'])!.value,
+                    username: this.formGroup.get(['username'])!.value,
                 },
                 this.formGroup.get(['passwords', 'passwordConfirm'])!.value
             )

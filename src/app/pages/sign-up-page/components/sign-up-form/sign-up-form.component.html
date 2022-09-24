@@ -4,10 +4,12 @@
             <mat-label>First name</mat-label>
             <input type="text" matInput formControlName="firstName" autocomplete="true" />
             <mat-error>
-                <span *ngIf="formGroup.controls['firstName'].errors && formGroup.controls['firstName'].errors['required']">
+                <span
+                    *ngIf="formGroup.controls['firstName'].errors && formGroup.controls['firstName'].errors['required']">
                     This field is required
                 </span>
-                <span *ngIf="formGroup.controls['firstName'].errors && !!formGroup.controls['firstName'].errors['maxlength']">
+                <span
+                    *ngIf="formGroup.controls['firstName'].errors && !!formGroup.controls['firstName'].errors['maxlength']">
                     Too many symbols
                 </span>
             </mat-error>
@@ -16,10 +18,12 @@
             <mat-label>Last name</mat-label>
             <input type="text" matInput formControlName="lastName" />
             <mat-error>
-                <span *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['required']">
+                <span
+                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['required']">
                     This field is required
                 </span>
-                <span *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['maxlength']">
+                <span
+                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['maxlength']">
                     Too many symbols
                 </span>
             </mat-error>
@@ -28,10 +32,12 @@
             <mat-label>Username</mat-label>
             <input type="text" matInput formControlName="username" />
             <mat-error>
-                <span *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']">
+                <span
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']">
                     This field is required
                 </span>
-                <span *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']">
+                <span
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']">
                     Too many symbols
                 </span>
             </mat-error>
@@ -39,7 +45,13 @@
         <div formGroupName="passwords">
             <mat-form-field appearance="fill">
                 <mat-label>Password</mat-label>
-                <input type="password" matInput formControlName="password" />
+                <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
+                <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                    <mat-icon>
+                        {{ hide ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                </button>
                 <mat-error>
                     <span
                         *ngIf="
@@ -61,7 +73,7 @@
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Password confirm</mat-label>
-                <input type="password" matInput formControlName="passwordConfirm" />
+                <input [type]="hide ? 'password' : 'text'" matInput formControlName="passwordConfirm" />
                 <mat-error>
                     <span
                         *ngIf="

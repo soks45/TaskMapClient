@@ -20,6 +20,7 @@ interface LoginFormControls {
 })
 export class LoginFormComponent extends FormMixin<Constructor, LoginFormControls>(BaseObject) {
     isLoading = false;
+    hide = true;
 
     constructor(private formBuilder: FormBuilder, private authService: AuthService, private logger: NGXLogger, private router: Router) {
         super();

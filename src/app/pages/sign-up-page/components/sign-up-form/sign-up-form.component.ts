@@ -26,6 +26,7 @@ interface SignUpFormControls {
 })
 export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormControls>(BaseObject) {
     isLoading = false;
+    hide = true;
 
     constructor(private formBuilder: FormBuilder, private authService: AuthService, private logger: NGXLogger, private router: Router) {
         super();

@@ -3,15 +3,15 @@
     border-radius: 15px !important;
 
     &--success {
-        background: linear-gradient(270deg, #89f994 15.6%, rgba(137, 249, 141, 0.6) 100%) !important;
+        background: linear-gradient(90deg, #89f994 15.6%, rgba(137, 249, 141, 0.6) 100%) !important;
     }
 
     &--error {
-        background: linear-gradient(270deg, #f98989 15.6%, rgba(249, 137, 137, 0.6) 100%) !important;
+        background: linear-gradient(90deg, #f98989 15.6%, rgba(249, 137, 137, 0.6) 100%) !important;
     }
 
     &--info {
-        background: linear-gradient(270deg, #89cef9 15.6%, rgba(137, 223, 249, 0.6) 100%) !important;
+        background: linear-gradient(90deg, #89cef9 15.6%, rgba(137, 223, 249, 0.6) 100%) !important;
     }
 }
 

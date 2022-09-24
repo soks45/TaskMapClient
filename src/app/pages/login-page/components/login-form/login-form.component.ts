@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject, Constructor } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
+import { MessagesService } from '@services/messages.service';
 import { NGXLogger } from 'ngx-logger';
 import { finalize } from 'rxjs/operators';
 
@@ -22,7 +23,13 @@ export class LoginFormComponent extends FormMixin<Constructor, LoginFormControls
     isLoading = false;
     hide = true;
 
-    constructor(private formBuilder: FormBuilder, private authService: AuthService, private logger: NGXLogger, private router: Router) {
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService,
+        private logger: NGXLogger,
+        private router: Router,
+        private messages: MessagesService
+    ) {
         super();
         this.formGroup = this.formBuilder.group({
             username: new FormControl('', {
@@ -46,11 +53,15 @@ export class LoginFormComponent extends FormMixin<Constructor, LoginFormControls
             .login(this.formGroup.get(['username'])!.value, this.formGroup.get(['password'])!.value)
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe({
-                next: () => {
-                    this.logger.info('authed!');
+                next: (value) => {
+                    this.messages.success(`Welcome ${value.firstName} ${value.lastName}!`);
+                    this.logger.info('login');
                     this.router.navigate(['/main-page']);
                 },
-                error: (error) => this.logger.error(error),
+                error: (error) => {
+                    this.logger.error(error);
+                    this.messages.error(error);
+                },
             });
     }
 }

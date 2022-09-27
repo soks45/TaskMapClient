@@ -1,12 +1,12 @@
 import { CdkDragMove } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { takeUntil } from 'rxjs';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
-import { TaskService } from '@services/task-service';
 import { TaskB } from '@models/task-b';
+import { EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import { TaskService } from '@services/task.service';
+import { takeUntil } from 'rxjs';
 
 export const Colors = ['purple', 'green', 'red'];
 
@@ -24,7 +24,8 @@ export class CardComponent extends DestroyMixin(BaseObject) {
     }
 
     deleteTask(): void {
-        this.taskService.deleteTask(this.task).pipe(takeUntil(this.destroyed$)).subscribe();
+        console.log('delete');
+        this.taskService.delete(this.task.taskId, this.task.boardId).pipe(takeUntil(this.destroyed$)).subscribe();
     }
 
     editTask() {
@@ -45,6 +46,6 @@ export class CardComponent extends DestroyMixin(BaseObject) {
         const newPosition = element.getFreeDragPosition();
         this.task.coordinates.x = newPosition.x;
         this.task.coordinates.y = newPosition.y;
-        this.taskService.taskMovesSource$.next(this.task);
+        this.taskService.moveTask.next(this.task);
     }
 }

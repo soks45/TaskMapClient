@@ -71,11 +71,7 @@ export class BoardService implements CRUD<Board> {
             );
         }
 
-        return this.cache$.pipe(
-            tap((boards) => {
-                this.boardSource.next(boards);
-            })
-        );
+        return this.cache$.pipe(tap((boards) => this.boardSource.next(boards)));
     }
 
     private reload(): void {

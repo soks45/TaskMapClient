@@ -1,19 +1,20 @@
 import { Component, Input } from '@angular/core';
-import { TaskService } from '@services/task-service';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
+import { TaskService } from '@services/task.service';
+import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'tm-board',
+    selector: 'tm-board [Board]',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent {
-    tasks: TaskB[];
-    @Input() Board: Board | null = null;
+    tasks$: Observable<TaskB[]>;
+    @Input() Board!: Board;
 
     constructor(private taskService: TaskService) {
-        this.tasks = this.taskService.tasks;
+        this.tasks$ = this.taskService.content$;
     }
 
     contextMenu(event: Event): void {

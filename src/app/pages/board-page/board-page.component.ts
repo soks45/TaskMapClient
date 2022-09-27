@@ -5,7 +5,7 @@ import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { AuthService } from '@services/auth.service';
 import { BoardService } from '@services/board.service';
-import { TaskService } from '@services/task-service';
+import { TaskService } from '@services/task.service';
 import { UserLastBoardService } from '@services/user-last-board.service';
 import { Observable } from 'rxjs';
 
@@ -26,6 +26,7 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
     ) {
         super();
         this.currentBoard$ = this.lastBoardService.lastBoard();
+        this.currentBoard$.subscribe((value) => console.log(value));
     }
 
     get() {
@@ -63,4 +64,27 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
     switch() {
         this.lastBoardService.switchBoard(4).subscribe();
     }
+
+    addTask() {
+        this.taskService
+            .add({
+                boardId: 4,
+                taskId: 1,
+                createdDate: '',
+                taskLabel: 'SUY&PE',
+                taskText: 'dawdaw',
+                color: 'purple',
+                userId: 4,
+                state: 1,
+                coordinates: {
+                    x: 1,
+                    y: 2,
+                },
+            })
+            .subscribe();
+    }
+
+    editTask() {}
+
+    deleteTask() {}
 }

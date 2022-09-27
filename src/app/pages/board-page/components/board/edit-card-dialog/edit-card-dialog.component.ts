@@ -1,11 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { finalize } from 'rxjs/operators';
+import { State, TaskB } from '@models/task-b';
 import { Colors } from '@pages/board-page/components/board/card/card.component';
 import { AuthService } from '@services/auth.service';
-import { TaskService } from '@services/task-service';
-import { State, TaskB } from '@models/task-b';
+import { TaskService } from '@services/task.service';
+import { finalize } from 'rxjs/operators';
 
 export interface BaseTask {
     userId: number;
@@ -53,14 +53,14 @@ export class EditCardDialogComponent {
 
         if (this.isNew) {
             this.taskService
-                .addTask(editedTask)
+                .add(editedTask)
                 .pipe(finalize(() => this.dialogRef.close(true)))
                 .subscribe();
             return;
         }
 
         this.taskService
-            .editTask(editedTask)
+            .edit(editedTask)
             .pipe(finalize(() => this.dialogRef.close(true)))
             .subscribe();
     }

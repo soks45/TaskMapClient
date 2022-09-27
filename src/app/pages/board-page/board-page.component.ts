@@ -67,16 +67,4 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) implements OnIn
             });
         }
     }
-
-    showSnackBarInfo() {
-        this.messages.info('info');
-    }
-
-    showSnackBarSuccess() {
-        this.messages.success('success');
-    }
-
-    showSnackBarError() {
-        this.messages.error('error');
-    }
 }

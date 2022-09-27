@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject, tap } from 'rxjs';
-import { Cached } from '@decorators/cached';
-import { TaskService } from '@services/task-service';
+import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
+import { TaskService } from '@services/task-service';
+import { Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -21,34 +20,29 @@ export class BoardService {
         this.currentBoard$ = this.currentBoardSource$.asObservable();
     }
 
-    @Cached()
     public switchBoard(board: Board): Observable<TaskB[]> {
         return this.taskService.loadTasks(board.boardId).pipe(tap(() => this.switchBoardClient(board)));
     }
 
-    @Cached()
     public getBoards(): Observable<Board[]> {
-        return this.http.get<Board[]>(`${environment.apiUrl}/board/get-boards`).pipe(tap((boards) => this.getBoardsClient(boards)));
+        return this.http.get<Board[]>(`${environment.apiUrl}/board`).pipe(tap((boards) => this.getBoardsClient(boards)));
     }
 
-    @Cached()
     public addBoard(board: Board): Observable<Board> {
         return this.http
-            .post<Board>(`${environment.apiUrl}/board/add-board`, board, { withCredentials: true })
-            .pipe(tap((board) => this.addBoardClient(board)));
+            .post<Board>(`${environment.apiUrl}/board`, board, { withCredentials: true })
+            .pipe(tap((value) => this.addBoardClient(value)));
     }
 
-    @Cached()
     public editBoard(board: Board): Observable<Board> {
         return this.http
-            .put<Board>(`${environment.apiUrl}/board/change-board/${board.boardId}`, board, { withCredentials: true })
-            .pipe(tap((board) => this.editBoardClient(board)));
+            .put<Board>(`${environment.apiUrl}/board`, board, { withCredentials: true })
+            .pipe(tap((value) => this.editBoardClient(value)));
     }
 
-    @Cached()
-    public deleteBoard(board: Board): Observable<number> {
+    public deleteBoard(id: number): Observable<number> {
         return this.http
-            .delete<number>(`${environment.apiUrl}/board/delete-board/${board.boardId}`, { withCredentials: true })
+            .delete<number>(`${environment.apiUrl}/board/${id}`, { withCredentials: true })
             .pipe(tap((id) => this.deleteBoardClient(id)));
     }
 

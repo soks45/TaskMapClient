@@ -108,7 +108,6 @@ export class TaskService {
         [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
         return <TaskBServer>{
             ...task,
-            color: 'red', // TODO remove this after error fix on server
             coordinates: JSON.stringify(task.coordinates),
         };
     }

@@ -31,6 +31,12 @@
             ],
             "@environments/*": [
                 "environments/*"
+            ],
+            "@directives/*": [
+                "app/directives/*"
+            ],
+            "@validators/*": [
+                "app/validators/*"
             ]
         },
         "outDir": "./dist/out-tsc",

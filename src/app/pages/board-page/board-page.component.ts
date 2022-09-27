@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, switchMap, takeUntil, throwError } from 'rxjs';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
+import { Board } from '@models/board';
+import { User } from '@models/user';
 import { BaseTask, EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 import { AuthService } from '@services/auth.service';
 import { BoardService } from '@services/board.service';
+import { MessagesService } from '@services/messages.service';
 import { TaskService } from '@services/task-service';
-import { Board } from '@models/board';
-import { User } from '@models/user';
+import { Observable, switchMap, takeUntil, throwError } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
@@ -24,7 +25,8 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) implements OnIn
         private boardService: BoardService,
         private taskService: TaskService,
         private auth: AuthService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private messages: MessagesService
     ) {
         super();
         this.currentBoard$ = this.boardService.currentBoard$;
@@ -64,5 +66,17 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) implements OnIn
                 },
             });
         }
+    }
+
+    showSnackBarInfo() {
+        this.messages.info('info');
+    }
+
+    showSnackBarSuccess() {
+        this.messages.success('success');
+    }
+
+    showSnackBarError() {
+        this.messages.error('error');
     }
 }

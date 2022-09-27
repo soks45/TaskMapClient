@@ -5,10 +5,10 @@
             <div class="header__title">
                 <div *ngIf="route !== '/board-page'; else boardTitle">Task Map</div>
                 <ng-template #boardTitle>
-                    <div *ngIf="currentBoard; else loading">
-                        {{ currentBoard.boardName }}
+                    <div *ngIf="(currentBoard$ | async)?.boardName; else loading">
+                        {{ (currentBoard$ | async)?.boardName }}
                     </div>
-                    <ng-template #loading> Task Map </ng-template>
+                    <ng-template #loading> Task Map</ng-template>
                 </ng-template>
             </div>
         </div>

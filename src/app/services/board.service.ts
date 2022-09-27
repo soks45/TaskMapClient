@@ -2,74 +2,84 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Board } from '@models/board';
-import { TaskB } from '@models/task-b';
-import { TaskService } from '@services/task-service';
-import { Observable, ReplaySubject, tap } from 'rxjs';
+import { CRUD } from '@models/CRUD';
+import { MessagesService } from '@services/messages.service';
+import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
 })
-export class BoardService {
-    readonly boards: Board[] = [];
-    readonly currentBoard$: Observable<Board>;
-    private readonly currentBoardSource$: ReplaySubject<Board>;
-    lastBoardId?: number;
+export class BoardService implements CRUD<Board> {
+    readonly content$: Observable<Board[]>;
+    private boardSource: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
+    private cache$: Observable<Board[]> | undefined;
 
-    constructor(private http: HttpClient, private taskService: TaskService) {
-        this.currentBoardSource$ = new ReplaySubject<Board>(1);
-        this.currentBoard$ = this.currentBoardSource$.asObservable();
+    constructor(private http: HttpClient, private messages: MessagesService) {
+        this.content$ = this.boardSource.asObservable();
     }
 
-    public switchBoard(board: Board): Observable<TaskB[]> {
-        return this.taskService.loadTasks(board.boardId).pipe(tap(() => this.switchBoardClient(board)));
+    getById(id: number): Observable<Board> {
+        return this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true });
     }
 
-    public getBoards(): Observable<Board[]> {
-        return this.http.get<Board[]>(`${environment.apiUrl}/board`).pipe(tap((boards) => this.getBoardsClient(boards)));
+    get(): Observable<Board[]> {
+        return this.load().pipe(mergeMap(() => this.cache$!));
     }
 
-    public addBoard(board: Board): Observable<Board> {
-        return this.http
-            .post<Board>(`${environment.apiUrl}/board`, board, { withCredentials: true })
-            .pipe(tap((value) => this.addBoardClient(value)));
+    add(entity: Board): Observable<void> {
+        return this.http.post<void>(`${environment.apiUrl}/board`, entity, { withCredentials: true }).pipe(
+            catchError((err) => {
+                throw err;
+            }),
+            tap(() => this.reload())
+        );
     }
 
-    public editBoard(board: Board): Observable<Board> {
-        return this.http
-            .put<Board>(`${environment.apiUrl}/board`, board, { withCredentials: true })
-            .pipe(tap((value) => this.editBoardClient(value)));
+    edit(entity: Board): Observable<void> {
+        return this.http.put<void>(`${environment.apiUrl}/board`, entity, { withCredentials: true }).pipe(
+            catchError((err) => {
+                throw err;
+            }),
+            tap(() => this.reload())
+        );
     }
 
-    public deleteBoard(id: number): Observable<number> {
-        return this.http
-            .delete<number>(`${environment.apiUrl}/board/${id}`, { withCredentials: true })
-            .pipe(tap((id) => this.deleteBoardClient(id)));
+    delete(id: number): Observable<void> {
+        return this.http.delete<void>(`${environment.apiUrl}/board/${id}`, { withCredentials: true }).pipe(
+            catchError((err) => {
+                throw err;
+            }),
+            tap(() => this.reload())
+        );
     }
 
-    private getBoardsClient(boards: Board[]): void {
-        this.boards.splice(0, this.boards.length);
-        boards.forEach((board) => this.boards.push(board));
-    }
-
-    private addBoardClient(board: Board): void {
-        this.boards.push(board);
-    }
-
-    private editBoardClient(board: Board): void {
-        const index = this.boards.findIndex((item) => item.boardId === board.boardId);
-        if (index !== -1) {
-            this.boards[index] = board;
+    private load(): Observable<Board[]> {
+        if (!this.cache$) {
+            this.cache$ = this.http.get<Board[]>(`${environment.apiUrl}/board`, { withCredentials: true }).pipe(
+                share({
+                    connector: () => new AsyncSubject(),
+                    resetOnError: false,
+                    resetOnComplete: false,
+                    resetOnRefCountZero: false,
+                }),
+                catchError((err) => {
+                    this.messages.error(err);
+                    this.cache$ = undefined;
+                    throw err;
+                })
+            );
         }
+
+        return this.cache$.pipe(
+            tap((boards) => {
+                this.boardSource.next(boards);
+            })
+        );
     }
 
-    private deleteBoardClient(id: number): void {
-        const index = this.boards.findIndex((item) => item.boardId === id);
-        if (index !== -1) {
-            this.boards.splice(index, 1);
-        }
-    }
-
-    private switchBoardClient(board: Board): void {
-        this.currentBoardSource$.next(board);
+    private reload(): void {
+        this.cache$ = undefined;
+        this.load().subscribe();
     }
 }

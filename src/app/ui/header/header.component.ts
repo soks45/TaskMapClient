@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
-import { ShortUser } from '@models/user';
+import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
-import { BoardService } from '@services/board.service';
+import { UserLastBoardService } from '@services/user-last-board.service';
 import { Observable, takeUntil } from 'rxjs';
 
 @Component({
@@ -13,18 +13,15 @@ import { Observable, takeUntil } from 'rxjs';
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent extends DestroyMixin(BaseObject) implements OnInit {
-    route?: string;
-    currentBoard?: Board;
-    user$: Observable<ShortUser | null>;
+export class HeaderComponent extends DestroyMixin(BaseObject) {
+    route: string = this.router.url;
+    currentBoard$: Observable<Board>;
+    user$: Observable<User | null>;
 
-    constructor(private router: Router, private boardService: BoardService, private auth: AuthService) {
+    constructor(private router: Router, private lastBoardService: UserLastBoardService, private auth: AuthService) {
         super();
+        this.currentBoard$ = this.lastBoardService.lastBoard$;
         this.user$ = this.auth.user$;
-    }
-
-    ngOnInit(): void {
-        this.boardService.currentBoard$.pipe(takeUntil(this.destroyed$)).subscribe((board) => (this.currentBoard = board));
 
         this.router.events.pipe(takeUntil(this.destroyed$)).subscribe((event: any) => {
             if (event instanceof NavigationEnd) {

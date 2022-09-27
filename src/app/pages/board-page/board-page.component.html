@@ -1,8 +1,13 @@
 <div class="board-page">
+    <button (click)="get()">get</button>
+    <button (click)="add()">add</button>
+    <button (click)="edit()">edit</button>
+    <button (click)="delete()">delete</button>
+
+
     <button (click)="createTask()">create new task</button>
     <button (click)="showSnackBarInfo()">show snack bar info</button>
     <button (click)="showSnackBarSuccess()">show snack bar success</button>
     <button (click)="showSnackBarError()">show snack bar error</button>
-
     <tm-board [Board]="currentBoard$ | async"></tm-board>
 </div>

@@ -79,4 +79,36 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) implements OnIn
     showSnackBarError() {
         this.messages.error('error');
     }
+
+    get(): void {
+        this.boardService.getBoards().subscribe((res) => console.log(res));
+    }
+
+    add(): void {
+        this.boardService
+            .addBoard({
+                boardId: 1,
+                boardName: 'board',
+                userId: 3,
+                boardDescription: 'dawwad',
+                createdDate: 'dwa',
+            })
+            .subscribe((res) => console.log(res));
+    }
+
+    edit(): void {
+        this.boardService
+            .editBoard({
+                boardId: 7,
+                boardName: 'editedboard',
+                userId: 3,
+                boardDescription: 'dawwad',
+                createdDate: 'dwa',
+            })
+            .subscribe((res) => console.log(res));
+    }
+
+    delete(): void {
+        this.boardService.deleteBoard(7).subscribe((res) => console.log(res));
+    }
 }

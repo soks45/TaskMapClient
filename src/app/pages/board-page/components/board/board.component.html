@@ -3,8 +3,5 @@
     <div *ngFor="let task of (tasks$ | async)">
         <tm-card [task]="task"></tm-card>
     </div>
-    <div>
-        
-    </div>
 </div>
 <ng-template #empty> You have no boards</ng-template>

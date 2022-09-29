@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Board } from '@models/board';
-import { BoardService } from '@services/board.service';
 import { MessagesService } from '@services/messages.service';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -11,16 +10,16 @@ import { catchError } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class CurrentBoardService {
-    readonly lastBoard$: Observable<Board>;
-    private lastBoardSource: ReplaySubject<Board> = new ReplaySubject<Board>(1);
+    readonly currentBoard$: Observable<Board>;
+    private currentBoardSource: ReplaySubject<Board> = new ReplaySubject<Board>(1);
     private cache$: Observable<Board> | undefined;
 
-    constructor(private http: HttpClient, private messages: MessagesService, private boardService: BoardService) {
-        this.lastBoard$ = this.lastBoardSource.asObservable();
+    constructor(private http: HttpClient, private messages: MessagesService) {
+        this.currentBoard$ = this.currentBoardSource.asObservable();
     }
 
-    lastBoard(): Observable<Board> {
-        return this.load().pipe(mergeMap(() => this.lastBoard$));
+    currentBoard(): Observable<Board> {
+        return this.load().pipe(mergeMap(() => this.currentBoard$));
     }
 
     switchBoard(id: number): Observable<void> {
@@ -51,10 +50,14 @@ export class CurrentBoardService {
                     this.cache$ = undefined;
                     throw err;
                 }),
-                mergeMap((id) => this.boardService.getById(id))
+                mergeMap((id) => this.getBoard(id))
             );
         }
 
-        return this.cache$.pipe(tap((board) => this.lastBoardSource.next(board)));
+        return this.cache$.pipe(tap((board) => this.currentBoardSource.next(board)));
+    }
+
+    private getBoard(id: number): Observable<Board> {
+        return this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true });
     }
 }

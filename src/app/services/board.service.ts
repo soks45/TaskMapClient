@@ -20,10 +20,6 @@ export class BoardService implements CRUD<Board> {
         this.content$ = this.boardSource.asObservable();
     }
 
-    getById(id: number): Observable<Board> {
-        return this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true });
-    }
-
     get(): Observable<Board[]> {
         return this.load().pipe(mergeMap(() => this.content$));
     }

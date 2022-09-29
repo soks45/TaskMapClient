@@ -20,7 +20,7 @@ export class HeaderComponent extends DestroyMixin(BaseObject) {
 
     constructor(private router: Router, private lastBoardService: CurrentBoardService, private auth: AuthService) {
         super();
-        this.currentBoard$ = this.lastBoardService.lastBoard$;
+        this.currentBoard$ = this.lastBoardService.currentBoard$;
         this.user$ = this.auth.user$;
 
         this.router.events.pipe(takeUntil(this.destroyed$)).subscribe((event: any) => {

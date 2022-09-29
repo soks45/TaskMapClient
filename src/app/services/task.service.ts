@@ -4,30 +4,27 @@ import { environment } from '@environments/environment';
 import { CRUD } from '@models/CRUD';
 import { TaskB, TaskBServer } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
+import { CurrentBoardService } from '@services/current-board.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
-import { asyncScheduler, AsyncSubject, BehaviorSubject, mergeMap, Observable, share, Subject, tap, throttleTime } from 'rxjs';
+import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TaskService implements CRUD<TaskB> {
-    readonly moveTask: Subject<TaskB> = new Subject<TaskB>();
     readonly content: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
     private taskSource: MemoryStorage<number, BehaviorSubject<TaskB[]>> = new MemoryStorage();
     private cache: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
 
-    constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {
-        this.moveTask
-            .pipe(
-                throttleTime(20, asyncScheduler, {
-                    leading: true,
-                    trailing: true,
-                }),
-                tap((task) => this.move(task).subscribe())
-            )
-            .subscribe();
+    constructor(
+        private http: HttpClient,
+        private messages: MessagesService,
+        private converter: ConverterService,
+        private currentBoardService: CurrentBoardService
+    ) {
+        this.currentBoardService.currentBoard$.pipe(tap((board) => this.reload(board.boardId))).subscribe();
     }
 
     get(id: number): Observable<TaskB[]> {
@@ -61,17 +58,26 @@ export class TaskService implements CRUD<TaskB> {
         );
     }
 
+    moveTask(entity: TaskB): Observable<void> {
+        return this.http.put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true }).pipe(
+            catchError((err) => {
+                throw err;
+            })
+        );
+    }
+
     addSource(id: number): void {
         console.log('addSource', id);
         const source: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
         this.taskSource.setItem(id, source);
-        this.content.setItem(id, source.asObservable());
+        this.content.setItem(id, source.asObservable().pipe(tap(console.log)));
     }
 
     removeSource(id: number): void {
         console.log('removeSource', id);
         const source = this.taskSource.getItem(id);
         source?.complete();
+        source?.unsubscribe();
         this.taskSource.removeItem(id);
         this.content.removeItem(id);
     }
@@ -83,6 +89,7 @@ export class TaskService implements CRUD<TaskB> {
 
     private load(id: number): Observable<TaskB[]> {
         if (!this.cache.getItem(id)) {
+            console.log('new load');
             this.cache.setItem(
                 id,
                 this.http.get<TaskBServer[]>(`${environment.apiUrl}/task/${id}`, { withCredentials: true }).pipe(
@@ -107,13 +114,5 @@ export class TaskService implements CRUD<TaskB> {
         }
 
         return this.cache.getItem(id)!.pipe(tap((tasks) => this.taskSource.getItem(id)!.next(tasks)));
-    }
-
-    private move(entity: TaskB): Observable<void> {
-        return this.http.put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true }).pipe(
-            catchError((err) => {
-                throw err;
-            })
-        );
     }
 }

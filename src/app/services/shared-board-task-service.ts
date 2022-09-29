@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Cached } from '@decorators/cached';
 import { TaskB, TaskBServer } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { TaskHubService } from '@services/task-hub.service';
@@ -42,7 +41,6 @@ export class TaskService {
         this.taskMovesSource$.pipe(throttleTime(15)).subscribe((task) => this.moveTask(task));
     }
 
-    @Cached()
     loadTasks(boardId: number): Observable<TaskB[]> {
         return this.signalRService.safeInvoke<TaskBServer[]>(TaskMethodsServer.loadTasks, boardId).pipe(
             map((tasksServer: TaskBServer[]) => tasksServer.map((task) => this.converter.taskBClient(task))),
@@ -50,7 +48,6 @@ export class TaskService {
         );
     }
 
-    @Cached()
     addTask(task: TaskB): Observable<TaskB> {
         return this.signalRService.safeInvoke<TaskBServer>(TaskMethodsServer.addTask, this.converter.taskBServer(task)).pipe(
             map((taskServer) => this.converter.taskBClient(taskServer)),
@@ -58,15 +55,13 @@ export class TaskService {
         );
     }
 
-    @Cached()
     editTask(task: TaskB): Observable<TaskB> {
         return this.signalRService.safeInvoke<TaskBServer>(TaskMethodsServer.editTask, this.converter.taskBServer(task)).pipe(
             map((taskServer) => this.converter.taskBClient(taskServer)),
             tap((task) => this.editTaskClient(task))
         );
     }
-
-    @Cached()
+    
     deleteTask(task: TaskB): Observable<boolean> {
         return this.signalRService
             .safeInvoke<boolean>(TaskMethodsServer.deleteTask, this.converter.taskBServer(task))

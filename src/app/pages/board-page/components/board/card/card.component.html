@@ -3,7 +3,8 @@
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
     cdkDrag
     cdkDragBoundary=".container"
-    (cdkDragMoved)="newTaskPosition($event)"
+    (cdkDragStarted)="newTaskPosition($event)"
+    (cdkDragEnded)="newTaskPosition($event)"
     [cdkDragFreeDragPosition]="task.coordinates"
 >
     <header class="card-text_header">

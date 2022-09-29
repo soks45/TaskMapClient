@@ -6,6 +6,7 @@ import { AuthService } from '@services/auth.service';
 import { BoardService } from '@services/board.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
@@ -21,6 +22,10 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
         private currentBoardService: CurrentBoardService
     ) {
         super();
+        this.currentBoardService.currentBoard$.pipe(takeUntil(this.destroyed$)).subscribe((b) => {
+            this.boardId = b.boardId;
+            console.log('board id', b.boardId);
+        });
     }
 
     private boardId = 4;
@@ -94,26 +99,31 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
         this.currentBoardService.switchBoard(4).subscribe();
     }
 
-    switch10() {
-        this.boardId = 10;
-        this.currentBoardService.switchBoard(10).subscribe();
+    switch12() {
+        this.boardId = 12;
+        this.currentBoardService.switchBoard(12).subscribe();
     }
 
-    switch11() {
-        this.boardId = 11;
-        this.currentBoardService.switchBoard(11).subscribe();
+    switch13() {
+        this.boardId = 13;
+        this.currentBoardService.switchBoard(13).subscribe();
+    }
+
+    switch15() {
+        this.boardId = 15;
+        this.currentBoardService.switchBoard(15).subscribe();
     }
 
     addTask() {
         this.taskService
             .add({
-                boardId: this.boardId,
-                taskId: 1,
+                boardId: 13,
+                taskId: 3,
                 createdDate: '',
                 taskLabel: 'SUY&PE',
                 taskText: 'dawdaw',
                 color: 'purple',
-                userId: 4,
+                userId: 3,
                 state: 1,
                 coordinates: {
                     x: 1,

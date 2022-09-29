@@ -2,12 +2,16 @@
     <button (click)="get()">get</button>
     <button (click)="add()">add</button>
     <button (click)="edit()">edit</button>
-    <button (click)="delete()">delete</button>
-    <button (click)="switch()">switch</button>
+    <button (click)="delete4()">delete4</button>
+    <button (click)="delete9()">delete9</button>
+    <button (click)="delete10()">delete10</button>
+    <button (click)="switch4()">switch4</button>
+    <button (click)="switch10()">switch10</button>
+    <button (click)="switch11()">switch11</button>
     <button (click)="addTask()">add Task</button>
     <button (click)="editTask()">edit Task</button>
     <button (click)="deleteTask()">delete Task</button>
 
 
-    <tm-board *ngIf="currentBoard$ | async as board" [Board]="board"></tm-board>
+    <tm-board></tm-board>
 </div>

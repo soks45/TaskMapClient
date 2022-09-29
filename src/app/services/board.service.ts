@@ -4,6 +4,7 @@ import { environment } from '@environments/environment';
 import { Board } from '@models/board';
 import { CRUD } from '@models/CRUD';
 import { MessagesService } from '@services/messages.service';
+import { TaskService } from '@services/task.service';
 import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -15,7 +16,7 @@ export class BoardService implements CRUD<Board> {
     private boardSource: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
     private cache$: Observable<Board[]> | undefined;
 
-    constructor(private http: HttpClient, private messages: MessagesService) {
+    constructor(private http: HttpClient, private messages: MessagesService, private taskService: TaskService) {
         this.content$ = this.boardSource.asObservable();
     }
 
@@ -50,7 +51,10 @@ export class BoardService implements CRUD<Board> {
             catchError((err) => {
                 throw err;
             }),
-            tap(() => this.reload())
+            tap(() => {
+                this.reload();
+                this.taskService.removeSource(entity.boardId);
+            })
         );
     }
 

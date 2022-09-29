@@ -5,7 +5,7 @@ import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
-import { UserLastBoardService } from '@services/user-last-board.service';
+import { CurrentBoardService } from '@services/current-board.service';
 import { Observable, takeUntil } from 'rxjs';
 
 @Component({
@@ -18,7 +18,7 @@ export class HeaderComponent extends DestroyMixin(BaseObject) {
     currentBoard$: Observable<Board>;
     user$: Observable<User | null>;
 
-    constructor(private router: Router, private lastBoardService: UserLastBoardService, private auth: AuthService) {
+    constructor(private router: Router, private lastBoardService: CurrentBoardService, private auth: AuthService) {
         super();
         this.currentBoard$ = this.lastBoardService.lastBoard$;
         this.user$ = this.auth.user$;

@@ -2,12 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Board } from '@models/board';
 import { AuthService } from '@services/auth.service';
 import { BoardService } from '@services/board.service';
+import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
-import { UserLastBoardService } from '@services/user-last-board.service';
-import { Observable } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
@@ -15,19 +13,17 @@ import { Observable } from 'rxjs';
     styleUrls: ['./board-page.component.scss'],
 })
 export class BoardPageComponent extends DestroyMixin(BaseObject) {
-    currentBoard$: Observable<Board>;
-
     constructor(
         private boardService: BoardService,
         private taskService: TaskService,
         private auth: AuthService,
         private dialog: MatDialog,
-        private lastBoardService: UserLastBoardService
+        private currentBoardService: CurrentBoardService
     ) {
         super();
-        this.currentBoard$ = this.lastBoardService.lastBoard();
-        this.currentBoard$.subscribe((value) => console.log(value));
     }
+
+    private boardId = 4;
 
     get() {
         this.boardService.get().subscribe((value) => console.log(value));
@@ -48,19 +44,19 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
     edit() {
         this.boardService
             .edit({
-                boardId: 8,
+                boardId: 11,
                 boardDescription: 'somedaw',
-                boardName: 'edited',
+                boardName: 'edik',
                 createdDate: 'daw',
-                userId: 1,
+                userId: 3,
             })
             .subscribe((value) => console.log(value));
     }
 
-    delete() {
+    delete4() {
         this.boardService
             .delete({
-                boardId: 8,
+                boardId: 4,
                 boardDescription: 'somedaw',
                 boardName: 'edited',
                 createdDate: 'daw',
@@ -69,14 +65,49 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
             .subscribe((value) => console.log(value));
     }
 
-    switch() {
-        this.lastBoardService.switchBoard(4).subscribe();
+    delete9() {
+        this.boardService
+            .delete({
+                boardId: 9,
+                boardDescription: 'somedaw',
+                boardName: 'edited',
+                createdDate: 'daw',
+                userId: 1,
+            })
+            .subscribe((value) => console.log(value));
+    }
+
+    delete10() {
+        this.boardService
+            .delete({
+                boardId: 10,
+                boardDescription: 'somedaw',
+                boardName: 'edited',
+                createdDate: 'daw',
+                userId: 1,
+            })
+            .subscribe((value) => console.log(value));
+    }
+
+    switch4() {
+        this.boardId = 4;
+        this.currentBoardService.switchBoard(4).subscribe();
+    }
+
+    switch10() {
+        this.boardId = 10;
+        this.currentBoardService.switchBoard(10).subscribe();
+    }
+
+    switch11() {
+        this.boardId = 11;
+        this.currentBoardService.switchBoard(11).subscribe();
     }
 
     addTask() {
         this.taskService
             .add({
-                boardId: 4,
+                boardId: this.boardId,
                 taskId: 1,
                 createdDate: '',
                 taskLabel: 'SUY&PE',

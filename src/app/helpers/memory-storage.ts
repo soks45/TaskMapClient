@@ -5,6 +5,10 @@ export class MemoryStorage<K, T> {
         return this.cache.size;
     }
 
+    forEach(callback: (value: T, key: K) => void): void {
+        this.cache.forEach(callback);
+    }
+
     clear(): void {
         this.cache.clear();
     }

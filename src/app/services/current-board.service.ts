@@ -10,7 +10,7 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root',
 })
-export class UserLastBoardService {
+export class CurrentBoardService {
     readonly lastBoard$: Observable<Board>;
     private lastBoardSource: ReplaySubject<Board> = new ReplaySubject<Board>(1);
     private cache$: Observable<Board> | undefined;

@@ -13,15 +13,18 @@ import { catchError, map } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class TaskService implements CRUD<TaskB> {
-    readonly content: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
     readonly moveTask: Subject<TaskB> = new Subject<TaskB>();
+    readonly content: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
     private taskSource: MemoryStorage<number, BehaviorSubject<TaskB[]>> = new MemoryStorage();
     private cache: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
 
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {
         this.moveTask
             .pipe(
-                throttleTime(20, asyncScheduler, { leading: true, trailing: true }),
+                throttleTime(20, asyncScheduler, {
+                    leading: true,
+                    trailing: true,
+                }),
                 tap((task) => this.move(task).subscribe())
             )
             .subscribe();
@@ -58,6 +61,21 @@ export class TaskService implements CRUD<TaskB> {
         );
     }
 
+    addSource(id: number): void {
+        console.log('addSource', id);
+        const source: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
+        this.taskSource.setItem(id, source);
+        this.content.setItem(id, source.asObservable());
+    }
+
+    removeSource(id: number): void {
+        console.log('removeSource', id);
+        const source = this.taskSource.getItem(id);
+        source?.complete();
+        this.taskSource.removeItem(id);
+        this.content.removeItem(id);
+    }
+
     private reload(id: number): void {
         this.cache.removeItem(id);
         this.load(id).subscribe();
@@ -85,10 +103,7 @@ export class TaskService implements CRUD<TaskB> {
         }
 
         if (!this.taskSource.getItem(id)) {
-            const source: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
-            source.subscribe((value) => console.log(value));
-            this.taskSource.setItem(id, source);
-            this.content.setItem(id, source.asObservable());
+            this.addSource(id);
         }
 
         return this.cache.getItem(id)!.pipe(tap((tasks) => this.taskSource.getItem(id)!.next(tasks)));

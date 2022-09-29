@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
 import { TaskService } from '@services/task.service';
@@ -9,16 +9,18 @@ import { Observable } from 'rxjs';
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
 })
-export class BoardComponent {
-    tasks$: Observable<TaskB[]>;
+export class BoardComponent implements OnInit {
+    tasks$?: Observable<TaskB[]>;
     @Input() Board!: Board;
 
-    constructor(private taskService: TaskService) {
-        this.tasks$ = this.taskService.content$;
-    }
+    constructor(private taskService: TaskService) {}
 
     contextMenu(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
+    }
+
+    ngOnInit(): void {
+        this.tasks$ = this.taskService.get(this.Board.boardId);
     }
 }

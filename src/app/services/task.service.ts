@@ -5,6 +5,7 @@ import { CRUD } from '@models/CRUD';
 import { TaskB, TaskBServer } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
+import { MemoryStorage } from 'app/helpers/memory-storage';
 import { asyncScheduler, AsyncSubject, BehaviorSubject, mergeMap, Observable, share, Subject, tap, throttleTime } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -12,24 +13,22 @@ import { catchError, map } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class TaskService implements CRUD<TaskB> {
-    readonly content$: Observable<TaskB[]>;
+    readonly content: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
     readonly moveTask: Subject<TaskB> = new Subject<TaskB>();
-    private taskSource: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
-    private cache$: Observable<TaskB[]> | undefined;
-    private lastId: number | undefined;
+    private taskSource: MemoryStorage<number, BehaviorSubject<TaskB[]>> = new MemoryStorage();
+    private cache: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
 
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {
-        this.content$ = this.taskSource.asObservable();
         this.moveTask
             .pipe(
-                throttleTime(30, asyncScheduler, { leading: true, trailing: true }),
+                throttleTime(20, asyncScheduler, { leading: true, trailing: true }),
                 tap((task) => this.move(task).subscribe())
             )
             .subscribe();
     }
 
     get(id: number): Observable<TaskB[]> {
-        return this.load(id).pipe(mergeMap(() => this.cache$!));
+        return this.load(id).pipe(mergeMap(() => this.content.getItem(id)!));
     }
 
     add(entity: TaskB): Observable<void> {
@@ -50,40 +49,49 @@ export class TaskService implements CRUD<TaskB> {
         );
     }
 
-    delete(taskId: number, boardId: number): Observable<void> {
-        return this.http.delete<void>(`${environment.apiUrl}/task/${taskId}`, { withCredentials: true }).pipe(
+    delete(entity: TaskB): Observable<void> {
+        return this.http.delete<void>(`${environment.apiUrl}/task/${entity.taskId}`, { withCredentials: true }).pipe(
             catchError((err) => {
                 throw err;
             }),
-            tap(() => this.reload(boardId))
+            tap(() => this.reload(entity.boardId))
         );
     }
 
     private reload(id: number): void {
-        this.cache$ = undefined;
-        this.lastId = id;
+        this.cache.removeItem(id);
         this.load(id).subscribe();
     }
 
     private load(id: number): Observable<TaskB[]> {
-        if (!this.cache$ || (this.cache$ && this.lastId !== id)) {
-            this.cache$ = this.http.get<TaskBServer[]>(`${environment.apiUrl}/task/${id}`, { withCredentials: true }).pipe(
-                share({
-                    connector: () => new AsyncSubject(),
-                    resetOnError: false,
-                    resetOnComplete: false,
-                    resetOnRefCountZero: false,
-                }),
-                catchError((err) => {
-                    this.messages.error(err);
-                    this.cache$ = undefined;
-                    throw err;
-                }),
-                map((tasks) => tasks.map((task) => this.converter.taskBClient(task)))
+        if (!this.cache.getItem(id)) {
+            this.cache.setItem(
+                id,
+                this.http.get<TaskBServer[]>(`${environment.apiUrl}/task/${id}`, { withCredentials: true }).pipe(
+                    share({
+                        connector: () => new AsyncSubject(),
+                        resetOnError: false,
+                        resetOnComplete: false,
+                        resetOnRefCountZero: false,
+                    }),
+                    catchError((err) => {
+                        this.messages.error(err);
+                        this.cache.removeItem(id);
+                        throw err;
+                    }),
+                    map((tasks) => tasks.map((task) => this.converter.taskBClient(task)))
+                )
             );
         }
 
-        return this.cache$.pipe(tap((tasks) => this.taskSource.next(tasks)));
+        if (!this.taskSource.getItem(id)) {
+            const source: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
+            source.subscribe((value) => console.log(value));
+            this.taskSource.setItem(id, source);
+            this.content.setItem(id, source.asObservable());
+        }
+
+        return this.cache.getItem(id)!.pipe(tap((tasks) => this.taskSource.getItem(id)!.next(tasks)));
     }
 
     private move(entity: TaskB): Observable<void> {

@@ -24,7 +24,7 @@ export class BoardService implements CRUD<Board> {
     }
 
     get(): Observable<Board[]> {
-        return this.load().pipe(mergeMap(() => this.cache$!));
+        return this.load().pipe(mergeMap(() => this.content$));
     }
 
     add(entity: Board): Observable<void> {
@@ -45,8 +45,8 @@ export class BoardService implements CRUD<Board> {
         );
     }
 
-    delete(id: number): Observable<void> {
-        return this.http.delete<void>(`${environment.apiUrl}/board/${id}`, { withCredentials: true }).pipe(
+    delete(entity: Board): Observable<void> {
+        return this.http.delete<void>(`${environment.apiUrl}/board/${entity.boardId}`, { withCredentials: true }).pipe(
             catchError((err) => {
                 throw err;
             }),

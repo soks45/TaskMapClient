@@ -58,7 +58,15 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
     }
 
     delete() {
-        this.boardService.delete(8).subscribe((value) => console.log(value));
+        this.boardService
+            .delete({
+                boardId: 8,
+                boardDescription: 'somedaw',
+                boardName: 'edited',
+                createdDate: 'daw',
+                userId: 1,
+            })
+            .subscribe((value) => console.log(value));
     }
 
     switch() {

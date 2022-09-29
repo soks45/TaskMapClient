@@ -24,8 +24,7 @@ export class CardComponent extends DestroyMixin(BaseObject) {
     }
 
     deleteTask(): void {
-        console.log('delete');
-        this.taskService.delete(this.task.taskId, this.task.boardId).pipe(takeUntil(this.destroyed$)).subscribe();
+        this.taskService.delete(this.task).pipe(takeUntil(this.destroyed$)).subscribe();
     }
 
     editTask() {

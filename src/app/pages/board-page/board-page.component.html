@@ -8,5 +8,6 @@
     <button (click)="editTask()">edit Task</button>
     <button (click)="deleteTask()">delete Task</button>
 
-    <tm-board *ngIf="currentBoard$ | async" [Board]="(currentBoard$ | async)!"></tm-board>
+
+    <tm-board *ngIf="currentBoard$ | async as board" [Board]="board"></tm-board>
 </div>

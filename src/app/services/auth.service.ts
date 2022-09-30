@@ -84,7 +84,7 @@ export class AuthService implements OnDestroy {
                     this.clearLocalStorage();
                     this._user.next(null);
                     this.stopTokenTimer();
-                    this.router.navigate(['/login']);
+                    this.router.navigate(['/board-page']);
                 })
             )
             .subscribe();

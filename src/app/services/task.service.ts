@@ -6,7 +6,7 @@ import { TaskB, TaskBServer } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
-import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
+import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 @Injectable({
@@ -14,7 +14,7 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class TaskService implements CRUD<TaskB> {
     readonly tasks: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
-    private tasksSource: MemoryStorage<number, BehaviorSubject<TaskB[]>> = new MemoryStorage();
+    private tasksSource: MemoryStorage<number, ReplaySubject<TaskB[]>> = new MemoryStorage();
     private cache: MemoryStorage<number, Observable<TaskB[]>> = new MemoryStorage();
 
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
@@ -96,7 +96,7 @@ export class TaskService implements CRUD<TaskB> {
     }
 
     private addSource(id: number): void {
-        const source: BehaviorSubject<TaskB[]> = new BehaviorSubject<TaskB[]>([]);
+        const source: ReplaySubject<TaskB[]> = new ReplaySubject<TaskB[]>(1);
         this.tasksSource.setItem(id, source);
         this.tasks.setItem(id, source.asObservable());
     }

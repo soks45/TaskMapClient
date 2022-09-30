@@ -6,12 +6,12 @@
                 <div class="header__title">
                     <ng-container *ngIf="state.user; then titleAuthed; else titleNotAuthed"></ng-container>
                     <ng-template #titleAuthed>
-                        <ng-template *ngIf="route === '/board-page'; else boardPage">
+                        <div *ngIf="route === '/board-page'; else boardPage">
                             <span *ngIf="currentBoard$ | async as board; else loading">
                                 {{ board.boardName }}
                             </span>
                             <ng-template #loading>Task Map</ng-template>
-                        </ng-template>
+                        </div>
                         <ng-template #boardPage>
                             Task Map
                         </ng-template>

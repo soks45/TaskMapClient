@@ -1,16 +1,21 @@
 <div class="board">
     <div *ngIf="user$ | async; else notAuthed">
-        <div *ngIf="currentBoard$ | async as board; else empty">
-            <div *ngFor="let task of tasks$ | async">
-                <tm-card [task]="task" [boundary]="'.board'"></tm-card>
+        <div *ngIf="currentBoard$ | async; else empty">
+            <div *ngIf="tasks$ | async as tasks; else loading">
+                <div *ngFor="let task of tasks">
+                    <tm-card [task]="task" [boundary]="'.board'"></tm-card>
+                </div>
             </div>
+            <ng-template #loading>
+                <mat-progress-bar mode="buffer"></mat-progress-bar>
+            </ng-template>
         </div>
         <ng-template #empty>
             You have no boards
         </ng-template>
     </div>
     <ng-template #notAuthed>
-        
+
     </ng-template>
 </div>
 

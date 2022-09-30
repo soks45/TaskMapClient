@@ -23,12 +23,14 @@ export class CurrentBoardService {
     }
 
     switchBoard(id: number): Observable<void> {
-        return this.http.patch<void>(`${environment.apiUrl}/account/last-board/${id}`, null, { withCredentials: true }).pipe(
-            catchError((err) => {
-                throw err;
-            }),
-            tap(() => this.reload())
-        );
+        return this.http
+            .patch<void>(`${environment.apiUrl}/account/last-board/${id}`, null, { withCredentials: true })
+            .pipe(
+                catchError((err) => {
+                    throw err;
+                }),
+                tap(() => this.reload())
+            );
     }
 
     private reload(): void {
@@ -38,20 +40,22 @@ export class CurrentBoardService {
 
     private load(): Observable<Board> {
         if (!this.cache$) {
-            this.cache$ = this.http.get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true }).pipe(
-                share({
-                    connector: () => new AsyncSubject(),
-                    resetOnError: false,
-                    resetOnComplete: false,
-                    resetOnRefCountZero: false,
-                }),
-                catchError((err) => {
-                    this.messages.error(err);
-                    this.cache$ = undefined;
-                    throw err;
-                }),
-                mergeMap((id) => this.getBoard(id))
-            );
+            this.cache$ = this.http
+                .get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true })
+                .pipe(
+                    share({
+                        connector: () => new AsyncSubject(),
+                        resetOnError: false,
+                        resetOnComplete: false,
+                        resetOnRefCountZero: false,
+                    }),
+                    catchError((err) => {
+                        this.messages.error(err);
+                        this.cache$ = undefined;
+                        throw err;
+                    }),
+                    mergeMap((id) => this.getBoard(id))
+                );
         }
 
         return this.cache$.pipe(tap((board) => this.currentBoardSource.next(board)));

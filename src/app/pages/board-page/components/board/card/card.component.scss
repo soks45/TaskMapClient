@@ -16,6 +16,7 @@
     &--red {
         background: linear-gradient(335.54deg, #f98989 15.6%, rgba(249, 137, 137, 0.6) 100%);
     }
+
     &--normal {
         width: 210px;
         height: 260px;
@@ -23,7 +24,8 @@
 }
 
 .card-box:active {
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 
 .card-header-image {
@@ -32,7 +34,7 @@
 }
 
 .card-text {
-    font-family: 'Roboto';
+    font-family: 'Roboto', serif;
     font-style: normal;
     font-weight: 400;
     justify-items: center;

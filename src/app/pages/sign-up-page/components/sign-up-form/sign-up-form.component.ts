@@ -28,7 +28,12 @@ export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormContro
     isLoading = false;
     hide = true;
 
-    constructor(private formBuilder: FormBuilder, private authService: AuthService, private logger: NGXLogger, private router: Router) {
+    constructor(
+        private formBuilder: FormBuilder,
+        private authService: AuthService,
+        private logger: NGXLogger,
+        private router: Router
+    ) {
         super();
         this.formGroup = this.formBuilder.group({
             firstName: new FormControl('', {
@@ -60,7 +65,10 @@ export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormContro
     }
 
     get passwordMatchError() {
-        return this.formGroup.get(['passwords'])!.getError('mismatch') && this.formGroup.get(['passwords', 'passwordConfirm'])?.touched;
+        return (
+            this.formGroup.get(['passwords'])!.getError('mismatch') &&
+            this.formGroup.get(['passwords', 'passwordConfirm'])?.touched
+        );
     }
 
     onSubmit(): void {

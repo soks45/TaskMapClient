@@ -13,7 +13,11 @@ export const Colors = ['purple', 'green', 'red'];
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
     animations: [
-        trigger('state', [state('void', style({ opacity: 0 })), state('*', style({ opacity: 1 })), transition('void => *', animate(200))]),
+        trigger('state', [
+            state('void', style({ opacity: 0 })),
+            state('*', style({ opacity: 1 })),
+            transition('void => *', animate(200)),
+        ]),
     ],
 })
 export class CardComponent {

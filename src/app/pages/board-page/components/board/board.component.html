@@ -1,7 +1,9 @@
-<div class="container board__content"
-     *ngIf="currentBoard$ | async as board; else empty"
-     (contextmenu)="contextMenu($event)">
-    <div *ngFor="let task of (tasks$ | async)">
+<div
+    class="container board__content"
+    *ngIf="currentBoard$ | async as board; else empty"
+    (contextmenu)="contextMenu($event)"
+>
+    <div *ngFor="let task of tasks$ | async">
         <tm-card [task]="task" [boundary]="'.container'"></tm-card>
     </div>
 </div>

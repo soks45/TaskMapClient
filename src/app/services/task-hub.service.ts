@@ -43,9 +43,11 @@ export class TaskHubService implements ModifiedHub {
             ? from(this.hubConnection.invoke<T>(methodName, arg))
             : this.startConnection().pipe(switchMap(() => from(this.hubConnection.invoke<T>(methodName, arg))));
     }
-    
+
     public startConnection(): Observable<void> {
-        return from(this.hubConnection.start().then(() => console.log('new start conn'))).pipe(tap(this.newConnectionStateCallback));
+        return from(this.hubConnection.start().then(() => console.log('new start conn'))).pipe(
+            tap(this.newConnectionStateCallback)
+        );
     }
 
     public stopConnection(): Observable<void> {

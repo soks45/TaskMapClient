@@ -13,6 +13,9 @@ export class CustomIconsService {
     }
 
     private registerIcon(name: string, filename: string) {
-        this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`));
+        this.matIconRegistry.addSvgIcon(
+            name,
+            this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`)
+        );
     }
 }

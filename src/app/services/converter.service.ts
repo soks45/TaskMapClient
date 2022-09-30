@@ -15,7 +15,10 @@ export class ConverterService {
     }
 
     taskBServer(task: TaskB): TaskBServer {
-        [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
+        [task.coordinates.x, task.coordinates.y] = [
+            Math.abs(Math.floor(task.coordinates.x)),
+            Math.abs(Math.floor(task.coordinates.y)),
+        ];
         return <TaskBServer>{
             ...task,
             coordinates: JSON.stringify(task.coordinates),

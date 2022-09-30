@@ -49,19 +49,23 @@ export class TaskService {
     }
 
     addTask(task: TaskB): Observable<TaskB> {
-        return this.signalRService.safeInvoke<TaskBServer>(TaskMethodsServer.addTask, this.converter.taskBServer(task)).pipe(
-            map((taskServer) => this.converter.taskBClient(taskServer)),
-            tap((task) => this.addTaskClient(task))
-        );
+        return this.signalRService
+            .safeInvoke<TaskBServer>(TaskMethodsServer.addTask, this.converter.taskBServer(task))
+            .pipe(
+                map((taskServer) => this.converter.taskBClient(taskServer)),
+                tap((task) => this.addTaskClient(task))
+            );
     }
 
     editTask(task: TaskB): Observable<TaskB> {
-        return this.signalRService.safeInvoke<TaskBServer>(TaskMethodsServer.editTask, this.converter.taskBServer(task)).pipe(
-            map((taskServer) => this.converter.taskBClient(taskServer)),
-            tap((task) => this.editTaskClient(task))
-        );
+        return this.signalRService
+            .safeInvoke<TaskBServer>(TaskMethodsServer.editTask, this.converter.taskBServer(task))
+            .pipe(
+                map((taskServer) => this.converter.taskBClient(taskServer)),
+                tap((task) => this.editTaskClient(task))
+            );
     }
-    
+
     deleteTask(task: TaskB): Observable<boolean> {
         return this.signalRService
             .safeInvoke<boolean>(TaskMethodsServer.deleteTask, this.converter.taskBServer(task))

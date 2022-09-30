@@ -24,21 +24,25 @@ export class TaskService implements CRUD<TaskB> {
     }
 
     add(entity: TaskB): Observable<void> {
-        return this.http.post<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true }).pipe(
-            catchError((err) => {
-                throw err;
-            }),
-            tap(() => this.reload(entity.boardId))
-        );
+        return this.http
+            .post<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
+            .pipe(
+                catchError((err) => {
+                    throw err;
+                }),
+                tap(() => this.reload(entity.boardId))
+            );
     }
 
     edit(entity: TaskB): Observable<void> {
-        return this.http.put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true }).pipe(
-            catchError((err) => {
-                throw err;
-            }),
-            tap(() => this.reload(entity.boardId))
-        );
+        return this.http
+            .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
+            .pipe(
+                catchError((err) => {
+                    throw err;
+                }),
+                tap(() => this.reload(entity.boardId))
+            );
     }
 
     delete(entity: TaskB): Observable<void> {

@@ -10,6 +10,8 @@ export class CustomIconsService {
 
     init(): void {
         this.registerIcon('account', 'account');
+        this.registerIcon('custom-add', 'custom-add');
+        this.registerIcon('edit', 'edit');
     }
 
     private registerIcon(name: string, filename: string) {

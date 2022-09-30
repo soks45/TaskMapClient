@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
@@ -13,12 +13,11 @@ interface LoginFormControls {
 }
 
 @Component({
-    selector: 'tm-login-form',
-    templateUrl: './login-form.component.html',
-    styleUrls: ['./login-form.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    selector: 'tm-login-form-dialog',
+    templateUrl: './login-form-dialog.component.html',
+    styleUrls: ['./login-form-dialog.component.scss'],
 })
-export class LoginFormComponent extends FormMixin<Constructor, LoginFormControls>(BaseObject) {
+export class LoginFormDialogComponent extends FormMixin<Constructor, LoginFormControls>(BaseObject) {
     isLoading = false;
     hide = true;
 

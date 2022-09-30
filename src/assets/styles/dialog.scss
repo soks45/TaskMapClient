@@ -1,0 +1,9 @@
+.std-dialog-backdrop {
+    &.cdk-overlay-backdrop.cdk-overlay-backdrop-showing {
+        background-color: #e2e2f6;
+        opacity: 0.3;
+    }
+}
+
+.std-dialog-panel {
+}

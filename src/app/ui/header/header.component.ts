@@ -7,8 +7,8 @@ import { Board } from '@models/board';
 import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
-import { LoginFormComponent } from '@ui/login-form/login-form.component';
-import { SignUpFormComponent } from '@ui/sign-up-form/sign-up-form.component';
+import { LoginFormDialogComponent } from '@ui/header/login-form-dialog/login-form-dialog.component';
+import { SignUpFormDialogComponent } from '@ui/header/sign-up-form-dialog/sign-up-form-dialog.component';
 import { Observable, takeUntil } from 'rxjs';
 
 @Component({
@@ -42,7 +42,11 @@ export class HeaderComponent extends DestroyMixin(BaseObject) {
         if (this.router.url !== 'board-page') {
             this.router.navigate(['board-page']);
         }
-        const dialog = this.dialog.open(LoginFormComponent);
+        const dialog = this.dialog.open(LoginFormDialogComponent, {
+            closeOnNavigation: true,
+            backdropClass: 'std-dialog-backdrop',
+            panelClass: 'std-dialog-panel',
+        });
     }
 
     onSignup(): void {
@@ -50,6 +54,6 @@ export class HeaderComponent extends DestroyMixin(BaseObject) {
             this.router.navigate(['board-page']);
         }
 
-        const dialog = this.dialog.open(SignUpFormComponent);
+        const dialog = this.dialog.open(SignUpFormDialogComponent);
     }
 }

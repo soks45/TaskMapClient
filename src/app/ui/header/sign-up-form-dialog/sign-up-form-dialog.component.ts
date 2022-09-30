@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
@@ -19,12 +19,11 @@ interface SignUpFormControls {
 }
 
 @Component({
-    selector: 'tm-sign-up-form',
-    templateUrl: './sign-up-form.component.html',
-    styleUrls: ['./sign-up-form.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    selector: 'tm-sign-up-form-dialog',
+    templateUrl: './sign-up-form-dialog.component.html',
+    styleUrls: ['./sign-up-form-dialog.component.scss'],
 })
-export class SignUpFormComponent extends FormMixin<Constructor, SignUpFormControls>(BaseObject) {
+export class SignUpFormDialogComponent extends FormMixin<Constructor, SignUpFormControls>(BaseObject) {
     isLoading = false;
     hide = true;
 

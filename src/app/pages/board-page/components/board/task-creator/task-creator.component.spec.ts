@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignUpFormComponent } from 'app/ui/sign-up-form/sign-up-form.component';
+import { TaskCreatorComponent } from './task-creator.component';
 
-describe('SignUpFormComponent', () => {
-    let component: SignUpFormComponent;
-    let fixture: ComponentFixture<SignUpFormComponent>;
+describe('TaskCreatorComponent', () => {
+    let component: TaskCreatorComponent;
+    let fixture: ComponentFixture<TaskCreatorComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [SignUpFormComponent],
+            declarations: [TaskCreatorComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(SignUpFormComponent);
+        fixture = TestBed.createComponent(TaskCreatorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

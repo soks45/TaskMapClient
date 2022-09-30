@@ -14,7 +14,8 @@ export const Colors = ['purple', 'green', 'red'];
 })
 export class CardComponent {
     @Input() task!: TaskB;
-    @Input() boundary: string = '';
+    @Input() boundary: string = 'card-box';
+    @Input() disabled: boolean = false;
     private dialogRef?: MatDialogRef<EditCardDialogComponent, boolean>;
 
     constructor(private taskService: TaskService, private dialog: MatDialog) {}

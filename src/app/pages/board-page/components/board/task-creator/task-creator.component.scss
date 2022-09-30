@@ -1,0 +1,80 @@
+.task-creator {
+    width: 304px;
+    height: 374px;
+    flex-direction: column;
+    z-index: 100;
+
+    &__add-btn {
+        width: 40px;
+        height: 40px;
+    }
+
+    &__header {
+        display: flex;
+        justify-content: right;
+    }
+
+    &__content {
+        border: 1px solid black;
+        border-radius: 6px;
+        background: rgba(0, 0, 0, 0.03);
+        width: 254px;
+        height: 333px;
+        backdrop-filter: blur(2px);
+
+    }
+
+    &__card {
+        opacity: 1;
+        width: 210px;
+        height: 260px;
+        padding-top: 15px;
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    &__actions {
+        margin-top: 12px;
+        display: flex;
+        justify-content: space-between;
+
+        &--left {
+            display: flex;
+            justify-content: space-between;
+            margin-left: 20px;
+            width: 80px;
+        }
+
+        &--right {
+            margin-right: 25px;
+            display: inline-block;
+        }
+    }
+
+    &__edit-btn {
+        width: 70px;
+        height: 35px;
+        border-radius: 5px;
+        color: rgb(33, 33, 33, 0.9);
+    }
+}
+
+
+.btn {
+    &--purple {
+        background: linear-gradient(335.54deg, #f989f0 15.6%, rgba(249, 137, 240, 0.6) 100%);
+    }
+
+    &--red {
+        background: linear-gradient(335.54deg, #f98989 15.6%, rgba(249, 137, 137, 0.6) 100%);
+    }
+
+    &--green {
+        background: linear-gradient(335.54deg, #89f994 15.6%, rgba(137, 249, 141, 0.6) 100%);
+    }
+}
+
+.edit-icon {
+    scale: 0.7;
+}
+

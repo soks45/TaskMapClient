@@ -4,8 +4,8 @@ import { MatRippleModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { LoginFormModule } from '@ui/login-form/login-form.module';
-import { SignUpFormModule } from '@ui/sign-up-form/sign-up-form.module';
+import { LoginFormDialogModule } from '@ui/header/login-form-dialog/login-form-dialog.module';
+import { SignUpFormDialogModule } from '@ui/header/sign-up-form-dialog/sign-up-form-dialog.module';
 import { HeaderComponent } from './header.component';
 
 @NgModule({
@@ -16,8 +16,8 @@ import { HeaderComponent } from './header.component';
         MatRippleModule,
         RouterModule,
         MatDialogModule,
-        SignUpFormModule,
-        LoginFormModule,
+        SignUpFormDialogModule,
+        LoginFormDialogModule,
     ],
     exports: [HeaderComponent],
 })

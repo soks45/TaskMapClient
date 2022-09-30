@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { CardComponent } from '@pages/board-page/components/board/card/card.component';

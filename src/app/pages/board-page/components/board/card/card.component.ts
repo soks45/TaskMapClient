@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -11,6 +12,9 @@ export const Colors = ['purple', 'green', 'red'];
     selector: 'tm-card [task]',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
+    animations: [
+        trigger('state', [state('void', style({ opacity: 0 })), state('*', style({ opacity: 1 })), transition('void => *', animate(200))]),
+    ],
 })
 export class CardComponent {
     @Input() task!: TaskB;

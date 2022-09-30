@@ -37,6 +37,7 @@
         margin-top: 12px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
 
         &--left {
             display: flex;
@@ -51,7 +52,7 @@
         }
     }
 
-    &__edit-btn {
+    &__create-btn {
         width: 70px;
         height: 35px;
         border-radius: 5px;

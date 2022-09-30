@@ -1,15 +1,15 @@
 <div class="board" (contextmenu)="contextMenu($event)">
     <div *ngIf="user$ | async; else notAuthed">
-        <div *ngIf="currentBoard$ | async">
-            <div *ngIf="tasks$ | async as tasks; else loading">
+        <div *ngIf="currentBoard$ | async; else loading">
+            <div *ngIf="tasks$ | async as tasks; else loading" @state>
                 <div *ngFor="let task of tasks">
                     <tm-card [task]="task" [boundary]="'.board'"></tm-card>
                 </div>
             </div>
-            <ng-template #loading>
-                <mat-spinner class="loader"></mat-spinner>
-            </ng-template>
         </div>
+        <ng-template #loading>
+            <mat-spinner class="loader"></mat-spinner>
+        </ng-template>
     </div>
     <ng-template #notAuthed></ng-template>
     <div class="board__task-creator">

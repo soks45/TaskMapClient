@@ -15,16 +15,25 @@ export const Colors = ['purple', 'green', 'red'];
 export class CardComponent {
     @Input() task!: TaskB;
     @Input() boundary: string = 'card-box';
-    @Input() disabled: boolean = false;
+    @Input() isTemplate: boolean = false;
     private dialogRef?: MatDialogRef<EditCardDialogComponent, boolean>;
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {}
+    constructor(private taskService: TaskService, private dialog: MatDialog) {
+    }
 
     deleteTask(): void {
+        if (this.isTemplate) {
+            return;
+        }
+
         this.taskService.delete(this.task).subscribe(); //TODO do some cool stuff here
     }
 
-    editTask() {
+    editTask(): void {
+        if (this.isTemplate) {
+
+        }
+
         this.dialogRef = this.dialog.open(EditCardDialogComponent, {
             closeOnNavigation: true,
             data: this.task,

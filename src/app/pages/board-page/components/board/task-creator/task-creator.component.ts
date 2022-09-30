@@ -9,6 +9,7 @@ import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
 import { Observable, takeUntil } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 @Component({
     selector: 'tm-task-creator',
@@ -19,6 +20,7 @@ import { Observable, takeUntil } from 'rxjs';
 export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements OnInit {
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
+    isLoading: boolean = false;
 
     newTask: TaskB = {
         taskId: 1,
@@ -53,6 +55,7 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
         this.user$.pipe(takeUntil(this.destroyed$)).subscribe((u) => {
             if (!u) {
                 this.newTask.userId = -1;
+                this.newTask.boardId = -1;
                 return;
             }
 
@@ -62,5 +65,16 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
 
     changeColor(color: string): void {
         this.newTask.color = color;
+    }
+
+    onCreate(): void {
+        if (this.newTask.userId !== -1 && this.newTask.boardId !== -1) {
+            this.isLoading = true;
+            this.taskService
+                .add(this.newTask)
+                .pipe(finalize(() => (this.isLoading = false)))
+                .subscribe();
+            return;
+        }
     }
 }

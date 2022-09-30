@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
@@ -13,6 +14,13 @@ import { Observable, takeUntil, tap } from 'rxjs';
     selector: 'tm-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
+    animations: [
+        trigger('state', [
+            state('void', style({ opacity: 0.5 })),
+            state('*', style({ opacity: 1 })),
+            transition('void => *', animate(200)),
+        ]),
+    ],
 })
 export class BoardComponent extends DestroyMixin(BaseObject) {
     tasks$?: Observable<TaskB[]>;

@@ -1,7 +1,8 @@
-<div *ngIf="currentBoard$ | async as board; else empty" class="container board__content"
+<div class="container board__content"
+     *ngIf="currentBoard$ | async as board; else empty"
      (contextmenu)="contextMenu($event)">
     <div *ngFor="let task of (tasks$ | async)">
-        <tm-card [task]="task"></tm-card>
+        <tm-card [task]="task" [boundary]="'.container'"></tm-card>
     </div>
 </div>
 <ng-template #empty> You have no boards</ng-template>

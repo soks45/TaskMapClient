@@ -1,32 +1,23 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { DestroyMixin } from '@mixins/destroy.mixin';
-import { BaseObject } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
 import { BoardService } from '@services/board.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
-import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
     templateUrl: './board-page.component.html',
     styleUrls: ['./board-page.component.scss'],
 })
-export class BoardPageComponent extends DestroyMixin(BaseObject) {
+export class BoardPageComponent {
     constructor(
         private boardService: BoardService,
         private taskService: TaskService,
         private auth: AuthService,
         private dialog: MatDialog,
         private currentBoardService: CurrentBoardService
-    ) {
-        super();
-        this.currentBoardService.currentBoard$.pipe(takeUntil(this.destroyed$)).subscribe((b) => {
-            this.boardId = b.boardId;
-            console.log('board id', b.boardId);
-        });
-    }
+    ) {}
 
     private boardId = 4;
 
@@ -94,9 +85,9 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
             .subscribe((value) => console.log(value));
     }
 
-    switch4() {
-        this.boardId = 4;
-        this.currentBoardService.switchBoard(4).subscribe();
+    switch34() {
+        this.boardId = 34;
+        this.currentBoardService.switchBoard(34).subscribe();
     }
 
     switch12() {
@@ -117,7 +108,7 @@ export class BoardPageComponent extends DestroyMixin(BaseObject) {
     addTask() {
         this.taskService
             .add({
-                boardId: 13,
+                boardId: 34,
                 taskId: 3,
                 createdDate: '',
                 taskLabel: 'SUY&PE',

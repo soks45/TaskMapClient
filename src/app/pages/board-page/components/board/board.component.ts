@@ -14,7 +14,7 @@ import { Observable, takeUntil, tap } from 'rxjs';
 })
 export class BoardComponent extends DestroyMixin(BaseObject) {
     tasks$?: Observable<TaskB[]>;
-    currentBoard$?: Observable<Board>;
+    currentBoard$: Observable<Board>;
 
     constructor(private taskService: TaskService, private currentBoard: CurrentBoardService) {
         super();

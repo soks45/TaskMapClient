@@ -1,10 +1,17 @@
-<div
-    class="container board__content"
-    *ngIf="currentBoard$ | async as board; else empty"
-    (contextmenu)="contextMenu($event)"
->
-    <div *ngFor="let task of tasks$ | async">
-        <tm-card [task]="task" [boundary]="'.container'"></tm-card>
+<div class="board">
+    <div *ngIf="user$ | async; else notAuthed">
+        <div *ngIf="currentBoard$ | async as board; else empty">
+            <div *ngFor="let task of tasks$ | async">
+                <tm-card [task]="task" [boundary]="'.board'"></tm-card>
+            </div>
+        </div>
+        <ng-template #empty>
+            You have no boards
+        </ng-template>
     </div>
+    <ng-template #notAuthed>
+        
+    </ng-template>
 </div>
-<ng-template #empty> You have no boards</ng-template>
+
+

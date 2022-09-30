@@ -28,10 +28,10 @@
                 </div>
             </ng-template>
             <ng-template #notAuthed>
-                <a class="menu-item" mat-ripple [routerLink]="['/login']">
+                <a class="menu-item" mat-ripple (click)="onLogin()">
                     <span class="menu-item__title">Log In</span>
                 </a>
-                <a class="menu-item" mat-ripple [routerLink]="['/signup']">
+                <a class="menu-item" mat-ripple (click)="onSignup()">
                     <span class="menu-item__title">Sign Up</span>
                 </a>
                 <div class="header__user">

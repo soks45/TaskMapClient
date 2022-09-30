@@ -15,7 +15,7 @@ export class CurrentBoardService {
     private cache$: Observable<Board> | undefined;
 
     constructor(private http: HttpClient, private messages: MessagesService) {
-        this.currentBoard$ = this.currentBoardSource.asObservable();
+        this.currentBoard$ = this.currentBoardSource.asObservable().pipe(tap((v) => console.log(v)));
     }
 
     currentBoard(): Observable<Board> {

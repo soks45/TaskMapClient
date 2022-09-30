@@ -21,7 +21,7 @@ export class AuthService implements OnDestroy {
     private readonly apiUrl = `${environment.apiUrl}/account`;
     private timer: Subscription | null = null;
     private _user = new BehaviorSubject<User | null>(null);
-    user$ = this._user;
+    user$ = this._user.asObservable();
 
     private storageEventListener(event: StorageEvent) {
         if (event.storageArea === localStorage) {

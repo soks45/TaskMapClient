@@ -4,17 +4,15 @@
             <div class="header__left">
                 <div class="header__logo"></div>
                 <div class="header__title">
-                    <ng-container *ngIf="state.user; then titleAuthed; else titleNotAuthed"></ng-container>
+                    <ng-container *ngIf="state.user; then titleAuthed; else TaskMap"></ng-container>
                     <ng-template #titleAuthed>
-                        <div *ngIf="route === '/board-page'; else boardPage">
-                            <span *ngIf="currentBoard$ | async as board; else loading">
+                        <div *ngIf="route === '/board-page'; else TaskMap">
+                            <span *ngIf="currentBoard$ | async as board; else TaskMap">
                                 {{ board.boardName }}
                             </span>
-                            <ng-template #loading>Task Map</ng-template>
                         </div>
-                        <ng-template #boardPage> Task Map</ng-template>
                     </ng-template>
-                    <ng-template #titleNotAuthed> Task Map</ng-template>
+                    <ng-template #TaskMap>Task Map</ng-template>
                 </div>
             </div>
             <div class="header__right">

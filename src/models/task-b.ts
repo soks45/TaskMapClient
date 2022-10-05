@@ -5,6 +5,15 @@ export enum State {
     Short,
 }
 
+export enum Color {
+    Purple = 'purple',
+    Green = 'green',
+    Red = 'red',
+}
+
+export const States = Object.values(State);
+export const Colors = Object.values(Color);
+
 export interface ShortTaskB {
     taskId: number;
     boardId: number;
@@ -16,7 +25,7 @@ export interface TaskB extends ShortTaskB {
     createdDate: string;
     taskLabel: string;
     taskText: string;
-    color: string;
+    color: Color;
     state: State;
 }
 

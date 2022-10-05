@@ -13,8 +13,6 @@ export function FormMixin<TBase extends Constructor, T extends Record<string, an
 
         abstract onSubmit(): void;
 
-        abstract isLoading: boolean;
-
         protected constructor(...args: any[]) {
             super(args);
         }

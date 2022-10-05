@@ -1,9 +1,9 @@
 <div
     class="card-box"
     cdkDrag
-    [cdkDragDisabled]="isTemplate"
+    [cdkDragDisabled]="fromCreator"
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
-    [cdkDragBoundary]="boundary"
+    [cdkDragBoundary]="boundary || ''"
     [cdkDragFreeDragPosition]="task.coordinates"
     (cdkDragEnded)="newTaskPosition($event)"
 >

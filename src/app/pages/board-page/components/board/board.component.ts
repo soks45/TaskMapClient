@@ -15,7 +15,7 @@ import { Observable, takeUntil, tap } from 'rxjs';
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
     animations: [
-        trigger('state', [
+        trigger('smoothAppearance', [
             state('void', style({ opacity: 0.5 })),
             state('*', style({ opacity: 1 })),
             transition('void => *', animate(200)),

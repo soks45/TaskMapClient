@@ -1,11 +1,12 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TaskB } from '@models/task-b';
-import { EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import {
+    EditCardDialogComponent,
+    EditDialogData,
+} from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task.service';
-
-export const Colors = ['purple', 'green', 'red'];
 
 @Component({
     selector: 'tm-card [task]',
@@ -14,15 +15,14 @@ export const Colors = ['purple', 'green', 'red'];
 })
 export class CardComponent {
     @Input() task!: TaskB;
-    @Input() boundary: string = 'card-box';
-    @Input() isTemplate: boolean = false;
-    private dialogRef?: MatDialogRef<EditCardDialogComponent, boolean>;
+    @Input() boundary?: string;
+    @Input() fromCreator: boolean = false;
+    @Input() isAuthed: boolean = false;
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {
-    }
+    constructor(private taskService: TaskService, private dialog: MatDialog) {}
 
     deleteTask(): void {
-        if (this.isTemplate) {
+        if (this.fromCreator) {
             return;
         }
 
@@ -30,16 +30,20 @@ export class CardComponent {
     }
 
     editTask(): void {
-        if (this.isTemplate) {
-
-        }
-
-        this.dialogRef = this.dialog.open(EditCardDialogComponent, {
+        const dialogRef = this.dialog.open(EditCardDialogComponent, {
             closeOnNavigation: true,
-            data: this.task,
+            data: <EditDialogData>{
+                task: this.task,
+                isAuthed: this.isAuthed,
+                fromCreator: this.fromCreator,
+            },
         });
 
-        this.dialogRef.afterClosed().subscribe(); //TODO do some cool stuff here
+        if (this.fromCreator) {
+            return;
+        }
+
+        //TODO do some cool stuff here
     }
 
     newTaskPosition(event: CdkDragEnd): void {

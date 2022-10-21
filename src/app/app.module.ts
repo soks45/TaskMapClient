@@ -8,6 +8,7 @@ import { AuthService } from '@services/auth.service';
 import { HeaderModule } from '@ui/header/header.module';
 import { appInitializer } from 'app/app-initializer';
 import { environment } from 'environments/environment';
+import { CookieService } from 'ngx-cookie-service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,6 +37,7 @@ import { AppComponent } from './app.component';
             multi: true,
             deps: [AuthService],
         },
+        CookieService,
     ],
     bootstrap: [AppComponent],
 })

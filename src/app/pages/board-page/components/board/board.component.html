@@ -11,7 +11,13 @@
             <mat-spinner class="loader"></mat-spinner>
         </ng-template>
     </div>
-    <ng-template #notAuthed></ng-template>
+    <ng-template #notAuthed>
+        <ng-container *ngIf="tempTasks$ | async as tempTasks">
+            <div *ngFor="let task of tempTasks">
+                <tm-card [task]="task" [isAuthed]="false" [boundary]="'.board'"></tm-card>
+            </div>
+        </ng-container>
+    </ng-template>
     <div class="board__task-creator">
         <tm-task-creator></tm-task-creator>
     </div>

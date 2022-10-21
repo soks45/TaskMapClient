@@ -8,6 +8,7 @@ import { ShortUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
+import { TempTaskService } from '@services/temp-task.service';
 import { Observable, takeUntil, tap } from 'rxjs';
 
 @Component({
@@ -24,13 +25,15 @@ import { Observable, takeUntil, tap } from 'rxjs';
 })
 export class BoardComponent extends DestroyMixin(BaseObject) {
     tasks$?: Observable<TaskB[]>;
+    tempTasks$: Observable<TaskB[]>;
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
 
     constructor(
         private taskService: TaskService,
         private currentBoard: CurrentBoardService,
-        private auth: AuthService
+        private auth: AuthService,
+        private tempTaskService: TempTaskService
     ) {
         super();
         this.user$ = this.auth.user$;
@@ -38,6 +41,7 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
             takeUntil(this.destroyed$),
             tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
         );
+        this.tempTasks$ = this.tempTaskService.tempTasks$;
     }
 
     contextMenu(event: Event): void {

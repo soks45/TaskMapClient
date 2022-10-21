@@ -7,6 +7,7 @@ import { Color, Colors, State, States, TaskB } from '@models/task-b';
 import { MessagesService } from '@services/messages.service';
 import { TaskCreatorService } from '@services/task-creator.service';
 import { TaskService } from '@services/task.service';
+import { TempTaskService } from '@services/temp-task.service';
 import { finalize } from 'rxjs/operators';
 
 export interface EditDialogData {
@@ -40,7 +41,8 @@ export class EditCardDialogComponent extends FormMixin<Constructor, EditCardForm
         private messages: MessagesService,
         @Inject(MAT_DIALOG_DATA)
         private data: EditDialogData,
-        private taskCreator: TaskCreatorService
+        private taskCreator: TaskCreatorService,
+        private tempTasks: TempTaskService
     ) {
         super();
         if (this.data.fromCreator) {
@@ -74,10 +76,7 @@ export class EditCardDialogComponent extends FormMixin<Constructor, EditCardForm
         }
 
         if (this.data.fromCreator) {
-            this.taskCreator.edit({
-                ...this.data.task,
-                ...this.formGroup.value,
-            });
+            this.taskCreator.edit(this.formValue);
             this.dialogRef.close();
             return;
         }
@@ -91,7 +90,7 @@ export class EditCardDialogComponent extends FormMixin<Constructor, EditCardForm
             return;
         }
 
-        // not authed case
+        this.tempTasks.edit(this.formValue);
     }
 
     onCancel(): void {

@@ -7,6 +7,7 @@ import {
     EditDialogData,
 } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task.service';
+import { TempTaskService } from '@services/temp-task.service';
 
 @Component({
     selector: 'tm-card [task]',
@@ -19,7 +20,11 @@ export class CardComponent {
     @Input() fromCreator: boolean = false;
     @Input() isAuthed: boolean = false;
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {}
+    constructor(
+        private taskService: TaskService,
+        private dialog: MatDialog,
+        private tempTaskService: TempTaskService
+    ) {}
 
     deleteTask(): void {
         if (this.fromCreator) {
@@ -30,7 +35,7 @@ export class CardComponent {
     }
 
     editTask(): void {
-        const dialogRef = this.dialog.open(EditCardDialogComponent, {
+        this.dialog.open(EditCardDialogComponent, {
             closeOnNavigation: true,
             data: <EditDialogData>{
                 task: this.task,
@@ -38,18 +43,17 @@ export class CardComponent {
                 fromCreator: this.fromCreator,
             },
         });
-
-        if (this.fromCreator) {
-            return;
-        }
-
-        //TODO do some cool stuff here
     }
 
     newTaskPosition(event: CdkDragEnd): void {
-        const newPosition = event.source._dragRef.getFreeDragPosition();
+        const newPosition = event.source._dragRef.getFreeDragPosition(); // TODO refactor coordinates
         this.task.coordinates.x = newPosition.x;
         this.task.coordinates.y = newPosition.y;
+        if (!this.isAuthed) {
+            this.tempTaskService.edit(this.task);
+            return;
+        }
+
         this.taskService.edit(this.task).subscribe();
     }
 }

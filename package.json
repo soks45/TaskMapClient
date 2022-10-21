@@ -27,6 +27,7 @@
         "@microsoft/signalr": "^6.0.3",
         "md5-typescript": "^1.0.5",
         "moment": "^2.29.1",
+        "ngx-cookie-service": "^14.0.1",
         "ngx-logger": "^5.0.9",
         "rxjs": "~7.5.0",
         "tslib": "^2.3.0",

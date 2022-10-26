@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { TaskB, TaskBServer } from '@models/task-b';
+import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { TaskHubService } from '@services/task-hub.service';
 import { Observable, Subject, throttleTime } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
 enum TaskMethodsClient {
     addTask = 'newTask',
@@ -28,42 +28,29 @@ export class TaskService {
     constructor(private signalRService: TaskHubService, private converter: ConverterService) {
         this.taskMovesSource$ = new Subject<TaskB>();
 
-        this.signalRService.on(TaskMethodsClient.addTask, (taskBServer: TaskBServer) =>
-            this.addTaskClient(this.converter.taskBClient(taskBServer))
-        );
-        this.signalRService.on(TaskMethodsClient.editTask, (taskBServer: TaskBServer) =>
-            this.editTaskClient(this.converter.taskBClient(taskBServer))
-        );
-        this.signalRService.on(TaskMethodsClient.deleteTask, (taskBServer: TaskBServer) =>
-            this.deleteTaskClient(this.converter.taskBClient(taskBServer))
-        );
+        this.signalRService.on(TaskMethodsClient.addTask, (taskB: TaskB) => this.addTaskClient(taskB));
+        this.signalRService.on(TaskMethodsClient.editTask, (taskB: TaskB) => this.editTaskClient(taskB));
+        this.signalRService.on(TaskMethodsClient.deleteTask, (taskB: TaskB) => this.deleteTaskClient(taskB));
 
         this.taskMovesSource$.pipe(throttleTime(15)).subscribe((task) => this.moveTask(task));
     }
 
     loadTasks(boardId: number): Observable<TaskB[]> {
-        return this.signalRService.safeInvoke<TaskBServer[]>(TaskMethodsServer.loadTasks, boardId).pipe(
-            map((tasksServer: TaskBServer[]) => tasksServer.map((task) => this.converter.taskBClient(task))),
-            tap((tasks) => this.loadTasksClient(tasks))
-        );
+        return this.signalRService
+            .safeInvoke<TaskB[]>(TaskMethodsServer.loadTasks, boardId)
+            .pipe(tap((tasks) => this.loadTasksClient(tasks)));
     }
 
     addTask(task: TaskB): Observable<TaskB> {
         return this.signalRService
-            .safeInvoke<TaskBServer>(TaskMethodsServer.addTask, this.converter.taskBServer(task))
-            .pipe(
-                map((taskServer) => this.converter.taskBClient(taskServer)),
-                tap((task) => this.addTaskClient(task))
-            );
+            .safeInvoke<TaskB>(TaskMethodsServer.addTask, this.converter.taskBServer(task))
+            .pipe(tap((task) => this.addTaskClient(task)));
     }
 
     editTask(task: TaskB): Observable<TaskB> {
         return this.signalRService
-            .safeInvoke<TaskBServer>(TaskMethodsServer.editTask, this.converter.taskBServer(task))
-            .pipe(
-                map((taskServer) => this.converter.taskBClient(taskServer)),
-                tap((task) => this.editTaskClient(task))
-            );
+            .safeInvoke<TaskB>(TaskMethodsServer.editTask, this.converter.taskBServer(task))
+            .pipe(tap((task) => this.editTaskClient(task)));
     }
 
     deleteTask(task: TaskB): Observable<boolean> {

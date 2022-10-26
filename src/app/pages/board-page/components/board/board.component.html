@@ -12,7 +12,7 @@
 
     </ng-template>
     <div class="board__task-creator">
-        <tm-task-creator></tm-task-creator>
+        <tm-task-creator [boundaryCreator]="boundary"></tm-task-creator>
     </div>
     <ng-template #loading>
         <mat-spinner class="loader"></mat-spinner>

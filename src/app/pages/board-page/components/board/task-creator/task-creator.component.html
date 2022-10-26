@@ -1,6 +1,13 @@
-<div class="task-creator">
-    <div class="task-creator__header">
-        <button class="task-creator__show-btn" mat-button mat-icon-button (click)="isShowing = !isShowing">
+<div class="task-creator"
+     cdkDrag
+     [cdkDragBoundary]="boundaryCreator.boundaryClassName"
+     (cdkDragStarted)="onDnDStarted($event)"
+     (cdkDragEnded)="onDnDEnded($event)"
+>
+    <div class="task-creator__header" cdkDragHandle>
+        <button class="task-creator__show-btn" mat-button mat-icon-button
+                (click)="onShow($event)"
+        >
             <mat-icon svgIcon="custom-add"></mat-icon>
         </button>
     </div>

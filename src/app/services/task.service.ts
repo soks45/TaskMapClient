@@ -42,7 +42,7 @@ export class TaskService implements CRUD<TaskB> {
                     throw err;
                 }),
                 filter(() => shouldReload),
-                tap(() => this.reload(entity.boardId))
+                tap(() => this.reload(entity.boardId)) // TODO not obviously behavior
             );
     }
 

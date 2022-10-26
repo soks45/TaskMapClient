@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
@@ -15,7 +16,7 @@ import { Observable, takeUntil } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
-    selector: 'tm-task-creator',
+    selector: 'tm-task-creator [boundaryCreator]',
     templateUrl: './task-creator.component.html',
     styleUrls: ['./task-creator.component.scss'],
     providers: [DatePipe],
@@ -29,6 +30,8 @@ import { finalize } from 'rxjs/operators';
     ],
 })
 export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements OnInit {
+    @Input()
+        boundaryCreator!: Boundary;
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
     isLoading: boolean = false;
@@ -38,6 +41,7 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
     boundary: Boundary = {
         boundaryClassName: '',
     };
+    isDragging = false;
 
     constructor(
         private taskService: TaskService,
@@ -81,5 +85,22 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
             .add(newTask)
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe();
+    }
+
+    onDnDStarted($event: CdkDragStart): void {
+        this.isDragging = true;
+        console.log('onDnDStarted', this.isDragging, $event);
+    }
+
+    onDnDEnded($event: CdkDragEnd): void {
+        this.isDragging = false;
+        console.log('onDnDEnded', this.isDragging, $event);
+    }
+
+    onShow($event: MouseEvent): void {
+        console.log('onShow', this.isDragging, $event); // TODO fix dnd and click logic
+        if (!this.isDragging) {
+            this.isShowing = !this.isShowing;
+        }
     }
 }

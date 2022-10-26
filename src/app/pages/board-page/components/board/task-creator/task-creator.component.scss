@@ -3,10 +3,12 @@
     height: 374px;
     flex-direction: column;
     z-index: 100;
+    position: relative;
 
     &__show-btn {
         width: 40px;
         height: 40px;
+        background: rgba(0, 0, 0, 0.11);
     }
 
     &__header {

@@ -24,8 +24,8 @@ export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
     @Input() boundary!: Boundary;
     @Input() fromCreator: boolean = false;
     size: Point = {
-        x: 1600,
-        y: 900,
+        x: 0,
+        y: 0,
     };
     position: Point = {
         x: 0,

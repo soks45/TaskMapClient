@@ -3,7 +3,7 @@
         <div *ngIf="currentBoard$ | async; else loading">
             <div *ngIf="tasks$ | async as tasks; else loading" @smoothAppearance>
                 <div *ngFor="let task of tasks">
-                    <tm-card [task]="task" [isAuthed]="true" [boundary]="'.board'"></tm-card>
+                    <tm-card [task]="task" [boundary]="'.board'"></tm-card>
                 </div>
             </div>
         </div>
@@ -12,11 +12,7 @@
         </ng-template>
     </div>
     <ng-template #notAuthed>
-        <ng-container *ngIf="tempTasks$ | async as tempTasks">
-            <div *ngFor="let task of tempTasks">
-                <tm-card [task]="task" [isAuthed]="false" [boundary]="'.board'"></tm-card>
-            </div>
-        </ng-container>
+
     </ng-template>
     <div class="board__task-creator">
         <tm-task-creator></tm-task-creator>

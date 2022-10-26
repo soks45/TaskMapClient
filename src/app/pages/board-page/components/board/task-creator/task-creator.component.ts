@@ -10,7 +10,6 @@ import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskCreatorService } from '@services/task-creator.service';
 import { TaskService } from '@services/task.service';
-import { TempTaskService } from '@services/temp-task.service';
 import { Observable, takeUntil } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
@@ -40,8 +39,7 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
         private taskService: TaskService,
         private currentBoardService: CurrentBoardService,
         private auth: AuthService,
-        private taskCreator: TaskCreatorService,
-        private tempTaskService: TempTaskService
+        private taskCreator: TaskCreatorService
     ) {
         super();
         this.currentBoard$ = this.currentBoardService.currentBoard$;
@@ -74,16 +72,10 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
     }
 
     onCreate(newTask: TaskB): void {
-        if (newTask.userId !== -1 && newTask.boardId !== -1) {
-            this.isLoading = true;
-            this.taskService
-                .add(newTask)
-                .pipe(finalize(() => (this.isLoading = false)))
-                .subscribe();
-
-            return;
-        }
-
-        this.tempTaskService.create(newTask);
+        this.isLoading = true;
+        this.taskService
+            .add(newTask)
+            .pipe(finalize(() => (this.isLoading = false)))
+            .subscribe();
     }
 }

@@ -7,7 +7,6 @@ import {
     EditDialogData,
 } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task.service';
-import { TempTaskService } from '@services/temp-task.service';
 
 @Component({
     selector: 'tm-card [task]',
@@ -18,13 +17,8 @@ export class CardComponent {
     @Input() task!: TaskB;
     @Input() boundary?: string;
     @Input() fromCreator: boolean = false;
-    @Input() isAuthed: boolean = false;
 
-    constructor(
-        private taskService: TaskService,
-        private dialog: MatDialog,
-        private tempTaskService: TempTaskService
-    ) {}
+    constructor(private taskService: TaskService, private dialog: MatDialog) {}
 
     deleteTask(): void {
         if (this.fromCreator) {
@@ -39,7 +33,6 @@ export class CardComponent {
             closeOnNavigation: true,
             data: <EditDialogData>{
                 task: this.task,
-                isAuthed: this.isAuthed,
                 fromCreator: this.fromCreator,
             },
         });
@@ -49,10 +42,6 @@ export class CardComponent {
         const newPosition = event.source._dragRef.getFreeDragPosition(); // TODO refactor coordinates
         this.task.coordinates.x = newPosition.x;
         this.task.coordinates.y = newPosition.y;
-        if (!this.isAuthed) {
-            this.tempTaskService.edit(this.task);
-            return;
-        }
 
         this.taskService.edit(this.task).subscribe();
     }

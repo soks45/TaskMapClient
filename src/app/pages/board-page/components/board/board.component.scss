@@ -5,16 +5,20 @@
     border-style: dashed;
     border-radius: 40px;
     background-image: url('~assets/img/reticle.svg');
+    position: relative;
 
     &__task-creator {
+        position: relative;
         display: flex;
         justify-content: right;
         float: right;
-        margin-top: 24px;
-        margin-right: 24px;
+        top: 3%;
+        right: 1.5%;
     }
 }
 
 .loader {
-    margin: 20% auto;
+    position: absolute;
+    left: 45%;
+    top: 45%;
 }

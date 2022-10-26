@@ -6,7 +6,7 @@ import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
-import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
+import { AsyncSubject, filter, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -20,9 +20,7 @@ export class TaskService implements CRUD<TaskB> {
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
 
     get(id: number): Observable<TaskB[]> {
-        return this.load(id)
-            .pipe(mergeMap(() => this.tasks.getItem(id)!))
-            .pipe(tap(console.log));
+        return this.load(id).pipe(mergeMap(() => this.tasks.getItem(id)!));
     }
 
     add(entity: TaskB): Observable<void> {
@@ -36,13 +34,14 @@ export class TaskService implements CRUD<TaskB> {
             );
     }
 
-    edit(entity: TaskB): Observable<void> {
+    edit(entity: TaskB, shouldReload: boolean = true): Observable<void> {
         return this.http
             .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
             .pipe(
                 catchError((err) => {
                     throw err;
                 }),
+                filter(() => shouldReload),
                 tap(() => this.reload(entity.boardId))
             );
     }

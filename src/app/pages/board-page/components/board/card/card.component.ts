@@ -78,6 +78,6 @@ export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
         newPos = this.converter.positionToFraction(newPos, this.size);
         this.task.x = newPos.x;
         this.task.y = newPos.y;
-        this.taskService.edit(this.task).subscribe();
+        this.taskService.edit(this.task, false).subscribe();
     }
 }

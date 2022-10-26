@@ -1,7 +1,4 @@
-<div [class]="boundary.boundaryClassName" (contextmenu)="contextMenu($event)" #boardElement>
-    <div class="board__task-creator">
-        <tm-task-creator></tm-task-creator>
-    </div>
+<div [class]="boundary.boundaryClassName.split('.').join('')" (contextmenu)="contextMenu($event)" #boardElement>
     <div *ngIf="user$ | async; else notAuthed">
         <div *ngIf="currentBoard$ | async; else loading">
             <div *ngIf="tasks$ | async as tasks; else loading" @smoothAppearance>
@@ -14,6 +11,9 @@
     <ng-template #notAuthed>
 
     </ng-template>
+    <div class="board__task-creator">
+        <tm-task-creator></tm-task-creator>
+    </div>
     <ng-template #loading>
         <mat-spinner class="loader"></mat-spinner>
     </ng-template>

@@ -7,9 +7,9 @@
     [cdkDragFreeDragPosition]="position"
     (cdkDragEnded)="onDnDEnd($event)"
 >
-    <header class="card-text_header">
-        <div class="card-text_header_label">{{ task.taskLabel }}</div>
-        <div class="card-text_header_actions">
+    <header class="card-box__header">
+        <div class="card-box__header-label">{{ task.taskLabel }}</div>
+        <div class="card-box__header-actions">
             <button class="action-button" style="transform: scale(0.85)" (click)="editTask()">
                 <mat-icon>create</mat-icon>
             </button>
@@ -18,8 +18,8 @@
             </button>
         </div>
     </header>
-    <div class="card-text_body">
+    <div class="card-box__body">
         {{ task.taskText }}
     </div>
-    <div class="card-text_date">{{ task.createdDate | date: 'dd-MM-yyyy' }}</div>
+    <div class="card-box__date">{{ task.createdDate | date: 'dd-MM-yyyy' }}</div>
 </div>

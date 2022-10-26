@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ChartModel } from '@models/chart-model';
 import { Color, State, TaskB } from '@models/task-b';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 interface EditTask {
     taskId?: number;
     boardId?: number;
-    coordinates?: ChartModel;
+    x?: number;
+    t?: number;
     userId?: number;
     createdDate?: string;
     taskLabel?: string;
@@ -39,15 +39,14 @@ export class TaskCreatorService {
             taskId: 1,
             taskText: 'some task definition',
             state: State.Main,
-            coordinates: {
-                x: 0,
-                y: 0,
-            },
+            x: 0,
+            y: 0,
             taskLabel: 'New Task',
             createdDate: new Date().toString(),
             color: Color.Green,
             boardId: -1,
             userId: -1,
+            nextTaskId: 0,
         };
     }
 }

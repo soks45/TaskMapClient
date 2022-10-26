@@ -3,9 +3,9 @@
     cdkDrag
     [cdkDragDisabled]="fromCreator"
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
-    [cdkDragBoundary]="boundary || ''"
-    [cdkDragFreeDragPosition]="task.coordinates"
-    (cdkDragEnded)="newTaskPosition($event)"
+    [cdkDragBoundary]="boundary.boundaryClassName"
+    [cdkDragFreeDragPosition]="position"
+    (cdkDragEnded)="onDnDEnd($event)"
 >
     <header class="card-text_header">
         <div class="card-text_header_label">{{ task.taskLabel }}</div>

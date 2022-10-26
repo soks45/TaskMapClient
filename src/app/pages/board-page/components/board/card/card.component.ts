@@ -1,24 +1,46 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Component, Input } from '@angular/core';
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { DestroyMixin } from '@mixins/destroy.mixin';
+import { BaseObject } from '@mixins/mixins';
 import { TaskB } from '@models/task-b';
+import { Boundary } from '@pages/board-page/components/board/board.component';
 import {
     EditCardDialogComponent,
     EditDialogData,
 } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import { ConverterService } from '@services/converter.service';
 import { TaskService } from '@services/task.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
-    selector: 'tm-card [task]',
+    selector: 'tm-card [task] [boundary]',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
 })
-export class CardComponent {
+export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
     @Input() task!: TaskB;
-    @Input() boundary?: string;
+    @Input() boundary!: Boundary;
     @Input() fromCreator: boolean = false;
+    size: Point = {
+        x: 1600,
+        y: 900,
+    };
+    position: Point = {
+        x: 0,
+        y: 0,
+    };
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {}
+    constructor(private taskService: TaskService, private dialog: MatDialog, private converter: ConverterService) {
+        super();
+    }
+
+    ngOnInit(): void {
+        if (this.boundary.boundarySize) {
+            this.boundary.boundarySize.pipe(takeUntil(this.destroyed$)).subscribe((newSize) => this.onResize(newSize));
+        }
+    }
 
     deleteTask(): void {
         if (this.fromCreator) {
@@ -33,16 +55,29 @@ export class CardComponent {
             closeOnNavigation: true,
             data: <EditDialogData>{
                 task: this.task,
+                isAuthed: true,
                 fromCreator: this.fromCreator,
             },
         });
     }
 
-    newTaskPosition(event: CdkDragEnd): void {
-        const newPosition = event.source._dragRef.getFreeDragPosition(); // TODO refactor coordinates
-        this.task.coordinates.x = newPosition.x;
-        this.task.coordinates.y = newPosition.y;
+    onDnDEnd(event: CdkDragEnd): void {
+        this.newTaskPosition(event.source._dragRef.getFreeDragPosition());
+    }
 
+    private onResize(newSize: Point): void {
+        this.size = newSize;
+        this.setPosition();
+    }
+
+    private setPosition(): void {
+        this.position = this.converter.fractionToPosition({ x: this.task.x, y: this.task.y }, this.size);
+    }
+
+    private newTaskPosition(newPos: Point): void {
+        newPos = this.converter.positionToFraction(newPos, this.size);
+        this.task.x = newPos.x;
+        this.task.y = newPos.y;
         this.taskService.edit(this.task).subscribe();
     }
 }

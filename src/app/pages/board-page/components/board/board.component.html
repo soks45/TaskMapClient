@@ -1,9 +1,9 @@
-<div class="board" (contextmenu)="contextMenu($event)">
+<div [class]="boundary.boundaryClassName" (contextmenu)="contextMenu($event)" #boardElement>
     <div *ngIf="user$ | async; else notAuthed">
         <div *ngIf="currentBoard$ | async; else loading">
             <div *ngIf="tasks$ | async as tasks; else loading" @smoothAppearance>
                 <div *ngFor="let task of tasks">
-                    <tm-card [task]="task" [boundary]="'.board'"></tm-card>
+                    <tm-card [task]="task" [boundary]="boundary"></tm-card>
                 </div>
             </div>
         </div>

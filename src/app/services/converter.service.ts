@@ -1,5 +1,6 @@
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { Injectable } from '@angular/core';
-import { TaskB, TaskBServer } from '@models/task-b';
+import { TaskB } from '@models/task-b';
 
 @Injectable({
     providedIn: 'root',
@@ -7,21 +8,22 @@ import { TaskB, TaskBServer } from '@models/task-b';
 export class ConverterService {
     constructor() {}
 
-    taskBClient(task: TaskBServer): TaskB {
-        return <TaskB>{
-            ...task,
-            coordinates: JSON.parse(task.coordinates),
+    taskBServer(task: TaskB): TaskB {
+        [task.x, task.y] = [parseFloat(Math.abs(task.x).toFixed(4)), parseFloat(Math.abs(task.y).toFixed(4))];
+        return task;
+    }
+
+    fractionToPosition(fraction: Point, size: Point): Point {
+        return {
+            x: fraction.x * size.x,
+            y: fraction.y * size.y,
         };
     }
 
-    taskBServer(task: TaskB): TaskBServer {
-        [task.coordinates.x, task.coordinates.y] = [
-            Math.abs(Math.floor(task.coordinates.x)),
-            Math.abs(Math.floor(task.coordinates.y)),
-        ];
-        return <TaskBServer>{
-            ...task,
-            coordinates: JSON.stringify(task.coordinates),
+    positionToFraction(position: Point, size: Point): Point {
+        return {
+            x: position.x / size.x,
+            y: position.y / size.y,
         };
     }
 }

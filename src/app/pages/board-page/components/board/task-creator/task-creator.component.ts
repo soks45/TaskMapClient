@@ -6,6 +6,7 @@ import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { Color, TaskB } from '@models/task-b';
 import { ShortUser } from '@models/user';
+import { Boundary } from '@pages/board-page/components/board/board.component';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskCreatorService } from '@services/task-creator.service';
@@ -33,7 +34,10 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
     isLoading: boolean = false;
     isShowing: boolean = true;
     colorType = Color;
-    creatorTask: Observable<TaskB>;
+    creatorTask$: Observable<TaskB>;
+    boundary: Boundary = {
+        boundaryClassName: '',
+    };
 
     constructor(
         private taskService: TaskService,
@@ -44,7 +48,7 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
         super();
         this.currentBoard$ = this.currentBoardService.currentBoard$;
         this.user$ = this.auth.user$;
-        this.creatorTask = this.taskCreator.creatorTask$;
+        this.creatorTask$ = this.taskCreator.creatorTask$;
     }
 
     ngOnInit(): void {

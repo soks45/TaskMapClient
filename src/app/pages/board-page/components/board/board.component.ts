@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component } from '@angular/core';
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
@@ -8,7 +9,13 @@ import { ShortUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/current-board.service';
 import { TaskService } from '@services/task.service';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { concat, fromEvent, Observable, of, takeUntil, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface Boundary {
+    boundaryClassName: string;
+    boundarySize?: Observable<Point>;
+}
 
 @Component({
     selector: 'tm-board',
@@ -26,6 +33,10 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
     tasks$?: Observable<TaskB[]>;
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
+    boundary: Boundary;
+
+    @ViewChild('boardElement')
+        boardElement!: ElementRef;
 
     constructor(
         private taskService: TaskService,
@@ -38,10 +49,24 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
             takeUntil(this.destroyed$),
             tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
         );
+
+        this.boundary = {
+            boundaryClassName: 'board',
+            boundarySize: concat(of(null), fromEvent(window, 'resize').pipe(takeUntil(this.destroyed$))).pipe(
+                map(() => this.BoundarySize)
+            ),
+        };
     }
 
     contextMenu(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
+    }
+
+    get BoundarySize(): Point {
+        return <Point>{
+            x: this.boardElement.nativeElement.offsetWidth,
+            y: this.boardElement.nativeElement.offsetHeight,
+        };
     }
 }

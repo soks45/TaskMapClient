@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { CRUD } from '@models/CRUD';
-import { TaskB, TaskBServer } from '@models/task-b';
+import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -20,7 +20,9 @@ export class TaskService implements CRUD<TaskB> {
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
 
     get(id: number): Observable<TaskB[]> {
-        return this.load(id).pipe(mergeMap(() => this.tasks.getItem(id)!));
+        return this.load(id)
+            .pipe(mergeMap(() => this.tasks.getItem(id)!))
+            .pipe(tap(console.log));
     }
 
     add(entity: TaskB): Observable<void> {
@@ -71,7 +73,7 @@ export class TaskService implements CRUD<TaskB> {
         if (!this.cache.getItem(id)) {
             this.cache.setItem(
                 id,
-                this.http.get<TaskBServer[]>(`${environment.apiUrl}/task/${id}`, { withCredentials: true }).pipe(
+                this.http.get<TaskB[]>(`${environment.apiUrl}/task/${id}`, { withCredentials: true }).pipe(
                     share({
                         connector: () => new AsyncSubject(),
                         resetOnError: false,
@@ -82,8 +84,7 @@ export class TaskService implements CRUD<TaskB> {
                         this.messages.error(err);
                         this.cache.removeItem(id);
                         throw err;
-                    }),
-                    map((tasks) => tasks.map((task) => this.converter.taskBClient(task)))
+                    })
                 )
             );
         }

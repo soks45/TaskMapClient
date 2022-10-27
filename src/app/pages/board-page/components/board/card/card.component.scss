@@ -93,9 +93,13 @@
 
         &-label {
             display: inline;
-            text-overflow: ellipsis;
             white-space: nowrap;
-            overflow: hidden;
+            overflow: auto;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        &-label::-webkit-scrollbar {
+            display: none;
         }
     }
 }

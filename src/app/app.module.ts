@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -7,6 +7,7 @@ import { InterceptorsModule } from '@interceptors/interceptors.module';
 import { AuthService } from '@services/auth.service';
 import { HeaderModule } from '@ui/header/header.module';
 import { appInitializer } from 'app/app-initializer';
+import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
 import { environment } from 'environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
@@ -38,6 +39,10 @@ import { AppComponent } from './app.component';
             deps: [AuthService],
         },
         CookieService,
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler,
+        },
     ],
     bootstrap: [AppComponent],
 })

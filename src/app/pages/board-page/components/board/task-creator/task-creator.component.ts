@@ -1,18 +1,16 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CdkDragEnd, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { DatePipe } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Board } from '@models/board';
 import { Color, TaskB } from '@models/task-b';
-import { ShortUser } from '@models/user';
 import { Boundary } from '@pages/board-page/components/board/board.component';
-import { AuthService } from '@services/auth.service';
-import { CurrentBoardService } from '@services/current-board.service';
+import { ConverterService } from '@services/converter.service';
 import { TaskCreatorService } from '@services/task-creator.service';
 import { TaskService } from '@services/task.service';
-import { Observable, takeUntil } from 'rxjs';
+import { Observable, takeUntil, tap } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -29,78 +27,118 @@ import { finalize } from 'rxjs/operators';
         ]),
     ],
 })
-export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements OnInit {
-    @Input()
-        boundaryCreator!: Boundary;
-    currentBoard$: Observable<Board>;
-    user$: Observable<ShortUser | null>;
+export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
+    creatorCardBoundary: Boundary = { boundaryClassName: '' };
+    readonly cardCreatorSize: Point = {
+        x: 304,
+        y: 374,
+    };
+
+    @Input() boundaryCreator!: Boundary;
+
     isLoading: boolean = false;
     isShowing: boolean = true;
+    isFirstResize: boolean = true;
+    isProtectingDragAction: boolean = false;
+
     colorType = Color;
     creatorTask$: Observable<TaskB>;
-    boundary: Boundary = {
-        boundaryClassName: '',
+
+    size: Point = {
+        x: 0,
+        y: 0,
     };
-    isDragging = false;
+    position: Point = {
+        x: 0,
+        y: 0,
+    };
+    relativePosition: Point = {
+        x: 0.7,
+        y: 0.05,
+    };
 
     constructor(
         private taskService: TaskService,
-        private currentBoardService: CurrentBoardService,
-        private auth: AuthService,
-        private taskCreator: TaskCreatorService
+        private taskCreator: TaskCreatorService,
+        private converter: ConverterService
     ) {
         super();
-        this.currentBoard$ = this.currentBoardService.currentBoard$;
-        this.user$ = this.auth.user$;
         this.creatorTask$ = this.taskCreator.creatorTask$;
     }
 
-    ngOnInit(): void {
-        this.currentBoard$
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe((board) => this.taskCreator.edit({ boardId: board.boardId }));
+    ngAfterViewInit(): void {
+        if (this.boundaryCreator.boundarySize) {
+            const resizes$ = this.boundaryCreator.boundarySize.pipe(takeUntil(this.destroyed$));
+            resizes$
+                .pipe(
+                    tap((size) => {
+                        if (this.isFirstResize) {
+                            this.relativePosition = {
+                                x: 1 - (this.cardCreatorSize.x / size.x + 0.03), // top right corner
+                                y: 0.03,
+                            };
 
-        this.user$.pipe(takeUntil(this.destroyed$)).subscribe((u) => {
-            if (!u) {
-                this.taskCreator.edit({
-                    userId: -1,
-                    boardId: -1,
-                });
-                return;
-            }
-
-            this.taskCreator.edit({
-                userId: u.userId,
-            });
-        });
+                            this.isFirstResize = !this.isFirstResize;
+                        }
+                    })
+                )
+                .subscribe((newSize) => this.onResize(newSize));
+        }
     }
 
     changeColor(color: Color): void {
         this.taskCreator.edit({ color: color });
     }
 
-    onCreate(newTask: TaskB): void {
+    onCreate(creatorTask: TaskB): void {
+        const newTask = this.setNewTaskPosition(creatorTask);
+
         this.isLoading = true;
         this.taskService
             .add(newTask)
             .pipe(finalize(() => (this.isLoading = false)))
-            .subscribe();
-    }
-
-    onDnDStarted($event: CdkDragStart): void {
-        this.isDragging = true;
-        console.log('onDnDStarted', this.isDragging, $event);
+            .subscribe(() => (this.isShowing = !this.isShowing));
     }
 
     onDnDEnded($event: CdkDragEnd): void {
-        this.isDragging = false;
-        console.log('onDnDEnded', this.isDragging, $event);
+        this.newPosition($event.source._dragRef.getFreeDragPosition());
+        this.setPosition();
     }
 
-    onShow($event: MouseEvent): void {
-        console.log('onShow', this.isDragging, $event); // TODO fix dnd and click logic
-        if (!this.isDragging) {
-            this.isShowing = !this.isShowing;
-        }
+    onShow(): void {
+        this.isShowing = !this.isShowing;
+    }
+
+    private onResize(newSize: Point): void {
+        this.size = newSize;
+        this.setPosition();
+    }
+
+    private setPosition(): void {
+        this.position = this.converter.fractionToPosition(
+            {
+                x: this.relativePosition.x,
+                y: this.relativePosition.y,
+            },
+            this.size,
+            this.cardCreatorSize
+        );
+    }
+
+    private newPosition(newPos: Point): void {
+        newPos = this.converter.positionToFraction(newPos, this.size);
+        this.relativePosition.x = newPos.x;
+        this.relativePosition.y = newPos.y;
+    }
+
+    private setNewTaskPosition(task: TaskB): TaskB {
+        const newTask: TaskB = {
+            ...task,
+        };
+
+        newTask.x = (this.position.x + 20) / this.size.x;
+        newTask.y = (this.position.y + 55) / this.size.y;
+
+        return newTask;
     }
 }

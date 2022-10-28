@@ -81,3 +81,16 @@
     scale: 0.7;
 }
 
+.selected-icon {
+    margin-bottom: 2px;
+    margin-right: 4px;
+}
+
+.drag-shield {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10000; /* Or whatever your application requires to be on TOP. */
+}

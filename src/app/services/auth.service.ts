@@ -3,8 +3,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { InputUser, User } from '@models/user';
+import { MessagesService } from '@services/messages.service';
 import { Md5 } from 'md5-typescript';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
 
@@ -36,7 +36,7 @@ export class AuthService implements OnDestroy {
         }
     }
 
-    constructor(private router: Router, private http: HttpClient, private logger: NGXLogger) {
+    constructor(private router: Router, private http: HttpClient, private messages: MessagesService) {
         window.addEventListener('storage', this.storageEventListener.bind(this));
     }
 
@@ -55,7 +55,6 @@ export class AuthService implements OnDestroy {
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this.logger.info(x);
                     this._user.next({ ...x });
                     this.setLocalStorage(x);
                     this.startTokenTimer();
@@ -78,9 +77,10 @@ export class AuthService implements OnDestroy {
 
     logout(): void {
         this.http
-            .post<unknown>(`${this.apiUrl}/logout`, {})
+            .get<void>(`${this.apiUrl}/logout`)
             .pipe(
                 finalize(() => {
+                    this.messages.success('Have a nice day!');
                     this.clearLocalStorage();
                     this._user.next(null);
                     this.stopTokenTimer();

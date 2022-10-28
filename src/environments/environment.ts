@@ -8,7 +8,7 @@ export const environment = {
     signalRHubs: {
         Tasks: 'https://localhost:5001/hub/task',
     },
-    logUrl: 'https://localhost:5001/api/send-log/log',
+    logUrl: 'https://localhost:5001/api/send-log',
 };
 
 /*

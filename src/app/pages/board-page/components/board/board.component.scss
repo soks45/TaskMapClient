@@ -6,14 +6,10 @@
     border-radius: 40px;
     background-image: url('~assets/img/reticle.svg');
     position: relative;
+    border-color: #444444;
 
     &__task-creator {
-        position: relative;
         display: flex;
-        justify-content: right;
-        float: right;
-        top: 3%;
-        right: 1.5%;
     }
 }
 

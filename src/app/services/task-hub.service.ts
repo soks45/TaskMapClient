@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import * as signalR from '@microsoft/signalr';
 import { HubConnectionState, IRetryPolicy, LogLevel, RetryContext } from '@microsoft/signalr';
-import { NGXLogger } from 'ngx-logger';
 import { BehaviorSubject, distinct, from, Observable, switchMap, tap } from 'rxjs';
 
 interface ModifiedHub {
@@ -25,7 +24,7 @@ export class TaskHubService implements ModifiedHub {
     private readonly connectionStateSource$: BehaviorSubject<HubConnectionState>;
     private newConnectionStateCallback = () => this.connectionStateSource$.next(this.hubConnection.state);
 
-    constructor(private logger: NGXLogger) {
+    constructor() {
         this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(environment.signalRHubs.Tasks)
             .withAutomaticReconnect(this.retryPolicyFactory())
@@ -34,7 +33,6 @@ export class TaskHubService implements ModifiedHub {
 
         this.connectionStateSource$ = new BehaviorSubject<HubConnectionState>(this.hubConnection.state);
         this.connectionState$ = this.connectionStateSource$.pipe(distinct());
-        this.connectionState$.subscribe((state) => this.logger.log(`[SignalRService]: new connection state: ${state}`));
         this.connectionStateChangesOnEvents();
     }
 

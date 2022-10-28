@@ -1,12 +1,14 @@
 <div class="task-creator"
      cdkDrag
      [cdkDragBoundary]="boundaryCreator.boundaryClassName"
-     (cdkDragStarted)="onDnDStarted($event)"
      (cdkDragEnded)="onDnDEnded($event)"
+     [cdkDragFreeDragPosition]="position"
+     (cdkDragStarted)="isProtectingDragAction = true"
+     (cdkDragReleased)="isProtectingDragAction = false"
 >
     <div class="task-creator__header" cdkDragHandle>
         <button class="task-creator__show-btn" mat-button mat-icon-button
-                (click)="onShow($event)"
+                (click)="onShow()"
         >
             <mat-icon svgIcon="custom-add"></mat-icon>
         </button>
@@ -14,20 +16,23 @@
     <div class="task-creator__content" *ngIf="isShowing" @smoothAppearance>
         <ng-container *ngIf="creatorTask$ | async as task">
             <div class="task-creator__card">
-                <tm-card [task]="task" [fromCreator]="true" [boundary]="boundary"></tm-card>
+                <tm-card [task]="task" [fromCreator]="true" [boundary]="creatorCardBoundary"></tm-card>
             </div>
             <div class="task-creator__actions">
                 <div class="task-creator__actions--left">
                     <button mat-icon-button class="btn btn--purple icon-button-small"
                             (click)="changeColor(colorType.Purple)">
-                        <mat-icon *ngIf="task.color === colorType.Purple">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf="task.color === colorType.Purple" class="selected-icon">check_circle_outline
+                        </mat-icon>
                     </button>
                     <button mat-icon-button class="btn btn--red icon-button-small" (click)="changeColor(colorType.Red)">
-                        <mat-icon *ngIf="task.color === colorType.Red">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf="task.color === colorType.Red" class="selected-icon">check_circle_outline
+                        </mat-icon>
                     </button>
                     <button mat-icon-button class="btn btn--green icon-button-small"
                             (click)="changeColor(colorType.Green)">
-                        <mat-icon *ngIf="task.color === colorType.Green">check_circle_outline</mat-icon>
+                        <mat-icon *ngIf="task.color === colorType.Green" class="selected-icon">check_circle_outline
+                        </mat-icon>
                     </button>
                 </div>
                 <div class="task-creator__actions--right">
@@ -39,4 +44,7 @@
             </div>
         </ng-container>
     </div>
+</div>
+<div *ngIf="isProtectingDragAction" class="drag-shield">
+    <!-- This layer acts as an "event sink" for the mouse. -->
 </div>

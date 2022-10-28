@@ -1,13 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
-  <defs>
-    <style>
-      .cls-1 {
-        fill: none;
-        stroke: #04050910;
-        stroke-width: 2px;
-        fill-rule: evenodd;
-      }
-    </style>
-  </defs>
-  <path id="Линия_2_копия_3" data-name="Линия 2 копия 3" class="cls-1" d="M10-2h2V46H10V-2ZM32-2h2V46H32V-2ZM46,10v2H-2V10H46Zm0,22v2H-2V32H46Z"/>
+    <defs>
+        <style>
+            .cls-1 {
+                fill: none;
+                stroke: #04050920;
+                stroke-width: 2px;
+                fill-rule: evenodd;
+            }
+        </style>
+    </defs>
+    <path id="Линия_2_копия_3" data-name="Линия 2 копия 3" class="cls-1"
+          d="M10-2h2V46H10V-2ZM32-2h2V46H32V-2ZM46,10v2H-2V10H46Zm0,22v2H-2V32H46Z" />
 </svg>

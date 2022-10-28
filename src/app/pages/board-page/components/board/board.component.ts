@@ -34,6 +34,7 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
     boundary: Boundary;
+    boundaryClassName = 'board';
 
     @ViewChild('boardElement')
         boardElement!: ElementRef;
@@ -51,7 +52,7 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
         );
 
         this.boundary = {
-            boundaryClassName: '.board',
+            boundaryClassName: '.' + this.boundaryClassName,
             boundarySize: concat(of(null), fromEvent(window, 'resize').pipe(takeUntil(this.destroyed$))).pipe(
                 map(() => this.BoundarySize)
             ),

@@ -1,6 +1,6 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
@@ -19,10 +19,11 @@ import { takeUntil } from 'rxjs';
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
 })
-export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
+export class CardComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
     @Input() task!: TaskB;
     @Input() boundary!: Boundary;
     @Input() fromCreator: boolean = false;
+
     size: Point = {
         x: 0,
         y: 0,
@@ -31,12 +32,16 @@ export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
         x: 0,
         y: 0,
     };
+    cardSize: Point = {
+        x: 210,
+        y: 260,
+    };
 
     constructor(private taskService: TaskService, private dialog: MatDialog, private converter: ConverterService) {
         super();
     }
 
-    ngOnInit(): void {
+    ngAfterViewInit(): void {
         if (this.boundary.boundarySize) {
             this.boundary.boundarySize.pipe(takeUntil(this.destroyed$)).subscribe((newSize) => this.onResize(newSize));
         }
@@ -71,13 +76,14 @@ export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
     }
 
     private setPosition(): void {
-        this.position = this.converter.fractionToPosition({ x: this.task.x, y: this.task.y }, this.size);
+        this.position = this.converter.fractionToPosition({ x: this.task.x, y: this.task.y }, this.size, this.cardSize);
     }
 
     private newTaskPosition(newPos: Point): void {
-        newPos = this.converter.positionToFraction(newPos, this.size);
-        this.task.x = newPos.x;
-        this.task.y = newPos.y;
+        const fraction = this.converter.positionToFraction(newPos, this.size);
+        this.task.x = fraction.x;
+        this.task.y = fraction.y;
+        this.setPosition();
         this.taskService.edit(this.task, false).subscribe();
     }
 }

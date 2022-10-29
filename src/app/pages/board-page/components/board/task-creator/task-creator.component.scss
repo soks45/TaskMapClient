@@ -1,14 +1,11 @@
 .task-creator {
     width: 304px;
-    height: 374px;
     flex-direction: column;
-    z-index: 100;
     position: relative;
 
     &__show-btn {
         width: 40px;
         height: 40px;
-        background: rgba(0, 0, 0, 0.11);
     }
 
     &__header {
@@ -93,4 +90,33 @@
     right: 0;
     top: 0;
     z-index: 10000; /* Or whatever your application requires to be on TOP. */
+}
+
+@keyframes fading {
+    0% {
+        background: rgba(0, 0, 0, 0.11);
+    }
+    35% {
+        background: rgba(0, 0, 0, 0.11);
+    }
+    50% {
+        background: rgba(0, 0, 0, 0.20);
+        scale: 1.1;
+    }
+    65% {
+        background: rgba(0, 0, 0, 0.11);
+    }
+    100% {
+        background: rgba(0, 0, 0, 0.11);
+    }
+}
+
+.wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    animation: fading 5s ease-in-out infinite;
+    border-radius: 50%;
 }

@@ -6,10 +6,11 @@
      (cdkDragStarted)="isProtectingDragAction = true"
      (cdkDragReleased)="isProtectingDragAction = false"
 >
-    <div class="task-creator__header" cdkDragHandle>
-        <button class="task-creator__show-btn" mat-button mat-icon-button
+    <div class="task-creator__header">
+        <button class="task-creator__show-btn" mat-button mat-icon-button cdkDragHandle
                 (click)="onShow()"
         >
+            <div class="wrapper"></div>
             <mat-icon svgIcon="custom-add"></mat-icon>
         </button>
     </div>
@@ -22,16 +23,19 @@
                 <div class="task-creator__actions--left">
                     <button mat-icon-button class="btn btn--purple icon-button-small"
                             (click)="changeColor(colorType.Purple)">
-                        <mat-icon *ngIf="task.color === colorType.Purple" class="selected-icon">check_circle_outline
+                        <mat-icon *ngIf="task.color === colorType.Purple" class="selected-icon">
+                            check_circle_outline
                         </mat-icon>
                     </button>
                     <button mat-icon-button class="btn btn--red icon-button-small" (click)="changeColor(colorType.Red)">
-                        <mat-icon *ngIf="task.color === colorType.Red" class="selected-icon">check_circle_outline
+                        <mat-icon *ngIf="task.color === colorType.Red" class="selected-icon">
+                            check_circle_outline
                         </mat-icon>
                     </button>
                     <button mat-icon-button class="btn btn--green icon-button-small"
                             (click)="changeColor(colorType.Green)">
-                        <mat-icon *ngIf="task.color === colorType.Green" class="selected-icon">check_circle_outline
+                        <mat-icon *ngIf="task.color === colorType.Green" class="selected-icon">
+                            check_circle_outline
                         </mat-icon>
                     </button>
                 </div>

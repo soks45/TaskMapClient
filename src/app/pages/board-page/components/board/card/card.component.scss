@@ -67,7 +67,6 @@
         overflow: auto;
 
         -ms-overflow-style: none;
-        scrollbar-width: none;
     }
 
     &__body::-webkit-scrollbar {
@@ -96,8 +95,8 @@
             white-space: nowrap;
             overflow: auto;
             -ms-overflow-style: none;
-            scrollbar-width: none;
         }
+
         &-label::-webkit-scrollbar {
             display: none;
         }

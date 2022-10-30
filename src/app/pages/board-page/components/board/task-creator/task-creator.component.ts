@@ -1,13 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { BoardDraggableMixin } from '@mixins/board-draggable';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { DeepReadOnly } from '@models/deep-read-only';
 import { Color, TaskB } from '@models/task-b';
+import { BoardDraggableMixin } from '@pages/board-page/components/board/board-draggable';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { Observable } from 'rxjs';
@@ -62,15 +61,10 @@ export class TaskCreatorComponent extends BoardDraggableMixin(DestroyMixin(BaseO
             .subscribe(() => (this.isShowing = !this.isShowing));
     }
 
-    initItemPosition(boardSize: Point): void {
-        this.relativePositions$.next({
+    initItemPosition(boardSize: Point): Point {
+        return {
             x: 1 - (this.size.x / boardSize.x + 0.03),
             y: 0.03,
-        });
-    }
-
-    onDnDEnded($event: CdkDragEnd): void {
-        const newRelativePosition = this.boardView.absoluteToRelative($event.source._dragRef.getFreeDragPosition());
-        this.relativePositions$.next(newRelativePosition);
+        };
     }
 }

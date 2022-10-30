@@ -1,17 +1,17 @@
-import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { BoardDraggableMixin } from '@mixins/board-draggable';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { DeepReadOnly } from '@models/deep-read-only';
 import { TaskB } from '@models/task-b';
+import { BoardDraggableMixin } from '@pages/board-page/components/board/board-draggable';
 import {
     EditCardDialogComponent,
     EditDialogData,
 } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task/task.service';
+import { takeUntil, tap } from 'rxjs';
 
 @Component({
     selector: 'tm-card [task] ',
@@ -30,13 +30,23 @@ export class CardComponent extends BoardDraggableMixin(DestroyMixin(BaseObject))
 
     constructor(private taskService: TaskService, private dialog: MatDialog) {
         super();
+
+        this.drags$
+            .pipe(
+                takeUntil(this.destroyed$),
+                tap((relativePosition) => {
+                    [this.task.x, this.task.y] = [relativePosition.x, relativePosition.y];
+                    this.taskService.edit(this.task, false).subscribe();
+                })
+            )
+            .subscribe();
     }
 
-    initItemPosition(boardSize: Point): void {
-        this.relativePositions$.next({
+    initItemPosition(boardSize: Point): Point {
+        return {
             x: this.task.x,
             y: this.task.y,
-        });
+        };
     }
 
     deleteTask(): void {
@@ -56,12 +66,5 @@ export class CardComponent extends BoardDraggableMixin(DestroyMixin(BaseObject))
                 fromCreator: this.fromCreator,
             },
         });
-    }
-
-    onDnDEnd($event: CdkDragEnd): void {
-        const newRelativePosition = this.boardView.absoluteToRelative($event.source._dragRef.getFreeDragPosition());
-        [this.task.x, this.task.y] = [newRelativePosition.x, newRelativePosition.y];
-        this.relativePositions$.next(newRelativePosition);
-        this.taskService.edit(this.task, false).subscribe();
     }
 }

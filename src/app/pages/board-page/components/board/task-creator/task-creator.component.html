@@ -1,7 +1,7 @@
 <div class="task-creator"
      cdkDrag
      [cdkDragBoundary]="boundaryClassName"
-     (cdkDragEnded)="onDnDEnded($event)"
+     (cdkDragEnded)="onDnDEnd($event)"
      [cdkDragFreeDragPosition]="absolutePosition"
      (cdkDragStarted)="isProtectingDragAction = true"
      (cdkDragReleased)="isProtectingDragAction = false"

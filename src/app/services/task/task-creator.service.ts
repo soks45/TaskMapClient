@@ -3,7 +3,7 @@ import { Board } from '@models/board';
 import { Color, State, TaskB } from '@models/task-b';
 import { ShortUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
-import { CurrentBoardService } from '@services/current-board.service';
+import { CurrentBoardService } from '@services/board/current-board.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 interface EditTask {

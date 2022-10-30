@@ -4,7 +4,7 @@ import { environment } from '@environments/environment';
 import { Board } from '@models/board';
 import { CRUD } from '@models/CRUD';
 import { MessagesService } from '@services/messages.service';
-import { TaskService } from '@services/task.service';
+import { TaskService } from '@services/task/task.service';
 import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

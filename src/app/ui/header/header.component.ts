@@ -6,7 +6,7 @@ import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { User } from '@models/user';
 import { AuthService } from '@services/auth.service';
-import { CurrentBoardService } from '@services/current-board.service';
+import { CurrentBoardService } from '@services/board/current-board.service';
 import { LoginFormDialogComponent } from '@ui/header/login-form-dialog/login-form-dialog.component';
 import { SignUpFormDialogComponent } from '@ui/header/sign-up-form-dialog/sign-up-form-dialog.component';
 import { Observable, takeUntil } from 'rxjs';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
-import { TaskHubService } from '@services/task-hub.service';
+import { TaskHubService } from '@services/task/task-hub.service';
 import { Observable, Subject, throttleTime } from 'rxjs';
 import { tap } from 'rxjs/operators';
 

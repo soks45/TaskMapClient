@@ -1,50 +1,57 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
-import { AfterViewInit, Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
+import { DeepReadOnly } from '@models/deep-read-only';
 import { TaskB } from '@models/task-b';
-import { Boundary } from '@pages/board-page/components/board/board.component';
+import { BoardViewService } from '@pages/board-page/components/board/board-view.service';
 import {
     EditCardDialogComponent,
     EditDialogData,
 } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
-import { ConverterService } from '@services/converter.service';
-import { TaskService } from '@services/task.service';
-import { takeUntil } from 'rxjs';
+import { TaskService } from '@services/task/task.service';
+import { Subject, takeUntil, tap } from 'rxjs';
 
 @Component({
-    selector: 'tm-card [task] [boundary]',
+    selector: 'tm-card [task] ',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
 })
-export class CardComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
-    @Input() task!: TaskB;
-    @Input() boundary!: Boundary;
-    @Input() fromCreator: boolean = false;
-
-    size: Point = {
-        x: 0,
-        y: 0,
-    };
-    position: Point = {
-        x: 0,
-        y: 0,
-    };
-    cardSize: Point = {
+export class CardComponent extends DestroyMixin(BaseObject) implements OnInit {
+    readonly cardSize: DeepReadOnly<Point> = {
         x: 210,
         y: 260,
     };
 
-    constructor(private taskService: TaskService, private dialog: MatDialog, private converter: ConverterService) {
+    @Input() task!: TaskB;
+    @Input() boundaryClassName?: string;
+    @Input() fromCreator: boolean = false;
+
+    position: Point = {
+        x: 0,
+        y: 0,
+    };
+    relativePositions$: Subject<Point> = new Subject<Point>();
+
+    constructor(private taskService: TaskService, private dialog: MatDialog, private boardView: BoardViewService) {
         super();
+
+        this.boardView
+            .positions(this.cardSize, this.relativePositions$)
+            .pipe(
+                takeUntil(this.destroyed$),
+                tap((newPosition) => (this.position = newPosition))
+            )
+            .subscribe();
     }
 
-    ngAfterViewInit(): void {
-        if (this.boundary.boundarySize) {
-            this.boundary.boundarySize.pipe(takeUntil(this.destroyed$)).subscribe((newSize) => this.onResize(newSize));
-        }
+    ngOnInit(): void {
+        this.relativePositions$.next({
+            x: this.task.x,
+            y: this.task.y,
+        });
     }
 
     deleteTask(): void {
@@ -52,7 +59,7 @@ export class CardComponent extends DestroyMixin(BaseObject) implements AfterView
             return;
         }
 
-        this.taskService.delete(this.task).subscribe(); //TODO do some cool stuff here
+        this.taskService.delete(this.task).subscribe();
     }
 
     editTask(): void {
@@ -66,24 +73,10 @@ export class CardComponent extends DestroyMixin(BaseObject) implements AfterView
         });
     }
 
-    onDnDEnd(event: CdkDragEnd): void {
-        this.newTaskPosition(event.source._dragRef.getFreeDragPosition());
-    }
-
-    private onResize(newSize: Point): void {
-        this.size = newSize;
-        this.setPosition();
-    }
-
-    private setPosition(): void {
-        this.position = this.converter.fractionToPosition({ x: this.task.x, y: this.task.y }, this.size, this.cardSize);
-    }
-
-    private newTaskPosition(newPos: Point): void {
-        const fraction = this.converter.positionToFraction(newPos, this.size);
-        this.task.x = fraction.x;
-        this.task.y = fraction.y;
-        this.setPosition();
+    onDnDEnd($event: CdkDragEnd): void {
+        const newRelativePosition = this.boardView.absoluteToRelative($event.source._dragRef.getFreeDragPosition());
+        [this.task.x, this.task.y] = [newRelativePosition.x, newRelativePosition.y];
+        this.relativePositions$.next(newRelativePosition);
         this.taskService.edit(this.task, false).subscribe();
     }
 }

@@ -3,7 +3,7 @@
     cdkDrag
     [cdkDragDisabled]="fromCreator"
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
-    [cdkDragBoundary]="boundary.boundaryClassName"
+    [cdkDragBoundary]="boundaryClassName || ''"
     [cdkDragFreeDragPosition]="position"
     (cdkDragEnded)="onDnDEnd($event)"
 >

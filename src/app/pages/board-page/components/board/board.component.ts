@@ -1,14 +1,15 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
 import { ShortUser } from '@models/user';
+import { BoardViewService } from '@pages/board-page/components/board/board-view.service';
 import { AuthService } from '@services/auth.service';
-import { CurrentBoardService } from '@services/current-board.service';
-import { TaskService } from '@services/task.service';
+import { CurrentBoardService } from '@services/board/current-board.service';
+import { TaskService } from '@services/task/task.service';
 import { concat, fromEvent, Observable, of, takeUntil, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -29,11 +30,10 @@ export interface Boundary {
         ]),
     ],
 })
-export class BoardComponent extends DestroyMixin(BaseObject) {
+export class BoardComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
     tasks$?: Observable<TaskB[]>;
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
-    boundary: Boundary;
     boundaryClassName = 'board';
 
     @ViewChild('boardElement')
@@ -42,7 +42,8 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
     constructor(
         private taskService: TaskService,
         private currentBoard: CurrentBoardService,
-        private auth: AuthService
+        private auth: AuthService,
+        private boardView: BoardViewService
     ) {
         super();
         this.user$ = this.auth.user$;
@@ -50,13 +51,16 @@ export class BoardComponent extends DestroyMixin(BaseObject) {
             takeUntil(this.destroyed$),
             tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
         );
+    }
 
-        this.boundary = {
-            boundaryClassName: '.' + this.boundaryClassName,
-            boundarySize: concat(of(null), fromEvent(window, 'resize').pipe(takeUntil(this.destroyed$))).pipe(
-                map(() => this.BoundarySize)
-            ),
-        };
+    ngAfterViewInit(): void {
+        concat(of(null), fromEvent(window, 'resize').pipe(takeUntil(this.destroyed$)))
+            .pipe(
+                takeUntil(this.destroyed$),
+                map(() => this.BoundarySize),
+                tap((newSize) => this.boardView.newSize(newSize))
+            )
+            .subscribe();
     }
 
     contextMenu(event: Event): void {

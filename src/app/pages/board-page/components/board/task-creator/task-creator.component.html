@@ -1,6 +1,6 @@
 <div class="task-creator"
      cdkDrag
-     [cdkDragBoundary]="boundaryCreator.boundaryClassName"
+     [cdkDragBoundary]="boundaryClassName"
      (cdkDragEnded)="onDnDEnded($event)"
      [cdkDragFreeDragPosition]="position"
      (cdkDragStarted)="isProtectingDragAction = true"
@@ -17,7 +17,7 @@
     <div class="task-creator__content" *ngIf="isShowing" @smoothAppearance>
         <ng-container *ngIf="creatorTask$ | async as task">
             <div class="task-creator__card">
-                <tm-card [task]="task" [fromCreator]="true" [boundary]="creatorCardBoundary"></tm-card>
+                <tm-card [task]="task" [fromCreator]="true"></tm-card>
             </div>
             <div class="task-creator__actions">
                 <div class="task-creator__actions--left">

@@ -6,7 +6,7 @@ import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
-import { AsyncSubject, filter, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
+import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -41,8 +41,7 @@ export class TaskService implements CRUD<TaskB> {
                 catchError((err) => {
                     throw err;
                 }),
-                filter(() => shouldReload),
-                tap(() => this.reload(entity.boardId)) // TODO not obviously behavior
+                tap(() => (shouldReload ? this.reload(entity.boardId) : null))
             );
     }
 

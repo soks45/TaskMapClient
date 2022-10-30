@@ -3,7 +3,7 @@
         <div *ngIf="currentBoard$ | async; else loading">
             <div *ngIf="tasks$ | async as tasks; else loading" @smoothAppearance>
                 <div *ngFor="let task of tasks">
-                    <tm-card [task]="task" [boundary]="boundary"></tm-card>
+                    <tm-card [task]="task" [boundaryClassName]="'.' + boundaryClassName"></tm-card>
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
         <mat-spinner class="loader"></mat-spinner>
     </ng-template>
     <div class="board__task-creator">
-        <tm-task-creator [boundaryCreator]="boundary"></tm-task-creator>
+        <tm-task-creator [boundaryClassName]="'.' + boundaryClassName"></tm-task-creator>
     </div>
 </div>
 

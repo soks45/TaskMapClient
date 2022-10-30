@@ -1,11 +1,11 @@
-$white: #fff;
+$white: #f5f4f4;
 
 .header {
     max-width: 100%;
     min-height: 100px;
     display: flex;
     justify-content: center;
-    background-color: $white;
+    background-color: white;
     font-size: x-large;
 
     &__title {
@@ -64,9 +64,8 @@ $white: #fff;
 
     &--selected {
         transition: 0.3s ease-in-out;
-        background-color: white;
-        border: 2px solid black;
-        scale: 1.01;
+        background-color: $white;
+        border: 1px solid black;
 
         span {
             color: black;
@@ -77,11 +76,5 @@ $white: #fff;
 .account-icon {
     height: 50px;
     width: 50px;
-}
-
-.selected {
-    color: black;
-    background-color: $white;
-    scale: 1.05;
 }
 

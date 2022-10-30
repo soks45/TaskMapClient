@@ -2,13 +2,13 @@
      cdkDrag
      [cdkDragBoundary]="boundaryClassName"
      (cdkDragEnded)="onDnDEnded($event)"
-     [cdkDragFreeDragPosition]="position"
+     [cdkDragFreeDragPosition]="absolutePosition"
      (cdkDragStarted)="isProtectingDragAction = true"
      (cdkDragReleased)="isProtectingDragAction = false"
 >
     <div class="task-creator__header">
         <button class="task-creator__show-btn" mat-button mat-icon-button cdkDragHandle
-                (click)="onShow()"
+                (click)="this.isShowing = !this.isShowing"
         >
             <div class="wrapper"></div>
             <mat-icon svgIcon="custom-add"></mat-icon>

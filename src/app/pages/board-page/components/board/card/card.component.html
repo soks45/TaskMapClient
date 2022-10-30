@@ -4,7 +4,7 @@
     [cdkDragDisabled]="fromCreator"
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
     [cdkDragBoundary]="boundaryClassName || ''"
-    [cdkDragFreeDragPosition]="position"
+    [cdkDragFreeDragPosition]="absolutePosition"
     (cdkDragEnded)="onDnDEnd($event)"
 >
     <header class="card-box__header">

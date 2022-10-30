@@ -3,14 +3,14 @@ import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { DatePipe } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { BoardDraggableMixin } from '@mixins/board-draggable';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { DeepReadOnly } from '@models/deep-read-only';
 import { Color, TaskB } from '@models/task-b';
-import { BoardViewService } from '@pages/board-page/components/board/board-view.service';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
-import { Observable, Subject, takeUntil, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -27,13 +27,12 @@ import { finalize } from 'rxjs/operators';
         ]),
     ],
 })
-export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements OnInit {
-    readonly cardCreatorSize: DeepReadOnly<Point> = {
+export class TaskCreatorComponent extends BoardDraggableMixin(DestroyMixin(BaseObject)) implements OnInit {
+    @Input() boundaryClassName!: string;
+    readonly size: DeepReadOnly<Point> = {
         x: 304,
         y: 374,
     };
-
-    @Input() boundaryClassName!: string;
 
     isLoading: boolean = false;
     isShowing: boolean = true;
@@ -41,42 +40,10 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
 
     colorType = Color;
     creatorTask$: Observable<TaskB>;
-    position: Point = {
-        x: 0,
-        y: 0,
-    };
-    relativePositions$: Subject<Point>;
 
-    constructor(
-        private taskService: TaskService,
-        private taskCreator: TaskCreatorService,
-        private boardView: BoardViewService
-    ) {
+    constructor(private taskService: TaskService, private taskCreator: TaskCreatorService) {
         super();
         this.creatorTask$ = this.taskCreator.creatorTask$;
-        this.relativePositions$ = new Subject<Point>();
-
-        this.boardView
-            .positions(this.cardCreatorSize, this.relativePositions$)
-            .pipe(
-                takeUntil(this.destroyed$),
-                tap((newPosition) => (this.position = newPosition))
-            )
-            .subscribe();
-    }
-
-    ngOnInit(): void {
-        this.boardView
-            .initBoardSize()
-            .pipe(
-                tap((boardSize) => {
-                    this.relativePositions$.next({
-                        x: 1 - (this.cardCreatorSize.x / boardSize.x + 0.03),
-                        y: 0.03,
-                    });
-                })
-            )
-            .subscribe();
     }
 
     changeColor(color: Color): void {
@@ -85,8 +52,8 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
 
     onCreate(creatorTask: TaskB): void {
         const newPos: Point = this.boardView.absoluteToRelative({
-            x: this.position.x + 20,
-            y: this.position.y + 55,
+            x: this.absolutePosition.x + 20,
+            y: this.absolutePosition.y + 55,
         });
 
         this.taskService
@@ -95,12 +62,15 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) implements On
             .subscribe(() => (this.isShowing = !this.isShowing));
     }
 
+    initItemPosition(boardSize: Point): void {
+        this.relativePositions$.next({
+            x: 1 - (this.size.x / boardSize.x + 0.03),
+            y: 0.03,
+        });
+    }
+
     onDnDEnded($event: CdkDragEnd): void {
         const newRelativePosition = this.boardView.absoluteToRelative($event.source._dragRef.getFreeDragPosition());
         this.relativePositions$.next(newRelativePosition);
-    }
-
-    onShow(): void {
-        this.isShowing = !this.isShowing;
     }
 }

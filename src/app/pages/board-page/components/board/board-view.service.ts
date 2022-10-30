@@ -1,19 +1,29 @@
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { Injectable } from '@angular/core';
 import { DeepReadOnly } from '@models/deep-read-only';
-import { BehaviorSubject, combineLatest, Observable, skip, take } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject, skip, take, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
 export class BoardViewService {
     private boardSizeSource$: BehaviorSubject<Point>;
+    private initViewBoardSize$: ReplaySubject<Point>;
 
     constructor() {
         this.boardSizeSource$ = new BehaviorSubject<Point>({ x: 0, y: 0 });
+        this.initViewBoardSize$ = new ReplaySubject<Point>(1);
+        this.boardSizeSource$
+            .asObservable()
+            .pipe(
+                take(2),
+                skip(1),
+                tap((size) => this.initViewBoardSize$.next(size))
+            )
+            .subscribe();
     }
 
     initBoardSize(): Observable<Point> {
-        return this.boardSizeSource$.asObservable().pipe(take(2), skip(1));
+        return this.initViewBoardSize$.asObservable();
     }
 
     newSize(size: Point): void {

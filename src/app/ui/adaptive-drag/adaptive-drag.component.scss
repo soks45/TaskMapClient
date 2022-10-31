@@ -1,0 +1,18 @@
+.adaptive-drag {
+    position: absolute;
+    display: inline-block;
+}
+
+.drag-shield {
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 10000; /* Or whatever your application requires to be on TOP. */
+}
+
+.content-wrapper {
+    width: max-content;
+    height: max-content;
+}

@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { BoardViewService } from '@pages/board-page/components/board/board-view.service';
 import { BoardComponent } from '@pages/board-page/components/board/board.component';
 import { CardModule } from '@pages/board-page/components/board/card/card.module';
 import { EditCardDialogModule } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.module';
 import { TaskCreatorModule } from '@pages/board-page/components/board/task-creator/task-creator.module';
+import { AdaptiveDragModule } from '@ui/adaptive-drag/adaptive-drag.module';
 
 @NgModule({
     declarations: [BoardComponent],
@@ -19,8 +19,8 @@ import { TaskCreatorModule } from '@pages/board-page/components/board/task-creat
         MatProgressBarModule,
         MatProgressSpinnerModule,
         TaskCreatorModule,
+        AdaptiveDragModule,
     ],
     exports: [BoardComponent],
-    providers: [BoardViewService],
 })
 export class BoardModule {}

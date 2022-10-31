@@ -1,11 +1,4 @@
-<div class="task-creator"
-     cdkDrag
-     [cdkDragBoundary]="boundaryClassName"
-     (cdkDragEnded)="onDnDEnd($event)"
-     [cdkDragFreeDragPosition]="absolutePosition"
-     (cdkDragStarted)="isProtectingDragAction = true"
-     (cdkDragReleased)="isProtectingDragAction = false"
->
+<div class="task-creator">
     <div class="task-creator__header">
         <button class="task-creator__show-btn" mat-button mat-icon-button cdkDragHandle
                 (click)="this.isShowing = !this.isShowing"
@@ -48,7 +41,4 @@
             </div>
         </ng-container>
     </div>
-</div>
-<div *ngIf="isProtectingDragAction" class="drag-shield">
-    <!-- This layer acts as an "event sink" for the mouse. -->
 </div>

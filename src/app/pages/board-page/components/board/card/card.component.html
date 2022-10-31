@@ -1,11 +1,6 @@
 <div
     class="card-box"
-    cdkDrag
-    [cdkDragDisabled]="fromCreator"
     [ngClass]="['card-box--normal', 'card-box--' + task.color]"
-    [cdkDragBoundary]="boundaryClassName || ''"
-    [cdkDragFreeDragPosition]="absolutePosition"
-    (cdkDragEnded)="onDnDEnd($event)"
 >
     <header class="card-box__header">
         <div class="card-box__header-label">{{ task.taskLabel }}</div>

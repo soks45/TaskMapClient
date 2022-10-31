@@ -6,11 +6,11 @@ import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
 import { ShortUser } from '@models/user';
-import { BoardViewService } from '@pages/board-page/components/board/board-view.service';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
-import { concat, fromEvent, Observable, of, takeUntil, tap } from 'rxjs';
+import { InitItemPosition } from '@ui/adaptive-drag/draggable';
+import { concatWith, fromEvent, Observable, of, Subject, takeUntil, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface Boundary {
@@ -35,6 +35,8 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements AfterVie
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
     boundaryClassName = 'board';
+    resizes$: Observable<Point>;
+    ngAfterViewInit$: Subject<null>;
 
     @ViewChild('boardElement')
         boardElement!: ElementRef;
@@ -42,8 +44,7 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements AfterVie
     constructor(
         private taskService: TaskService,
         private currentBoard: CurrentBoardService,
-        private auth: AuthService,
-        private boardView: BoardViewService
+        private auth: AuthService
     ) {
         super();
         this.user$ = this.auth.user$;
@@ -51,21 +52,33 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements AfterVie
             takeUntil(this.destroyed$),
             tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
         );
+
+        this.ngAfterViewInit$ = new Subject<null>();
+
+        this.resizes$ = this.ngAfterViewInit$.pipe(
+            takeUntil(this.destroyed$),
+            map(() => this.BoundarySize),
+            concatWith(
+                of(true).pipe(
+                    concatWith(fromEvent(window, 'resize')),
+                    map(() => this.BoundarySize)
+                )
+            )
+        );
     }
 
     ngAfterViewInit(): void {
-        concat(of(null), fromEvent(window, 'resize').pipe(takeUntil(this.destroyed$)))
-            .pipe(
-                takeUntil(this.destroyed$),
-                map(() => this.BoundarySize),
-                tap((newSize) => this.boardView.newSize(newSize))
-            )
-            .subscribe();
+        this.ngAfterViewInit$.complete();
     }
 
-    contextMenu(event: Event): void {
-        event.stopPropagation();
-        event.preventDefault();
+    readonly initCreatorPosition: InitItemPosition = (size: Point, sizeOfItem: Point): Point => ({
+        x: 1 - (sizeOfItem.x / size.x + 0.03),
+        y: 0.03,
+    });
+    readonly initCardPosition: InitItemPosition = (_: Point, __: Point): Point => ({ x: 0, y: 0 });
+
+    onDnD(position: Point): void {
+        console.log(position);
     }
 
     get BoundarySize(): Point {
@@ -73,5 +86,10 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements AfterVie
             x: this.boardElement.nativeElement.offsetWidth,
             y: this.boardElement.nativeElement.offsetHeight,
         };
+    }
+
+    contextMenu(event: Event): void {
+        event.stopPropagation();
+        event.preventDefault();
     }
 }

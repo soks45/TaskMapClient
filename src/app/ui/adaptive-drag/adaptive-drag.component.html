@@ -1,0 +1,18 @@
+<div
+    #dragItem
+    cdkDrag
+    class="adaptive-drag"
+    [cdkDragFreeDragPosition]="absolutePosition"
+    [cdkDragBoundary]="dragBoundaryClassName"
+    (cdkDragEnded)="onDnDEnd($event)"
+    (cdkDragStarted)="isProtectingDragAction = true"
+    (cdkDragReleased)="isProtectingDragAction = false"
+    (cdkObserveContent)="contentChanged()"
+>
+    <ng-content></ng-content>
+    <div *ngIf="isProtectingDragAction" class="drag-shield">
+        <!-- This layer acts as an "event sink" for the mouse. -->
+    </div>
+</div>
+
+

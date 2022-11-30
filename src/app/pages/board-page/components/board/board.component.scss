@@ -1,8 +1,20 @@
-.container {
+.board {
     width: 98%;
     height: 100%;
     margin: auto;
     border-style: dashed;
     border-radius: 40px;
     background-image: url('~assets/img/reticle.svg');
+    position: relative;
+    border-color: #444444;
+
+    &__task-creator {
+        display: flex;
+    }
+}
+
+.loader {
+    position: absolute;
+    left: 45%;
+    top: 45%;
 }

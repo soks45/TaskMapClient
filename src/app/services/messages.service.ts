@@ -7,22 +7,31 @@ enum MessageType {
     info = 'info',
 }
 
+interface ErrorObject {
+    message: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class MessagesService {
     constructor(private matSnackBar: MatSnackBar) {}
 
-    success(message: string): void {
-        this.show(message, 'Cool!', MessageType.success);
+    success(message: string, action: string = '=)'): void {
+        this.show(message, action, MessageType.success);
     }
 
-    error(message: string): void {
-        this.show(message, 'Oh...', MessageType.error);
+    error(error: string | ErrorObject, action: string = 'Oh...'): void {
+        if (typeof error === 'object') {
+            this.show(error.message, action, MessageType.error);
+            return;
+        }
+
+        this.show(error, action, MessageType.error);
     }
 
-    info(message: string): void {
-        this.show(message, 'Ok', MessageType.info);
+    info(message: string, action: string = 'Ok'): void {
+        this.show(message, action, MessageType.info);
     }
 
     private show(message: string, action: string, type: MessageType): void {

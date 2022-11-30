@@ -1,0 +1,44 @@
+<div class="task-creator">
+    <div class="task-creator__header">
+        <button class="task-creator__show-btn" mat-button mat-icon-button cdkDragHandle
+                (click)="this.isShowing = !this.isShowing"
+        >
+            <div class="wrapper"></div>
+            <mat-icon svgIcon="custom-add"></mat-icon>
+        </button>
+    </div>
+    <div class="task-creator__content" *ngIf="isShowing" @smoothAppearance>
+        <ng-container *ngIf="creatorTask$ | async as task">
+            <div class="task-creator__card">
+                <tm-card [task]="task" [fromCreator]="true"></tm-card>
+            </div>
+            <div class="task-creator__actions">
+                <div class="task-creator__actions--left">
+                    <button mat-icon-button class="btn btn--purple icon-button-small"
+                            (click)="changeColor(colorType.Purple)">
+                        <mat-icon *ngIf="task.color === colorType.Purple" class="selected-icon">
+                            check_circle_outline
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button class="btn btn--red icon-button-small" (click)="changeColor(colorType.Red)">
+                        <mat-icon *ngIf="task.color === colorType.Red" class="selected-icon">
+                            check_circle_outline
+                        </mat-icon>
+                    </button>
+                    <button mat-icon-button class="btn btn--green icon-button-small"
+                            (click)="changeColor(colorType.Green)">
+                        <mat-icon *ngIf="task.color === colorType.Green" class="selected-icon">
+                            check_circle_outline
+                        </mat-icon>
+                    </button>
+                </div>
+                <div class="task-creator__actions--right">
+                    <button mat-raised-button class="task-creator__create-btn" (click)="onCreate(task)"
+                            [disabled]="isLoading">
+                        <mat-icon svgIcon="edit" class="edit-icon"></mat-icon>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,50 +1,56 @@
-import { CdkDragMove } from '@angular/cdk/drag-drop';
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { Component, Input } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { takeUntil } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { EditCardDialogComponent } from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
-import { TaskService } from '@services/task-service';
 import { TaskB } from '@models/task-b';
-
-export const Colors = ['purple', 'green', 'red'];
+import {
+    EditCardDialogComponent,
+    EditDialogData,
+} from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+import { TaskService } from '@services/task/task.service';
 
 @Component({
-    selector: 'tm-card',
+    selector: 'tm-card [task] ',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
 })
 export class CardComponent extends DestroyMixin(BaseObject) {
     @Input() task!: TaskB;
-    private dialogRef?: MatDialogRef<EditCardDialogComponent, boolean>;
+    @Input() fromCreator: boolean = false;
 
     constructor(private taskService: TaskService, private dialog: MatDialog) {
         super();
     }
 
     deleteTask(): void {
-        this.taskService.deleteTask(this.task).pipe(takeUntil(this.destroyed$)).subscribe();
+        if (this.fromCreator) {
+            return;
+        }
+
+        this.taskService.delete(this.task).subscribe();
     }
 
-    editTask() {
-        this.dialogRef = this.dialog.open(EditCardDialogComponent, {
+    editTask(): void {
+        this.dialog.open(EditCardDialogComponent, {
             closeOnNavigation: true,
-            data: this.task,
+            data: <EditDialogData>{
+                task: this.task,
+                isAuthed: true,
+                fromCreator: this.fromCreator,
+            },
         });
-
-        this.dialogRef
-            .afterClosed()
-            .subscribe
-            //TODO do some cool stuff here
-            ();
     }
 
-    newTaskPosition($event: CdkDragMove): void {
-        const element = $event.source._dragRef;
-        const newPosition = element.getFreeDragPosition();
-        this.task.coordinates.x = newPosition.x;
-        this.task.coordinates.y = newPosition.y;
-        this.taskService.taskMovesSource$.next(this.task);
+    newTaskPosition(newPosition: Point): void {
+        this.taskService
+            .edit(
+                {
+                    ...this.task,
+                    ...newPosition,
+                },
+                false
+            )
+            .subscribe();
     }
 }

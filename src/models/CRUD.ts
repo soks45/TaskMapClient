@@ -1,13 +1,11 @@
 import { Observable } from 'rxjs';
 
 export interface CRUD<T> {
-    content$: Observable<T[]>;
-
-    get(): Observable<T[]>;
+    get(id?: number): Observable<T[]>;
 
     add(entity: T): Observable<void>;
 
     edit(entity: T): Observable<void>;
 
-    delete(id: number): Observable<void>;
+    delete(entity: T): Observable<void>;
 }

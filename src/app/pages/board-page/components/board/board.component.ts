@@ -1,20 +1,68 @@
-import { Component, Input } from '@angular/core';
-import { TaskService } from '@services/task-service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Component } from '@angular/core';
+import { DestroyMixin } from '@mixins/destroy.mixin';
+import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { TaskB } from '@models/task-b';
+import { ShortUser } from '@models/user';
+import { AuthService } from '@services/auth.service';
+import { CurrentBoardService } from '@services/board/current-board.service';
+import { TaskService } from '@services/task/task.service';
+import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
+import { Observable, takeUntil, tap } from 'rxjs';
+
+export interface Boundary {
+    boundaryClassName: string;
+    boundarySize?: Observable<Point>;
+}
 
 @Component({
     selector: 'tm-board',
     templateUrl: './board.component.html',
     styleUrls: ['./board.component.scss'],
+    animations: [
+        trigger('smoothAppearance', [
+            state('void', style({ opacity: 0.5 })),
+            state('*', style({ opacity: 1 })),
+            transition('void => *', animate(200)),
+        ]),
+    ],
 })
-export class BoardComponent {
-    tasks: TaskB[];
-    @Input() Board: Board | null = null;
+export class BoardComponent extends DestroyMixin(BaseObject) {
+    tasks$?: Observable<TaskB[]>;
+    currentBoard$: Observable<Board>;
+    user$: Observable<ShortUser | null>;
+    boundaryClassName = 'board';
 
-    constructor(private taskService: TaskService) {
-        this.tasks = this.taskService.tasks;
+    constructor(
+        private taskService: TaskService,
+        private currentBoard: CurrentBoardService,
+        private auth: AuthService
+    ) {
+        super();
+        this.user$ = this.auth.user$;
+        this.currentBoard$ = this.currentBoard.currentBoard().pipe(
+            takeUntil(this.destroyed$),
+            tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
+        );
     }
+
+    initCreatorPosition: InitItemPosition = (boundarySize: Point, sizeOfItem: Point): Point => {
+        return {
+            x: 1 - (sizeOfItem.x / boundarySize.x + 0.03),
+            y: 0.03,
+        };
+    };
+
+    initCardPosition = (task: TaskB): InitItemPosition => {
+        return (_boundarySize: Point, _sizeOfItem: Point): Point => {
+            return {
+                x: task.x,
+                y: task.y,
+            };
+        };
+    };
 
     contextMenu(event: Event): void {
         event.stopPropagation();

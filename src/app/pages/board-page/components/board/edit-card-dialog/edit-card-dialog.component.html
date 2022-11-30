@@ -1,6 +1,6 @@
 <form [formGroup]="formGroup" class="edit-card-dialog">
     <header mat-dialog-title class="edit-card-dialog__header">
-        <p *ngIf="isNew; else edit">Add Task</p>
+        <p *ngIf="isNew; else edit">Create New Task</p>
         <ng-template #edit>
             <p>Edit Task</p>
         </ng-template>
@@ -28,7 +28,7 @@
         <mat-form-field>
             <mat-label>State</mat-label>
             <mat-select formControlName="state">
-                <div div *ngFor="let state of States">
+                <div *ngFor="let state of States">
                     <mat-option [value]="state">{{ state }}</mat-option>
                 </div>
             </mat-select>

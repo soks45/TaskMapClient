@@ -1,15 +1,25 @@
 import { Component, Inject } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormMixin } from '@mixins/form.mixin';
+import { BaseObject, Constructor } from '@mixins/mixins';
+import { Color, Colors, State, States, TaskB } from '@models/task-b';
+import { MessagesService } from '@services/messages.service';
+import { TaskCreatorService } from '@services/task/task-creator.service';
+import { TaskService } from '@services/task/task.service';
 import { finalize } from 'rxjs/operators';
-import { Colors } from '@pages/board-page/components/board/card/card.component';
-import { AuthService } from '@services/auth.service';
-import { TaskService } from '@services/task-service';
-import { State, TaskB } from '@models/task-b';
 
-export interface BaseTask {
-    userId: number;
-    boardId: number;
+export interface EditDialogData {
+    fromCreator: boolean;
+    isAuthed: boolean;
+    task: TaskB;
+}
+
+interface EditCardFormControls {
+    taskLabel: string;
+    taskText: string;
+    color: Color;
+    state: State;
 }
 
 @Component({
@@ -17,76 +27,76 @@ export interface BaseTask {
     templateUrl: './edit-card-dialog.component.html',
     styleUrls: ['./edit-card-dialog.component.scss'],
 })
-export class EditCardDialogComponent {
-    formGroup: UntypedFormGroup;
+export class EditCardDialogComponent extends FormMixin<Constructor, EditCardFormControls>(BaseObject) {
+    isNew = false;
     Colors = Colors;
-    States = [State.Main, State.Short];
-    isNew = true;
-    readonly task: TaskB;
+    States = States;
+    isLoading: boolean = false;
 
     constructor(
-        private dialogRef: MatDialogRef<Event | TaskB>,
-        private formBuilder: UntypedFormBuilder,
+        private dialogRef: MatDialogRef<TaskB>,
+        private formBuilder: FormBuilder,
         private taskService: TaskService,
-        private auth: AuthService,
-        @Inject(MAT_DIALOG_DATA) private baseTask: TaskB | BaseTask
+        private messages: MessagesService,
+        @Inject(MAT_DIALOG_DATA)
+        private data: EditDialogData,
+        private taskCreator: TaskCreatorService
     ) {
-        this.task = this.getNewTask(baseTask);
+        super();
+        if (this.data.fromCreator) {
+            this.isNew = true;
+        }
+
         this.formGroup = this.formBuilder.group({
-            taskLabel: [this.task.taskLabel, [Validators.required]],
-            taskText: [this.task.taskText, [Validators.maxLength(1024)]],
-            color: [this.task.color, []],
-            state: [this.task.state, []],
+            taskLabel: new FormControl(this.data.task.taskLabel, {
+                initialValueIsDefault: true,
+                validators: [Validators.required, Validators.maxLength(255)],
+            }),
+            taskText: new FormControl(this.data.task.taskText, {
+                initialValueIsDefault: true,
+                validators: [Validators.required, Validators.maxLength(1024)],
+            }),
+            color: new FormControl(this.data.task.color, {
+                initialValueIsDefault: true,
+                validators: [Validators.required],
+            }),
+            state: new FormControl(this.data.task.state, {
+                initialValueIsDefault: true,
+                validators: [Validators.required],
+            }),
         });
     }
 
     onSubmit(): void {
-        if (!this.task) {
+        if (!this.checkForm()) {
+            this.messages.error('You have some errors in form');
             return;
         }
-        // TODO add validation
 
-        const editedTask: TaskB = {
-            ...this.task,
-            ...this.formGroup.value,
-        };
+        if (this.data.fromCreator) {
+            this.taskCreator.edit(this.formValue);
+            this.dialogRef.close();
+            return;
+        }
 
-        if (this.isNew) {
+        if (this.data.isAuthed) {
+            this.isLoading = true;
             this.taskService
-                .addTask(editedTask)
-                .pipe(finalize(() => this.dialogRef.close(true)))
-                .subscribe();
+                .edit(this.formValue)
+                .pipe(finalize(() => (this.isLoading = false)))
+                .subscribe(() => this.dialogRef.close());
             return;
         }
-
-        this.taskService
-            .editTask(editedTask)
-            .pipe(finalize(() => this.dialogRef.close(true)))
-            .subscribe();
     }
 
     onCancel(): void {
         this.dialogRef.close(false);
     }
 
-    private getNewTask(baseTask: BaseTask | TaskB): TaskB {
-        if ('taskId' in baseTask) {
-            this.isNew = false;
-        }
-
-        const newTask = {
-            taskId: 0,
-            state: State.Main,
-            color: Colors[0],
-            taskText: '',
-            taskLabel: 'New Task',
-            coordinates: { x: 0, y: 0 },
-            createdDate: '',
-        };
-
-        return <TaskB>{
-            ...newTask,
-            ...baseTask,
+    private get formValue(): TaskB {
+        return {
+            ...this.data.task,
+            ...this.formGroup.value,
         };
     }
 }

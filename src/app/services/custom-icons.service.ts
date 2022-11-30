@@ -10,9 +10,14 @@ export class CustomIconsService {
 
     init(): void {
         this.registerIcon('account', 'account');
+        this.registerIcon('custom-add', 'custom-add');
+        this.registerIcon('edit', 'edit');
     }
 
     private registerIcon(name: string, filename: string) {
-        this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`));
+        this.matIconRegistry.addSvgIcon(
+            name,
+            this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`)
+        );
     }
 }

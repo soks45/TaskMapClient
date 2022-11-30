@@ -3,9 +3,6 @@
 html,
 body {
     height: 100%;
-}
-
-body {
     margin: 0;
     padding: 0;
     font-family: Roboto, 'Helvetica Neue', sans-serif;
@@ -16,6 +13,8 @@ a {
     text-decoration: none;
 }
 
-@import "assets/styles/messages";
-
-@import "assets/styles/form";
+@import 'assets/styles/messages';
+@import 'assets/styles/form';
+@import 'assets/styles/dialog';
+@import 'assets/styles/icon-buttons';
+@import 'assets/styles/spinner';

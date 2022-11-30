@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { TaskB, TaskBServer } from '@models/task-b';
+import { TaskB } from '@models/task-b';
 
 @Injectable({
     providedIn: 'root',
@@ -7,18 +7,8 @@ import { TaskB, TaskBServer } from '@models/task-b';
 export class ConverterService {
     constructor() {}
 
-    taskBClient(task: TaskBServer): TaskB {
-        return <TaskB>{
-            ...task,
-            coordinates: JSON.parse(task.coordinates),
-        };
-    }
-
-    taskBServer(task: TaskB): TaskBServer {
-        [task.coordinates.x, task.coordinates.y] = [Math.abs(Math.floor(task.coordinates.x)), Math.abs(Math.floor(task.coordinates.y))];
-        return <TaskBServer>{
-            ...task,
-            coordinates: JSON.stringify(task.coordinates),
-        };
+    taskBServer(task: TaskB): TaskB {
+        [task.x, task.y] = [parseFloat(Math.abs(task.x).toFixed(4)), parseFloat(Math.abs(task.y).toFixed(4))];
+        return task;
     }
 }

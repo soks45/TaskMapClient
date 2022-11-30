@@ -1,6 +1,31 @@
-<div *ngIf="Board; else empty" class="container board__content" (contextmenu)="contextMenu($event)">
-    <div *ngFor="let task of tasks">
-        <tm-card [task]="task"></tm-card>
-    </div>
+<div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance>
+    <ng-container *ngIf="user$ | async; else notAuthed">
+        <ng-container *ngIf="currentBoard$ | async">
+            <ng-container *ngIf="tasks$ | async as tasks">
+                <ng-container *ngFor="let task of tasks">
+                    <tm-adaptive-drag [initItemPosition]="initCardPosition(task)"
+                                      [boundary]="board"
+                                      (newPosition)="taskCard.newTaskPosition($event)"
+                    >
+                        <tm-card [task]="task" #taskCard></tm-card>
+                    </tm-adaptive-drag>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <ng-template #notAuthed>
+
+    </ng-template>
+
+    <tm-adaptive-drag class="board__task-creator"
+                      [initItemPosition]="initCreatorPosition"
+                      [boundary]="board"
+                      #taskCreatorDrag>
+        <tm-task-creator
+            [newPos]="taskCreatorDrag.getRelativePositionForPoint({
+                x: taskCreatorDrag.absolutePosition.x + 20,
+                y: taskCreatorDrag.absolutePosition.y + 55
+            })"></tm-task-creator>
+    </tm-adaptive-drag>
 </div>
-<ng-template #empty> You have no boards </ng-template>
+

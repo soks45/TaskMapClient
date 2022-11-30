@@ -99,4 +99,8 @@ export class TaskService implements CRUD<TaskB> {
         this.tasksSource.setItem(id, source);
         this.tasks.setItem(id, source.asObservable());
     }
+
+    private clearCache(): void {
+        this.cache.forEach((value, key) => this.cache.removeItem(key));
+    }
 }

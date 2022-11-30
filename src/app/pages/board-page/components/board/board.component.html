@@ -17,8 +17,15 @@
 
     </ng-template>
 
-    <tm-adaptive-drag class="board__task-creator" [initItemPosition]="initCreatorPosition" [boundary]="board">
-        <tm-task-creator></tm-task-creator>
+    <tm-adaptive-drag class="board__task-creator"
+                      [initItemPosition]="initCreatorPosition"
+                      [boundary]="board"
+                      #taskCreatorDrag>
+        <tm-task-creator
+            [newPos]="taskCreatorDrag.getRelativePositionForPoint({
+                x: taskCreatorDrag.absolutePosition.x + 20,
+                y: taskCreatorDrag.absolutePosition.y + 55
+            })"></tm-task-creator>
     </tm-adaptive-drag>
 
     <ng-template #loading>

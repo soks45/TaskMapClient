@@ -95,6 +95,10 @@ export class AdaptiveDragComponent extends DestroyMixin(BaseObject) implements A
         this.setRelativePosition();
     }
 
+    getRelativePositionForPoint(point: Point): Point {
+        return this.dragView.absoluteToRelative(point, this.itemSize, this.boundarySize);
+    }
+
     private observeResizes(
         element: ElementRef<HTMLElement> | HTMLElement | undefined = undefined,
         callback: ResizeObserverCallback

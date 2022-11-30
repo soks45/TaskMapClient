@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
+import { ClearCacheMixin } from '@mixins/clear-cache.mixin';
+import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { CRUD } from '@models/CRUD';
 import { MessagesService } from '@services/messages.service';
@@ -11,12 +13,13 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root',
 })
-export class BoardService implements CRUD<Board> {
+export class BoardService extends ClearCacheMixin(BaseObject) implements CRUD<Board> {
     readonly content$: Observable<Board[]>;
     private boardSource: BehaviorSubject<Board[]> = new BehaviorSubject<Board[]>([]);
-    private cache$: Observable<Board[]> | undefined;
+    cache$: Observable<Board[]> | undefined;
 
     constructor(private http: HttpClient, private messages: MessagesService, private taskService: TaskService) {
+        super();
         this.content$ = this.boardSource.asObservable();
     }
 

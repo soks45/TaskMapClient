@@ -1,7 +1,7 @@
 <div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance>
     <ng-container *ngIf="user$ | async; else notAuthed">
-        <ng-container *ngIf="currentBoard$ | async; else loading">
-            <ng-container *ngIf="tasks$ | async as tasks; else loading">
+        <ng-container *ngIf="currentBoard$ | async">
+            <ng-container *ngIf="tasks$ | async as tasks">
                 <ng-container *ngFor="let task of tasks">
                     <tm-adaptive-drag [initItemPosition]="initCardPosition(task)"
                                       [boundary]="board"
@@ -27,9 +27,5 @@
                 y: taskCreatorDrag.absolutePosition.y + 55
             })"></tm-task-creator>
     </tm-adaptive-drag>
-
-    <ng-template #loading>
-        <mat-spinner class="loader"></mat-spinner>
-    </ng-template>
 </div>
 

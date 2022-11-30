@@ -1,15 +1,13 @@
-<div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #boardElement>
+<div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance>
     <ng-container *ngIf="user$ | async; else notAuthed">
         <ng-container *ngIf="currentBoard$ | async; else loading">
             <ng-container *ngIf="tasks$ | async as tasks; else loading">
                 <ng-container *ngFor="let task of tasks">
-                    <tm-adaptive-drag [dragBoundaryClassName]="'.' + boundaryClassName"
-                                      [initItemPosition]="initCardPosition"
-                                      [boundaryResizes]="resizes$"
-                                      (DnDEnd)="onDnD($event)"
-                                      @smoothAppearance
+                    <tm-adaptive-drag [initItemPosition]="initCardPosition(task)"
+                                      [boundary]="board"
+                                      (newPosition)="taskCard.newTaskPosition($event)"
                     >
-                        <tm-card [task]="task"></tm-card>
+                        <tm-card [task]="task" #taskCard></tm-card>
                     </tm-adaptive-drag>
                 </ng-container>
             </ng-container>
@@ -19,12 +17,7 @@
 
     </ng-template>
 
-    <tm-adaptive-drag class="board__task-creator"
-                      [dragBoundaryClassName]="'.' + boundaryClassName"
-                      [initItemPosition]="initCreatorPosition"
-                      [boundaryResizes]="resizes$"
-                      (DnDEnd)="onDnD($event)"
-    >
+    <tm-adaptive-drag class="board__task-creator" [initItemPosition]="initCreatorPosition" [boundary]="board">
         <tm-task-creator></tm-task-creator>
     </tm-adaptive-drag>
 

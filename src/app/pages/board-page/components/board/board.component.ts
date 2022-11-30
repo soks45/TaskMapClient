@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop/drag-ref';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
@@ -9,9 +9,8 @@ import { ShortUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
-import { InitItemPosition } from '@ui/adaptive-drag/draggable';
-import { concatWith, fromEvent, Observable, of, Subject, takeUntil, tap } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
+import { Observable, takeUntil, tap } from 'rxjs';
 
 export interface Boundary {
     boundaryClassName: string;
@@ -30,16 +29,11 @@ export interface Boundary {
         ]),
     ],
 })
-export class BoardComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
+export class BoardComponent extends DestroyMixin(BaseObject) {
     tasks$?: Observable<TaskB[]>;
     currentBoard$: Observable<Board>;
     user$: Observable<ShortUser | null>;
     boundaryClassName = 'board';
-    resizes$: Observable<Point>;
-    ngAfterViewInit$: Subject<null>;
-
-    @ViewChild('boardElement')
-        boardElement!: ElementRef;
 
     constructor(
         private taskService: TaskService,
@@ -52,41 +46,23 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements AfterVie
             takeUntil(this.destroyed$),
             tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
         );
-
-        this.ngAfterViewInit$ = new Subject<null>();
-
-        this.resizes$ = this.ngAfterViewInit$.pipe(
-            takeUntil(this.destroyed$),
-            map(() => this.BoundarySize),
-            concatWith(
-                of(true).pipe(
-                    concatWith(fromEvent(window, 'resize')),
-                    map(() => this.BoundarySize)
-                )
-            )
-        );
     }
 
-    ngAfterViewInit(): void {
-        this.ngAfterViewInit$.complete();
-    }
-
-    readonly initCreatorPosition: InitItemPosition = (size: Point, sizeOfItem: Point): Point => ({
-        x: 1 - (sizeOfItem.x / size.x + 0.03),
-        y: 0.03,
-    });
-    readonly initCardPosition: InitItemPosition = (_: Point, __: Point): Point => ({ x: 0, y: 0 });
-
-    onDnD(position: Point): void {
-        console.log(position);
-    }
-
-    get BoundarySize(): Point {
-        return <Point>{
-            x: this.boardElement.nativeElement.offsetWidth,
-            y: this.boardElement.nativeElement.offsetHeight,
+    initCreatorPosition: InitItemPosition = (boundarySize: Point, sizeOfItem: Point): Point => {
+        return {
+            x: 1 - (sizeOfItem.x / boundarySize.x + 0.03),
+            y: 0.03,
         };
-    }
+    };
+
+    initCardPosition = (task: TaskB): InitItemPosition => {
+        return (_boundarySize: Point, _sizeOfItem: Point): Point => {
+            return {
+                x: task.x,
+                y: task.y,
+            };
+        };
+    };
 
     contextMenu(event: Event): void {
         event.stopPropagation();

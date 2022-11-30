@@ -1,3 +1,4 @@
+import { Point } from '@angular/cdk/drag-drop/drag-ref';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
@@ -39,5 +40,14 @@ export class CardComponent extends DestroyMixin(BaseObject) {
                 fromCreator: this.fromCreator,
             },
         });
+    }
+
+    newTaskPosition(newPosition: Point): void {
+        this.taskService
+            .edit({
+                ...this.task,
+                ...newPosition,
+            })
+            .subscribe();
     }
 }

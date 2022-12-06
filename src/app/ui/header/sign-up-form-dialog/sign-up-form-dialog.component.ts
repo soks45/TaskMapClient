@@ -81,9 +81,9 @@ export class SignUpFormDialogComponent extends FormMixin(BaseObject) {
         this.authService
             .signup(
                 {
-                    firstName: this.formGroup.get(['firstName'])!.value,
-                    lastName: this.formGroup.get(['lastName'])!.value,
-                    username: this.formGroup.get(['username'])!.value,
+                    firstName: this.formGroup.controls.firstName.value,
+                    lastName: this.formGroup.controls.lastName.value,
+                    username: this.formGroup.controls.username.value,
                 },
                 this.formGroup.get(['passwords', 'passwordConfirm'])!.value
             )

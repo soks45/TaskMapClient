@@ -51,13 +51,8 @@ export class LoginFormDialogComponent extends FormMixin(BaseObject) {
             .login(this.formGroup.get(['username'])!.value, this.formGroup.get(['password'])!.value)
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe({
-                next: (value) => {
-                    this.dialogRef.close(true);
-                    this.messages.success(`Welcome ${value.firstName} ${value.lastName}!`);
-                },
-                error: (error) => {
-                    this.messages.error(error);
-                },
+                next: () => this.dialogRef.close(true),
+                error: this.messages.error,
             });
     }
 }

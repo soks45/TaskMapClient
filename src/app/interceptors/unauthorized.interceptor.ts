@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
-import { MessagesService } from '@services/../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
+import { MessagesService } from '@services/messages.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

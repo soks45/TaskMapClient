@@ -3,7 +3,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { InputUser, User } from '@models/user';
-import { MessagesService } from '@services/../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
+import { MessagesService } from '@services/messages.service';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';

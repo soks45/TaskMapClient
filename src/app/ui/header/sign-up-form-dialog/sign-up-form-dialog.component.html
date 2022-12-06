@@ -66,44 +66,44 @@
                     </mat-icon>
                 </button>
                 <mat-error>
+                            <span
+                                *ngIf="
+                                    formGroup.controls['passwords'].controls.password.errors &&
+                                    formGroup.controls['passwords']['controls']['password'].errors['required']
+                                "
+                            >
+                                This field is required
+                            </span>
                     <span
                         *ngIf="
-                            formGroup.controls['passwords'].controls['password'].errors &&
-                            formGroup.controls['passwords'].controls['password'].errors['required']
-                        "
+                                    formGroup.controls['passwords']['controls']['password'].errors &&
+                                    formGroup.controls['passwords']['controls']['password'].errors['maxlength']
+                                "
                     >
-                        This field is required
-                    </span>
-                    <span
-                        *ngIf="
-                            formGroup.controls['passwords'].controls['password'].errors &&
-                            formGroup.controls['passwords'].controls['password'].errors['maxlength']
-                        "
-                    >
-                        Too many symbols
-                    </span>
+                                Too many symbols
+                            </span>
                 </mat-error>
             </mat-form-field>
             <mat-form-field appearance="fill">
                 <mat-label>Password confirm</mat-label>
                 <input [type]="hide ? 'password' : 'text'" matInput formControlName="passwordConfirm" />
                 <mat-error>
+                            <span
+                                *ngIf="
+                                    formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
+                                    formGroup.controls['passwords']['controls']['passwordConfirm'].errors['required']
+                                "
+                            >
+                                This field is required
+                            </span>
                     <span
                         *ngIf="
-                            formGroup.controls['passwords'].controls['passwordConfirm'].errors &&
-                            formGroup.controls['passwords'].controls['passwordConfirm'].errors['required']
-                        "
+                                    formGroup.controls['passwords']['controls']['password'].errors &&
+                                    formGroup.controls['passwords']['controls']['password'].errors['maxlength']
+                                "
                     >
-                        This field is required
-                    </span>
-                    <span
-                        *ngIf="
-                            formGroup.controls['passwords'].controls['password'].errors &&
-                            formGroup.controls['passwords'].controls['password'].errors['maxlength']
-                        "
-                    >
-                        Too many symbols
-                    </span>
+                                Too many symbols
+                            </span>
                 </mat-error>
             </mat-form-field>
             <mat-error>

@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject, Constructor } from '@mixins/mixins';
+import { BaseObject } from '@mixins/mixins';
 import { Color, Colors, State, States, TaskB } from '@models/task-b';
-import { MessagesService } from '@services/../../../../../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
+import { MessagesService } from '@services/messages.service';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { finalize } from 'rxjs/operators';
@@ -15,11 +15,11 @@ export interface EditDialogData {
     task: TaskB;
 }
 
-interface EditCardFormControls {
-    taskLabel: string;
-    taskText: string;
-    color: Color;
-    state: State;
+interface EditCardForm {
+    taskLabel: FormControl<string>;
+    taskText: FormControl<string>;
+    color: FormControl<Color>;
+    state: FormControl<State>;
 }
 
 @Component({
@@ -27,11 +27,12 @@ interface EditCardFormControls {
     templateUrl: './edit-card-dialog.component.html',
     styleUrls: ['./edit-card-dialog.component.scss'],
 })
-export class EditCardDialogComponent extends FormMixin<Constructor, EditCardFormControls>(BaseObject) {
+export class EditCardDialogComponent extends FormMixin(BaseObject) {
     isNew = false;
     Colors = Colors;
     States = States;
     isLoading: boolean = false;
+    formGroup: FormGroup<EditCardForm>;
 
     constructor(
         private dialogRef: MatDialogRef<TaskB>,
@@ -48,23 +49,25 @@ export class EditCardDialogComponent extends FormMixin<Constructor, EditCardForm
         }
 
         this.formGroup = this.formBuilder.group({
-            taskLabel: new FormControl(this.data.task.taskLabel, {
-                initialValueIsDefault: true,
+            taskLabel: new FormControl('', {
+                nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(255)],
             }),
-            taskText: new FormControl(this.data.task.taskText, {
-                initialValueIsDefault: true,
+            taskText: new FormControl('', {
+                nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(1024)],
             }),
-            color: new FormControl(this.data.task.color, {
-                initialValueIsDefault: true,
+            color: new FormControl(Color.Red, {
+                nonNullable: true,
                 validators: [Validators.required],
             }),
-            state: new FormControl(this.data.task.state, {
-                initialValueIsDefault: true,
-                validators: [Validators.required],
-            }),
+            state: new FormControl(State.Main, {
+                nonNullable: true,
+                validators: [Validators.required, Validators.maxLength(255)],
+            })
         });
+
+        this.formGroup.patchValue(this.data.task);
     }
 
     onSubmit(): void {

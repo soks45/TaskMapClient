@@ -5,7 +5,7 @@ import { ClearCacheMixin } from '@mixins/clear-cache.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { Board } from '@models/board';
 import { CRUD } from '@models/CRUD';
-import { MessagesService } from '@services/../../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
+import { MessagesService } from '@services/messages.service';
 import { TaskService } from '@services/task/task.service';
 import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';

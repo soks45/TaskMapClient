@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject, Constructor } from '@mixins/mixins';
+import { BaseObject } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
+import { MessagesService } from '@services/messages.service';
 import { finalize } from 'rxjs/operators';
 
-interface LoginFormControls {
-    username: string;
-    password: string;
+interface LoginForm {
+    username: FormControl<string>;
+    password: FormControl<string>;
 }
 
 @Component({
@@ -16,9 +17,10 @@ interface LoginFormControls {
     templateUrl: './login-form-dialog.component.html',
     styleUrls: ['./login-form-dialog.component.scss'],
 })
-export class LoginFormDialogComponent extends FormMixin<Constructor, LoginFormControls>(BaseObject) {
+export class LoginFormDialogComponent extends FormMixin(BaseObject) {
     isLoading = false;
     hide = true;
+    formGroup: FormGroup<LoginForm>;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -29,11 +31,11 @@ export class LoginFormDialogComponent extends FormMixin<Constructor, LoginFormCo
         super();
         this.formGroup = this.formBuilder.group({
             username: new FormControl('', {
-                initialValueIsDefault: true,
+                nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(255)],
             }),
             password: new FormControl('', {
-                initialValueIsDefault: true,
+                nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(255)],
             }),
         });

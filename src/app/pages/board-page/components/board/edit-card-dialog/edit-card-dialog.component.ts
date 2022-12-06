@@ -4,7 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject, Constructor } from '@mixins/mixins';
 import { Color, Colors, State, States, TaskB } from '@models/task-b';
-import { MessagesService } from '@services/messages.service';
+import { MessagesService } from '@services/../../../../../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { finalize } from 'rxjs/operators';

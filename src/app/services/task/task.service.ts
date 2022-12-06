@@ -4,7 +4,7 @@ import { environment } from '@environments/environment';
 import { CRUD } from '@models/CRUD';
 import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
-import { MessagesService } from '@services/messages.service';
+import { MessagesService } from '@services/../../../../../../hantaton22/client/htn22-client/src/app/services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';

@@ -47,6 +47,7 @@ export class LoginFormDialogComponent extends FormMixin(BaseObject) {
         }
 
         this.isLoading = true;
+
         this.authService
             .login(this.formGroup.get(['username'])!.value, this.formGroup.get(['password'])!.value)
             .pipe(finalize(() => (this.isLoading = false)))

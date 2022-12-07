@@ -3,7 +3,6 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { InputUser, User } from '@models/user';
-import { MessagesService } from '@services/messages.service';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
@@ -18,7 +17,6 @@ interface LoginResult extends User {
 })
 // TODO refactor this service
 export class AuthService implements OnDestroy {
-    private readonly apiUrl = `${environment.apiUrl}/account`;
     private timer: Subscription | null = null;
     private _user = new BehaviorSubject<User | null>(null);
     user$ = this._user.asObservable();
@@ -31,12 +29,12 @@ export class AuthService implements OnDestroy {
             }
             if (event.key === 'login-event') {
                 this.stopTokenTimer();
-                this.http.get<LoginResult>(`${this.apiUrl}/user`).subscribe((x) => this._user.next({ ...x }));
+                this.http.get<LoginResult>(`${environment.apiUrl}/account/user`).subscribe((x) => this._user.next(x));
             }
         }
     }
 
-    constructor(private router: Router, private http: HttpClient, private messages: MessagesService) {
+    constructor(private router: Router, private http: HttpClient) {
         window.addEventListener('storage', this.storageEventListener.bind(this));
     }
 
@@ -48,39 +46,36 @@ export class AuthService implements OnDestroy {
         const userId = 0;
         const md5PasswordHash = Md5.init(password);
         return this.http
-            .post<LoginResult>(`${this.apiUrl}/register`, {
+            .post<LoginResult>(`${environment.apiUrl}/account/register`, {
                 userId,
                 ...user,
                 md5PasswordHash,
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this._user.next({ ...x });
+                    this._user.next(x);
                     this.setLocalStorage(x);
                     this.startTokenTimer();
-                    return x;
                 })
             );
     }
 
     login(username: string, _password: string): Observable<LoginResult> {
         const password = Md5.init(_password);
-        return this.http.post<LoginResult>(`${this.apiUrl}/login`, { username, password }).pipe(
+        return this.http.post<LoginResult>(`${environment.apiUrl}/account/login`, { username, password }).pipe(
             tap((x: LoginResult) => {
-                this._user.next({ ...x });
+                this._user.next(x);
                 this.setLocalStorage(x);
                 this.startTokenTimer();
-                return x;
             })
         );
     }
 
     logout(): void {
         this.http
-            .get<void>(`${this.apiUrl}/logout`)
+            .get<void>(`${environment.apiUrl}/account/logout`)
             .pipe(
                 finalize(() => {
-                    this.messages.success('Have a nice day!');
                     this.clearLocalStorage();
                     this._user.next(null);
                     this.stopTokenTimer();
@@ -97,12 +92,11 @@ export class AuthService implements OnDestroy {
             return of(null);
         }
 
-        return this.http.post<LoginResult>(`${this.apiUrl}/refresh-token`, { refreshToken }).pipe(
+        return this.http.post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken }).pipe(
             tap((x) => {
-                this._user.next({ ...x });
+                this._user.next(x);
                 this.setLocalStorage(x);
                 this.startTokenTimer();
-                return x;
             })
         );
     }

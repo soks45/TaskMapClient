@@ -36,16 +36,23 @@
                             <span class="menu-item__title">Your Boards</span>
                         </a>
                     </div>
-                    <div class="header__user">
+                    <div class="header__user" mat-button [matMenuTriggerFor]="menu">
                         <mat-icon svgIcon="account" class="account-icon"></mat-icon>
                     </div>
+                    <mat-menu #menu="matMenu" xPosition="before" yPosition="below" class="header__user-actions">
+                        <button mat-menu-item class="header__user-action">Item 1</button>
+                        <button mat-menu-item class="header__user-action">Item 1</button>
+                        <button mat-menu-item class="header__user-action">Item 1</button>
+                        <button mat-menu-item class="header__user-action">Item 1</button>
+                        <button mat-menu-item class="header__user-action">Item 1</button>
+                    </mat-menu>
                 </ng-template>
                 <ng-template #rightNotAuthed2>
                     <a class="menu-item" mat-ripple (click)="onLogin()">
-                        <span class="menu-item__title">Log In</span>
+                        <span class="menu-item__title">Sign in</span>
                     </a>
                     <a class="menu-item" mat-ripple (click)="onSignup()">
-                        <span class="menu-item__title">Sign Up</span>
+                        <span class="menu-item__title">Sign up</span>
                     </a>
                     <div class="header__user">
                         <mat-icon svgIcon="account" class="account-icon"></mat-icon>

@@ -44,12 +44,11 @@ export class AuthService implements OnDestroy {
 
     signup(user: InputUser, password: string): Observable<LoginResult> {
         const userId = 0;
-        const md5PasswordHash = Md5.init(password);
         return this.http
             .post<LoginResult>(`${environment.apiUrl}/account/register`, {
                 userId,
                 ...user,
-                md5PasswordHash,
+                password: Md5.init(password),
             })
             .pipe(
                 tap((x: LoginResult) => {
@@ -73,7 +72,7 @@ export class AuthService implements OnDestroy {
 
     logout(): void {
         this.http
-            .get<void>(`${environment.apiUrl}/account/logout`)
+            .post<void>(`${environment.apiUrl}/account/logout`, {})
             .pipe(
                 finalize(() => {
                     this.clearLocalStorage();

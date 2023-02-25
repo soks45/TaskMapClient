@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { SignUpFormModule } from '@ui/auth/sign-up/sign-up-form.module';
+import { SignUpFormModule } from '@ui/auth/sign-up-form/sign-up-form.module';
 
 import { SignUpPageRoutingModule } from './sign-up-page-routing.module';
 import { SignUpPageComponent } from './sign-up-page.component';

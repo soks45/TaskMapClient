@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { SignInFormComponent } from '@ui/auth/sign-in/sign-in-form.component';
+import { SignInFormComponent } from '@ui/auth/sign-in-form/sign-in-form.component';
 
 @NgModule({
     declarations: [SignInFormComponent],

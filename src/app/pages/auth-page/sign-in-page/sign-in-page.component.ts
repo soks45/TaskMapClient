@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-    selector: 'tm-sign-in-page',
+    selector: 'tm-sign-in-form-page',
     templateUrl: './sign-in-page.component.html',
     styleUrls: ['./sign-in-page.component.scss'],
 })

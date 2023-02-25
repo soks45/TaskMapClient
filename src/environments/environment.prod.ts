@@ -5,4 +5,5 @@ export const environment = {
         Tasks: 'https://localhost:5001/hub/Task',
     },
     logUrl: 'https://localhost:5001/ClientLog/log',
+    authClientId: 'id',
 };

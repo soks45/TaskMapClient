@@ -1,0 +1,8 @@
+.sign-up-form {
+    &__submit-btn-block {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+}

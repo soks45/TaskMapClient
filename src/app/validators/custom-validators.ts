@@ -6,7 +6,23 @@ export class CustomValidators {
             const sourceCtrl = control.get(source);
             const targetCtrl = control.get(target);
 
-            return sourceCtrl && targetCtrl && sourceCtrl.value !== targetCtrl.value ? { mismatch: true } : null;
+            const isError =
+                sourceCtrl &&
+                targetCtrl &&
+                sourceCtrl.value !== targetCtrl.value &&
+                targetCtrl.value !== null &&
+                targetCtrl.value !== '';
+
+            if (isError) {
+                targetCtrl?.setErrors({ mismatch: true });
+            } else {
+                if (targetCtrl?.hasError('mismatch')) {
+                    targetCtrl?.setErrors({ mismatch: null });
+                    targetCtrl?.updateValueAndValidity();
+                }
+            }
+
+            return isError ? { mismatch: true } : null;
         };
     }
 }

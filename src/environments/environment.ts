@@ -9,6 +9,7 @@ export const environment = {
         Tasks: 'https://localhost:5001/hub/task',
     },
     logUrl: 'https://localhost:5001/api/send-log',
+    authClientId: 'id',
 };
 
 /*

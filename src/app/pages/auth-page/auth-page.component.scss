@@ -29,7 +29,13 @@
     }
 
     &__nav {
-        margin-top: 15%;
+        margin-top: 14%;
+    }
+
+    &__google-btn {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
     }
 }
 

@@ -1,0 +1,12 @@
+.google-auth-btn {
+    &__btn {
+        margin: 0 auto;
+        display: inline-block;
+        box-shadow: 2px 2px 6px 2px rgba(0, 0, 0, 0.15);
+        backdrop-filter: blur(2px);
+    }
+
+    &__btn-wrapper {
+        width: max-content;
+    }
+}

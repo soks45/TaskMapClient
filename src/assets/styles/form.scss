@@ -1,9 +1,13 @@
 .std-form {
     border-radius: 6px;
-    border: 1px solid black;
-    min-width: 400px;
-    $submit-btn-wrapper-width: 260px;
-    $submit-btn-width: $submit-btn-wrapper-width - 4px;
+    min-width: 420px;
+    background: rgba(241, 241, 241, 0.51);
+    border: 1px solid #212121;
+    box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(2px);
+
+    $form-field-width: 260px;
+    $submit-btn-width: $form-field-width - 4px;
 
     &__content {
         margin-top: 58px;
@@ -12,15 +16,16 @@
     }
 
     &__form-field {
-        width: $submit-btn-wrapper-width;
-        margin: 0 auto 5px auto;
+        width: $form-field-width;
+        margin: 0 auto;
+        display: flex;
     }
 
     &__actions {
         display: flex;
         justify-content: center;
         margin-top: 5px;
-        margin-bottom: 36px;
+        margin-bottom: 24px;
     }
 
     &__submit-btn-wrapper {
@@ -28,7 +33,7 @@
         justify-content: center;
         align-items: center;
         background-color: black;
-        width: $submit-btn-wrapper-width;
+        width: $form-field-width;
         height: 50px;
         border-radius: 6px !important;
     }
@@ -40,10 +45,25 @@
         height: 46px;
         background: rgba(59, 59, 59, 0.8);
         color: rgba(143, 121, 219, 1);
+        font-weight: 600;
+        font-size: 32px;
+        line-height: 38px;
+    }
+
+    &__submit-btn-question {
+        color: rgba(143, 121, 219, 1) !important;
+        font-weight: 400;
+        font-size: 20px;
+        line-height: 23px;
     }
 
     &__formgroup {
         display: flex;
         flex-direction: column;
+    }
+
+    &__error {
+        font-size: 75%;
+
     }
 }

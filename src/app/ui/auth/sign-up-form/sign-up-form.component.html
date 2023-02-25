@@ -75,21 +75,26 @@
                         formGroup.controls['passwords']['controls']['passwordConfirm'].errors['required']">
                         This field is required
                     </span>
-                    <span *ngIf="formGroup.controls['passwords']['controls']['password'].errors &&
-                        formGroup.controls['passwords']['controls']['password'].errors['maxlength']">
+                    <span *ngIf="formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
+                        formGroup.controls['passwords']['controls']['passwordConfirm'].errors['maxlength']">
                         Too many symbols
+                    </span>
+                    <span *ngIf="formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
+                        formGroup.controls['passwords']['controls']['passwordConfirm'].errors['mismatch']">
+                        Password mismatch
                     </span>
                 </mat-error>
             </mat-form-field>
-            <mat-error>
-                <span *ngIf="passwordMatchError"> Password mismatch </span>
-            </mat-error>
         </div>
     </div>
 
     <div class="std-form__actions">
-        <div class="std-form__submit-btn-wrapper">
-            <button mat-raised-button class="std-form__submit-btn" (click)="onSubmit()">Sign Up</button>
+        <div class="sign-up-form__submit-btn-block">
+            <div class="std-form__submit-btn-wrapper">
+                <button mat-raised-button class="std-form__submit-btn" (click)="onSubmit()">Sign Up</button>
+            </div>
+            <a class="std-form__submit-btn-question">I already have an account</a>
         </div>
     </div>
 </form>
+

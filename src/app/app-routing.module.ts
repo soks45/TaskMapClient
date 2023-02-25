@@ -2,22 +2,37 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@guards/auth.guard';
 
+export enum PageRoutes {
+    authPageRoute = 'auth',
+    mainPageRoute = 'main',
+    boardPageRoute = 'board',
+    notFoundPageRoute = 'not-found',
+}
+
+export const defaultPageRoute = PageRoutes.boardPageRoute;
+
 const routes: Routes = [
     {
-        path: 'auth',
+        path: '',
+        redirectTo: defaultPageRoute,
+        pathMatch: 'full',
+    },
+    {
+        path: PageRoutes.authPageRoute,
         loadChildren: () => import('@pages/auth-page/auth-page.module').then((m) => m.AuthPageModule),
     },
     {
-        path: 'main',
+        path: PageRoutes.mainPageRoute,
         loadChildren: () => import('@pages/main-page/main-page.module').then((m) => m.MainPageModule),
         canActivate: [AuthGuard],
     },
     {
-        path: 'board',
+        path: PageRoutes.boardPageRoute,
         loadChildren: () => import('@pages/board-page/board-page.module').then((m) => m.BoardPageModule),
+        canActivate: [AuthGuard],
     },
     {
-        path: 'not-found',
+        path: PageRoutes.notFoundPageRoute,
         loadChildren: () => import('@pages/not-found-page/not-found-page.module').then((m) => m.NotFoundPageModule),
     },
     {
@@ -30,7 +45,6 @@ const routes: Routes = [
     imports: [
         RouterModule.forRoot(routes, {
             preloadingStrategy: PreloadAllModules,
-            relativeLinkResolution: 'legacy',
         }),
     ],
     exports: [RouterModule],

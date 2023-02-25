@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
+import { InputUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
 import { finalize } from 'rxjs/operators';
@@ -58,26 +59,25 @@ export class SignUpFormComponent extends FormMixin(BaseObject) {
         });
     }
 
-    get passwordMatchError() {
-        return (
-            this.formGroup.get(['passwords'])!.getError('mismatch') &&
-            this.formGroup.get(['passwords', 'passwordConfirm'])?.touched
-        );
-    }
-
     onSubmit(): void {
         if (!this.checkForm()) {
             return;
         }
 
+        this.isLoading = true;
+
+        const value = this.formGroup.value;
+        const { firstName, lastName, username }: InputUser = value as InputUser;
+        const password = value['passwords']!.passwordConfirm!;
+
         this.authService
             .signup(
                 {
-                    firstName: this.formGroup.controls.firstName.value,
-                    lastName: this.formGroup.controls.lastName.value,
-                    username: this.formGroup.controls.username.value,
+                    firstName,
+                    lastName,
+                    username,
                 },
-                this.formGroup.get(['passwords', 'passwordConfirm'])!.value
+                password
             )
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe();

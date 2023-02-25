@@ -3,9 +3,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { InputUser, User } from '@models/user';
+import { defaultPageRoute, PageRoutes } from 'app/app-routing.module';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { delay, finalize, tap } from 'rxjs/operators';
+import { delay, finalize, map, tap } from 'rxjs/operators';
 
 interface LoginResult extends User {
     accessToken: string;
@@ -25,6 +26,7 @@ export class AuthService implements OnDestroy {
     private timer: Subscription | null = null;
     private _user = new BehaviorSubject<User | null>(null);
     user$ = this._user.asObservable();
+    isAuthed$ = this.user$.pipe(map((u) => !!u));
 
     private storageEventListener(event: StorageEvent) {
         if (event.storageArea === localStorage) {
@@ -60,21 +62,25 @@ export class AuthService implements OnDestroy {
                     this._user.next(x);
                     this.setLocalStorage(x);
                     this.startTokenTimer();
+                    this.router.navigateByUrl(defaultPageRoute);
                 })
             );
     }
 
     login(credentials: Credentials): Observable<LoginResult> {
-        return this.http.post<LoginResult>(`${environment.apiUrl}/account/login`, <Credentials>{
-            ...credentials,
-            password: Md5.init(credentials.password)
-        }).pipe(
-            tap((x: LoginResult) => {
-                this._user.next(x);
-                this.setLocalStorage(x);
-                this.startTokenTimer();
+        return this.http
+            .post<LoginResult>(`${environment.apiUrl}/account/login`, <Credentials>{
+                ...credentials,
+                password: Md5.init(credentials.password),
             })
-        );
+            .pipe(
+                tap((x: LoginResult) => {
+                    this._user.next(x);
+                    this.setLocalStorage(x);
+                    this.startTokenTimer();
+                    this.router.navigateByUrl(defaultPageRoute);
+                })
+            );
     }
 
     logout(): void {
@@ -85,7 +91,7 @@ export class AuthService implements OnDestroy {
                     this.clearLocalStorage();
                     this._user.next(null);
                     this.stopTokenTimer();
-                    this.router.navigate(['/board-page']);
+                    this.router.navigateByUrl(PageRoutes.authPageRoute);
                 })
             )
             .subscribe();

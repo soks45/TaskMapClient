@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 import { MessagesService } from '@services/messages.service';
+import { PageRoutes } from 'app/app-routing.module';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -16,7 +17,7 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
             catchError((err) => {
                 if (err.status === 403 || err.status === 401) {
                     this.authService.clearLocalStorage();
-                    this.router.navigate(['/board-page']);
+                    this.router.navigateByUrl(PageRoutes.authPageRoute);
                 }
                 if (!environment.production) {
                     this.messages.error(err);

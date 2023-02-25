@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { NavTabItem } from '@ui/nav-tabs/nav-tabs.component';
 
 @Component({
-    selector: 'tm-auth-page',
-    templateUrl: './auth-page.component.html',
-    styleUrls: ['./auth-page.component.scss'],
+    selector: 'tm-auth',
+    templateUrl: './auth.component.html',
+    styleUrls: ['./auth.component.scss'],
 })
-export class AuthPageComponent {
+export class AuthComponent {
     authPages: NavTabItem[] = [
         {
             link: 'sign-in',

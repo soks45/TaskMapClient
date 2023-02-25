@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthPageComponent } from '@pages/auth-page/auth-page.component';
+import { AuthComponent } from '@pages/auth/auth.component';
 
 const routes: Routes = [
     {
@@ -10,17 +10,15 @@ const routes: Routes = [
     },
     {
         path: '',
-        component: AuthPageComponent,
+        component: AuthComponent,
         children: [
             {
                 path: 'sign-in',
-                loadChildren: () =>
-                    import('@pages/auth-page/sign-in-page/sign-in-page.module').then((m) => m.SignInPageModule),
+                loadChildren: () => import('@pages/auth/sign-in/sign-in.module').then((m) => m.SignInModule),
             },
             {
                 path: 'sign-up',
-                loadChildren: () =>
-                    import('@pages/auth-page/sign-up-page/sign-up-page.module').then((m) => m.SignUpPageModule),
+                loadChildren: () => import('@pages/auth/sign-up/sign-up.module').then((m) => m.SignUpModule),
             },
         ],
     },
@@ -30,4 +28,4 @@ const routes: Routes = [
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule],
 })
-export class AuthPageRoutingModule {}
+export class AuthRoutingModule {}

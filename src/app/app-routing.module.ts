@@ -19,7 +19,7 @@ const routes: Routes = [
     },
     {
         path: PageRoutes.authPageRoute,
-        loadChildren: () => import('@pages/auth-page/auth-page.module').then((m) => m.AuthPageModule),
+        loadChildren: () => import('@pages/auth/auth.module').then((m) => m.AuthModule),
     },
     {
         path: PageRoutes.mainPageRoute,

@@ -9,15 +9,16 @@ export class CustomIconsService {
     constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {}
 
     init(): void {
-        this.registerIcon('account', 'account');
-        this.registerIcon('custom-add', 'custom-add');
-        this.registerIcon('edit', 'edit');
+        this.registerIcon('account');
+        this.registerIcon('custom-add');
+        this.registerIcon('edit');
+        this.registerIcon('logo');
     }
 
-    private registerIcon(name: string, filename: string) {
+    private registerIcon(name: string) {
         this.matIconRegistry.addSvgIcon(
             name,
-            this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${filename}.svg`)
+            this.domSanitizer.bypassSecurityTrustResourceUrl(`assets/icons/${name}.svg`)
         );
     }
 }

@@ -1,0 +1,12 @@
+<div class="auth-page">
+    <div class="auth-page__left-block">
+        <tm-task-map></tm-task-map>
+    </div>
+    <div class="auth-page__vertical-divider"></div>
+    <div class="auth-page__right-block">
+        <tm-nav-tabs [items]="authPages" class="auth-page__nav">
+            <router-outlet></router-outlet>
+        </tm-nav-tabs>
+    </div>
+</div>
+

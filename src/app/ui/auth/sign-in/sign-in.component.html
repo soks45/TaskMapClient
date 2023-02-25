@@ -1,0 +1,50 @@
+<form [formGroup]="formGroup" class="sign-in-form">
+    <div class="sign-in-form__content">
+        <mat-form-field appearance="outline" class="sign-in-form__form-field">
+            <mat-label>username</mat-label>
+            <input type="text" matInput formControlName="username" autocomplete="true" class="sign-in-form__input" />
+            <mat-error>
+            <span *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']">
+                This field is required
+            </span>
+                <span
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']">
+                Too many symbols
+            </span>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="sign-in-form__form-field">
+            <mat-label>password</mat-label>
+            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password"
+                   class="sign-in-form__input" />
+            <button
+                mat-icon-button
+                matSuffix
+                (click)="hide = !hide"
+                [attr.aria-label]="'Hide password'"
+                [attr.aria-pressed]="hide"
+            >
+                <mat-icon>
+                    {{ hide ? 'visibility_off' : 'visibility' }}
+                </mat-icon>
+            </button>
+            <mat-error>
+                <span
+                    *ngIf="formGroup.controls['password'].errors && formGroup.controls['password'].errors['required']"
+                >
+                    This field is required
+                </span>
+                <span
+                    *ngIf="formGroup.controls['password'].errors && formGroup.controls['password'].errors['maxlength']"
+                >
+                    Too many symbols
+                </span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="sign-in-form__actions">
+
+    </div>
+</form>

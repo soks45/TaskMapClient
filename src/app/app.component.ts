@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 import { CustomIconsService } from '@services/custom-icons.service';
 
 @Component({
@@ -7,12 +6,8 @@ import { CustomIconsService } from '@services/custom-icons.service';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
 })
-export class AppComponent implements OnInit {
-    constructor(private icons: CustomIconsService, private router: Router) {
+export class AppComponent {
+    constructor(private icons: CustomIconsService) {
         this.icons.init();
-    }
-
-    ngOnInit(): void {
-        this.router.navigate(['board-page']);
     }
 }

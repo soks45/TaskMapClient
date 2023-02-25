@@ -1,0 +1,22 @@
+.nav-tabs {
+    &__nav {
+        margin-bottom: 16px;
+    }
+
+    &__item {
+        border-radius: 6px;
+        width: 20px;
+        background-color: white;
+        margin-right: 14px;
+        font-size: 24px;
+        border: 1px solid #e5e4e4;
+    }
+
+    .mat-tab-link {
+        min-width: 110px;
+    }
+
+    .mat-tab-links {
+        padding: 5px;
+    }
+}

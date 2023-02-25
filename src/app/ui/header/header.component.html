@@ -12,10 +12,10 @@
                             </span>
                         </div>
                     </ng-template>
-                    <ng-template #TaskMap>Task Map</ng-template>
+                    <ng-template #TaskMap>TaskMap</ng-template>
                 </div>
             </div>
-            <div class="header__right">
+            <div class="header__right" *ngIf="false">
                 <ng-container *ngIf="state.user; then rightAuthed; else rightNotAuthed2"></ng-container>
                 <ng-template #rightAuthed>
                     <div class="header__routes">
@@ -48,12 +48,6 @@
                     </mat-menu>
                 </ng-template>
                 <ng-template #rightNotAuthed2>
-                    <a class="menu-item" mat-ripple (click)="onLogin()">
-                        <span class="menu-item__title">Sign in</span>
-                    </a>
-                    <a class="menu-item" mat-ripple (click)="onSignup()">
-                        <span class="menu-item__title">Sign up</span>
-                    </a>
                     <div class="header__user">
                         <mat-icon svgIcon="account" class="account-icon"></mat-icon>
                     </div>

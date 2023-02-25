@@ -1,4 +1,4 @@
-import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Point } from '@angular/cdk/drag-drop';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';

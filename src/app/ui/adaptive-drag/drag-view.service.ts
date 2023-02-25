@@ -1,4 +1,4 @@
-import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Point } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
 import { DeepReadOnly } from '@models/deep-read-only';
 

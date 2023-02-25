@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
+import { AuthService, Credentials } from '@services/auth.service';
+import { finalize } from 'rxjs/operators';
 
 interface LoginForm {
     username: FormControl<string>;
@@ -9,16 +11,16 @@ interface LoginForm {
 }
 
 @Component({
-    selector: 'tm-sign-in',
-    templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
+    selector: 'tm-sign-in-form',
+    templateUrl: './sign-in-form.component.html',
+    styleUrls: ['./sign-in-form.component.scss'],
 })
-export class SignInComponent extends FormMixin(BaseObject) {
+export class SignInFormComponent extends FormMixin(BaseObject) {
     formGroup: FormGroup<LoginForm>;
     isLoading = false;
     hide = true;
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: FormBuilder, private authService: AuthService) {
         super();
 
         this.formGroup = this.fb.group<LoginForm>({
@@ -34,19 +36,15 @@ export class SignInComponent extends FormMixin(BaseObject) {
     }
 
     onSubmit(): void {
-        if (!this.checkForm) {
+        if (!this.checkForm()) {
             return;
         }
 
         this.isLoading = true;
 
-        /*        this.authService
-                    .login(this.formGroup.get(['username'])!.value, this.formGroup.get(['password'])!.value)
-                    .pipe(finalize(() => (this.isLoading = false)))
-                    .subscribe({
-                        next: () => this.dialogRef.close(true),
-                        error: this.messages.error,
-                    });*/
-        this.isLoading = false;
+        this.authService
+            .login(this.formGroup.value as Credentials)
+            .pipe(finalize(() => (this.isLoading = false)))
+            .subscribe();
     }
 }

@@ -1,8 +1,8 @@
-<form [formGroup]="formGroup" class="sign-in-form">
-    <div class="sign-in-form__content">
-        <mat-form-field appearance="outline" class="sign-in-form__form-field">
+<form [formGroup]="formGroup" class="sign-in-form std-form">
+    <div class="std-form__content">
+        <mat-form-field appearance="outline" class="std-form__form-field">
             <mat-label>username</mat-label>
-            <input type="text" matInput formControlName="username" autocomplete="true" class="sign-in-form__input" />
+            <input type="text" matInput formControlName="username" autocomplete="true" />
             <mat-error>
             <span *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']">
                 This field is required
@@ -14,10 +14,9 @@
             </mat-error>
         </mat-form-field>
 
-        <mat-form-field appearance="outline" class="sign-in-form__form-field">
+        <mat-form-field appearance="outline" class="std-form__form-field">
             <mat-label>password</mat-label>
-            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password"
-                   class="sign-in-form__input" />
+            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" />
             <button
                 mat-icon-button
                 matSuffix
@@ -44,7 +43,9 @@
         </mat-form-field>
     </div>
 
-    <div class="sign-in-form__actions">
-
+    <div class="std-form__actions">
+        <div class="std-form__submit-btn-wrapper">
+            <button mat-raised-button class="std-form__submit-btn" (click)="onSubmit()">Sign In</button>
+        </div>
     </div>
 </form>

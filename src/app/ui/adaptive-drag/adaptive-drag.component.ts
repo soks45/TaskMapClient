@@ -1,5 +1,4 @@
-import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { CdkDragEnd, Point } from '@angular/cdk/drag-drop';
 import {
     AfterViewInit,
     ChangeDetectorRef,

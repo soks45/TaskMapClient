@@ -12,6 +12,11 @@ interface LoginResult extends User {
     refreshToken: string;
 }
 
+export interface Credentials {
+    username: string;
+    password: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -59,9 +64,11 @@ export class AuthService implements OnDestroy {
             );
     }
 
-    login(username: string, _password: string): Observable<LoginResult> {
-        const password = Md5.init(_password);
-        return this.http.post<LoginResult>(`${environment.apiUrl}/account/login`, { username, password }).pipe(
+    login(credentials: Credentials): Observable<LoginResult> {
+        return this.http.post<LoginResult>(`${environment.apiUrl}/account/login`, <Credentials>{
+            ...credentials,
+            password: Md5.init(credentials.password)
+        }).pipe(
             tap((x: LoginResult) => {
                 this._user.next(x);
                 this.setLocalStorage(x);

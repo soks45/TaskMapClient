@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Point } from '@angular/cdk/drag-drop/drag-ref';
+import { Point } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';

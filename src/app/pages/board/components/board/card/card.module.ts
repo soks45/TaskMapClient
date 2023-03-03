@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { CardComponent } from '@pages/board-page/components/board/card/card.component';
+import { CardComponent } from '@pages/board/components/board/card/card.component';
 
 @NgModule({
     declarations: [CardComponent],

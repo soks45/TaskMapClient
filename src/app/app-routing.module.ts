@@ -4,7 +4,7 @@ import { AuthGuard } from '@guards/auth.guard';
 
 export enum PageRoutes {
     authPageRoute = 'auth',
-    mainPageRoute = 'main',
+    dashboardPageRoute = 'dashboard',
     boardPageRoute = 'board',
     notFoundPageRoute = 'not-found',
 }
@@ -22,13 +22,13 @@ const routes: Routes = [
         loadChildren: () => import('@pages/auth/auth.module').then((m) => m.AuthModule),
     },
     {
-        path: PageRoutes.mainPageRoute,
-        loadChildren: () => import('@pages/main-page/main-page.module').then((m) => m.MainPageModule),
+        path: PageRoutes.dashboardPageRoute,
+        loadChildren: () => import('@pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
         canActivate: [AuthGuard],
     },
     {
         path: PageRoutes.boardPageRoute,
-        loadChildren: () => import('@pages/board-page/board-page.module').then((m) => m.BoardPageModule),
+        loadChildren: () => import('@pages/board/board-page.module').then((m) => m.BoardPageModule),
         canActivate: [AuthGuard],
     },
     {

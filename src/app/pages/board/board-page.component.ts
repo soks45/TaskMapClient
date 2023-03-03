@@ -5,6 +5,4 @@ import { Component } from '@angular/core';
     templateUrl: './board-page.component.html',
     styleUrls: ['./board-page.component.scss'],
 })
-export class BoardPageComponent {
-    constructor() {}
-}
+export class BoardPageComponent {}

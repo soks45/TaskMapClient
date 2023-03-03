@@ -7,7 +7,7 @@ import { TaskB } from '@models/task-b';
 import {
     EditCardDialogComponent,
     EditDialogData,
-} from '@pages/board-page/components/board/edit-card-dialog/edit-card-dialog.component';
+} from '@pages/board/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task/task.service';
 
 @Component({

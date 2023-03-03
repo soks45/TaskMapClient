@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { AuthService } from '@services/auth.service';
 
 @Component({
-    selector: 'tm-main-page',
-    templateUrl: './main-page.component.html',
-    styleUrls: ['./main-page.component.scss'],
+    selector: 'tm-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss'],
 })
-export class MainPageComponent {
+export class DashboardComponent {
     constructor(private auth: AuthService) {}
 
     logout(): void {

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { BoardModule } from '@pages/board-page/components/board/board.module';
 
-import { BoardPageRoutingModule } from './board-page-routing.module';
-import { BoardPageComponent } from './board-page.component';
+import { BoardPageRoutingModule } from '@pages/board/board-page-routing.module';
+import { BoardModule } from '@pages/board/components/board/board.module';
+import { BoardPageComponent } from 'app/pages/board/board-page.component';
 
 @NgModule({
     declarations: [BoardPageComponent],

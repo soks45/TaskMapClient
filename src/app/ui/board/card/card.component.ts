@@ -8,13 +8,14 @@ import { TaskService } from '@services/task/task.service';
 import { EditCardDialogComponent, EditDialogData } from '@ui/board/edit-card-dialog/edit-card-dialog.component';
 
 @Component({
-    selector: 'tm-card [task] ',
+    selector: 'tm-card [task]',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
 })
 export class CardComponent extends DestroyMixin(BaseObject) {
     @Input() task!: TaskB;
     @Input() fromCreator: boolean = false;
+    @Input() reduced = false;
 
     constructor(private taskService: TaskService, private dialog: MatDialog) {
         super();

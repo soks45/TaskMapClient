@@ -1,6 +1,12 @@
 <div class="dashboard-page">
     <tm-vertical-grid>
-
+        <ng-container *ngIf="(boards$ | async) as boardList">
+            <tm-list *ngFor="let board of boardList" [header]="board.boardName" class="dashboard-page__board">
+                <ng-container *ngFor="let task of (tasks.get(board.boardId) | async)">
+                    <tm-card [task]="task" [reduced]="true"></tm-card>
+                </ng-container>
+            </tm-list>
+        </ng-container>
     </tm-vertical-grid>
 </div>
 

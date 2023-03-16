@@ -1,0 +1,20 @@
+.list {
+    padding: 23px 20px 23px 20px;
+    background: radial-gradient(100% 100% at 50% 0%, #FEFEFE 0%, #F0F0F0 100%);
+    border-radius: 6px;
+    max-height: max-content;
+
+    &__header {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 28px;
+    }
+
+    &__content {
+        margin-top: 23px;
+        display: flex;
+        flex-direction: column;
+        align-content: flex-start;
+        gap: 19px;
+    }
+}

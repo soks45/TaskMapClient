@@ -33,11 +33,11 @@ const routes: Routes = [
     },
     {
         path: PageRoutes.notFoundPageRoute,
-        loadChildren: () => import('@pages/not-found-page/not-found-page.module').then((m) => m.NotFoundPageModule),
+        loadChildren: () => import('@pages/not-found/not-found-page.module').then((m) => m.NotFoundPageModule),
     },
     {
         path: '**',
-        loadChildren: () => import('@pages/not-found-page/not-found-page.module').then((m) => m.NotFoundPageModule),
+        loadChildren: () => import('@pages/not-found/not-found-page.module').then((m) => m.NotFoundPageModule),
     },
 ];
 

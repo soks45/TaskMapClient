@@ -19,4 +19,14 @@
         flex-direction: row;
         justify-content: space-between;
     }
+
+    &__close-button {
+        border: transparent;
+        background-color: transparent;
+        width: 25px;
+        height: 25px;
+        padding: 0;
+        border-radius: 15px;
+        transition: 0s;
+    }
 }

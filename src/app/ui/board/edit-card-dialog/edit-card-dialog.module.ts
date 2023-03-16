@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
-import { EditCardDialogComponent } from '@pages/board/components/board/edit-card-dialog/edit-card-dialog.component';
+import { EditCardDialogComponent } from '@ui/board/edit-card-dialog/edit-card-dialog.component';
 
 @NgModule({
     declarations: [EditCardDialogComponent],

@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
-import { CardModule } from '@pages/board/components/board/card/card.module';
-import { TaskCreatorComponent } from './task-creator.component';
+import { CardModule } from '@ui/board/card/card.module';
+import { TaskCreatorComponent } from 'app/ui/board/task-creator/task-creator.component';
 
 @NgModule({
     declarations: [TaskCreatorComponent],

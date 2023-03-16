@@ -4,11 +4,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { TaskB } from '@models/task-b';
-import {
-    EditCardDialogComponent,
-    EditDialogData,
-} from '@pages/board/components/board/edit-card-dialog/edit-card-dialog.component';
 import { TaskService } from '@services/task/task.service';
+import { EditCardDialogComponent, EditDialogData } from '@ui/board/edit-card-dialog/edit-card-dialog.component';
 
 @Component({
     selector: 'tm-card [task] ',

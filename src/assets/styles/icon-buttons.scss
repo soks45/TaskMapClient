@@ -22,6 +22,29 @@ button[mat-icon-button] {
         }
     }
 
+    $medium-size-button: 36px;
+    $medium-size-icon: 24px;
+
+    &.icon-button-medium {
+        width: $medium-size-button;
+        height: $medium-size-button;
+        line-height: $medium-size-button;
+
+        .mat-icon {
+            font-size: $medium-size-icon;
+            width: $medium-size-icon;
+            height: $medium-size-icon;
+            line-height: $medium-size-icon;
+        }
+
+        .mat-button-ripple {
+            font-size: inherit;
+            width: inherit;
+            height: inherit;
+            line-height: inherit;
+        }
+    }
+
     $small-size-button: 24px;
     $small-size-icon: 24px;
 

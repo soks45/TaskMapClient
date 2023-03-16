@@ -1,0 +1,11 @@
+.vertical-grid {
+    max-height: 100%;
+    width: min-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    row-gap: 10px;
+}

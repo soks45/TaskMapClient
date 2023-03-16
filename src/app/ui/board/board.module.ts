@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { BoardComponent } from '@pages/board/components/board/board.component';
-import { CardModule } from '@pages/board/components/board/card/card.module';
-import { EditCardDialogModule } from '@pages/board/components/board/edit-card-dialog/edit-card-dialog.module';
-import { TaskCreatorModule } from '@pages/board/components/board/task-creator/task-creator.module';
 import { AdaptiveDragModule } from '@ui/adaptive-drag/adaptive-drag.module';
+import { BoardComponent } from '@ui/board/board.component';
+import { CardModule } from '@ui/board/card/card.module';
+import { EditCardDialogModule } from '@ui/board/edit-card-dialog/edit-card-dialog.module';
+import { TaskCreatorModule } from '@ui/board/task-creator/task-creator.module';
 
 @NgModule({
     declarations: [BoardComponent],

@@ -2,9 +2,8 @@
     width: 98%;
     height: 100%;
     margin: auto;
-    border-style: dashed;
-    border-radius: 40px;
-    background-image: url('../../../assets/img/reticle.svg');
+    border-radius: 6px;
+    background: radial-gradient(100% 100% at 50% 0%, #FEFEFE 0%, #F0F0F0 100%) /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
     position: relative;
     border-color: #c2c2c2;
 

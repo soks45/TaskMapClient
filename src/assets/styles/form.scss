@@ -1,3 +1,6 @@
+$form-field-width: 260px;
+$submit-btn-width: $form-field-width - 4px;
+
 .std-form {
     border-radius: 6px;
     min-width: 420px;

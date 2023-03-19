@@ -7,7 +7,7 @@ import { MemoryStorage } from 'app/helpers/memory-storage';
 import { CRUD } from 'app/models/CRUD';
 import { TaskB } from 'app/models/task-b';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -57,8 +57,7 @@ export class TaskService implements CRUD<TaskB> {
                     if (boardId !== newBoardId) {
                         this.reload(newBoardId);
                     }
-                }),
-                delay(1000)
+                })
             );
     }
 

@@ -1,5 +1,8 @@
 <div class="dashboard-page">
-    <div cdkDropListGroup class="dashboard-page__boards" [cdkDropListGroupDisabled]="isLoading">
+    <div class="dashboard-page__boards"
+         cdkDropListGroup
+         [cdkDropListGroupDisabled]="isLoading"
+         [ngStyle]="isLoading ? { opacity: 0.7 } : null">
         <div class="dashboard-page__board"
              *ngFor="let board of boards$ | async"
              cdkDropList

@@ -20,7 +20,7 @@ export interface ShortTaskB {
 }
 
 export interface TaskB extends ShortTaskB {
-    nextTaskId: number;
+    next_task_id: number;
     userId: number;
     createdDate: string;
     taskLabel: string;

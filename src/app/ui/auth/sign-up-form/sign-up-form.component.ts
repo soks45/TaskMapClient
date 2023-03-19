@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { InputUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
+import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
 
 interface SignUpForm {

@@ -1,13 +1,23 @@
 <div class="dashboard-page">
-    <tm-vertical-grid cdkDropListGroup class="dashboard-page__boards">
-        <tm-list class="dashboard-page__board" *ngFor="let board of boards$ | async"
-                 cdkDropList [cdkDropListData]="board.tasks" (cdkDropListDropped)="drop($event)"
-                 [header]="board.boardName">
-            <div class="dashboard-page__task" *ngFor="let task of board.tasks"
-                 cdkDrag [cdkDragData]="task">
-                <tm-card [task]="task" [reduced]="true"></tm-card>
+    <div cdkDropListGroup class="dashboard-page__boards" [cdkDropListGroupDisabled]="isLoading">
+        <div class="dashboard-page__board"
+             *ngFor="let board of boards$ | async"
+             cdkDropList
+             [cdkDropListData]="board.tasks"
+             (cdkDropListDropped)="drop($event)"
+             cdkDropListOrientation="vertical"
+             [id]="setId(board.boardId)">
+            <div class="dashboard-page__board-header">
+                {{ board.boardName }}
             </div>
-        </tm-list>
-    </tm-vertical-grid>
+            <div class="dashboard-page__task"
+                 *ngFor="let task of board.tasks"
+                 cdkDrag
+                 [cdkDragData]="task">
+                <tm-card [task]="task" [reduced]="true"></tm-card>
+                <tm-card [task]="task" *cdkDragPreview></tm-card>
+            </div>
+        </div>
+    </div>
 </div>
 

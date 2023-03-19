@@ -3,10 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Color, Colors, State, States, TaskB } from '@models/task-b';
 import { MessagesService } from '@services/messages.service';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
+import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
 import { finalize } from 'rxjs/operators';
 
 export interface EditDialogData {
@@ -64,7 +64,7 @@ export class EditCardDialogComponent extends FormMixin(BaseObject) {
             state: new FormControl(State.Main, {
                 nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(255)],
-            })
+            }),
         });
 
         this.formGroup.patchValue(this.data.task);

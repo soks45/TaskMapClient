@@ -4,9 +4,9 @@ import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Color, TaskB } from '@models/task-b';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
+import { Color, TaskB } from 'app/models/task-b';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 

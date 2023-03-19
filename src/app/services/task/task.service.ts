@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { CRUD } from '@models/CRUD';
-import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
+import { CRUD } from 'app/models/CRUD';
+import { TaskB } from 'app/models/task-b';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, delay } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -42,6 +42,23 @@ export class TaskService implements CRUD<TaskB> {
                     throw err;
                 }),
                 tap(() => (shouldReload ? this.reload(entity.boardId) : null))
+            );
+    }
+
+    moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
+        return this.http
+            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {
+                withCredentials: true,
+            })
+            .pipe(
+                tap(() => {
+                    this.reload(boardId);
+
+                    if (boardId !== newBoardId) {
+                        this.reload(newBoardId);
+                    }
+                }),
+                delay(1000)
             );
     }
 

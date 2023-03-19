@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { ClearCacheMixin } from '@mixins/clear-cache.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Board } from '@models/board';
 import { MessagesService } from '@services/messages.service';
+import { Board } from 'app/models/board';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

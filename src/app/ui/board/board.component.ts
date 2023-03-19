@@ -3,10 +3,10 @@ import { Point } from '@angular/cdk/drag-drop';
 import { Component } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { TaskB } from '@models/task-b';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
+import { TaskB } from 'app/models/task-b';
 import { Observable, takeUntil, tap } from 'rxjs';
 
 @Component({

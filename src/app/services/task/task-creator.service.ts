@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Color, State, TaskB } from '@models/task-b';
 import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/board/current-board.service';
+import { Color, State, TaskB } from 'app/models/task-b';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 interface EditTask {
@@ -66,7 +66,7 @@ export class TaskCreatorService {
             color: Color.Green,
             boardId: -1,
             userId: -1,
-            nextTaskId: 0,
+            next_task_id: 0,
         };
     }
 }

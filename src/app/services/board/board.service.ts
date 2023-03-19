@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { ClearCacheMixin } from '@mixins/clear-cache.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { Board } from '@models/board';
-import { CRUD } from '@models/CRUD';
 import { MessagesService } from '@services/messages.service';
 import { TaskService } from '@services/task/task.service';
+import { Board } from 'app/models/board';
+import { CRUD } from 'app/models/CRUD';
 import { AsyncSubject, BehaviorSubject, mergeMap, Observable, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

@@ -3,8 +3,34 @@
     width: 92%;
     height: 95%;
 
+    &__boards {
+        height: 100%;
+        width: min-content;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        column-gap: 20px;
+        row-gap: 10px;
+    }
+
     &__board {
-        display: block;
+        background: radial-gradient(100% 100% at 50% 0%, #FEFEFE 0%, #F0F0F0 100%);
+        border-radius: 6px;
+
+        &-header {
+            font-weight: 500;
+            font-size: 24px;
+            line-height: 28px;
+            padding: 20px;
+        }
+    }
+
+    &__board-header {
+        font-weight: 500;
+        font-size: 24px;
+        line-height: 28px;
+        padding: 20px;
     }
 
     &__task {

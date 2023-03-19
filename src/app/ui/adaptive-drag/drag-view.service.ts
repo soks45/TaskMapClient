@@ -1,6 +1,6 @@
 import { Point } from '@angular/cdk/drag-drop';
 import { Injectable } from '@angular/core';
-import { DeepReadOnly } from '@models/deep-read-only';
+import { DeepReadOnly } from 'app/models/deep-read-only';
 
 @Injectable()
 export class DragViewService {

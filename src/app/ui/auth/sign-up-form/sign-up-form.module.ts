@@ -5,11 +5,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { RouterLinkWithHref } from '@angular/router';
 import { SignUpFormComponent } from 'app/ui/auth/sign-up-form/sign-up-form.component';
 
 @NgModule({
     declarations: [SignUpFormComponent],
-    imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, MatButtonModule, MatIconModule, MatInputModule],
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
+        RouterLinkWithHref,
+    ],
     exports: [SignUpFormComponent],
 })
 export class SignUpFormModule {}

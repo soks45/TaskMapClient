@@ -4,6 +4,7 @@ import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
+import { PageRoutes } from 'app/app-routing.module';
 import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
 
@@ -23,6 +24,7 @@ interface SignUpForm {
     styleUrls: ['./sign-up-form.component.scss'],
 })
 export class SignUpFormComponent extends FormMixin(BaseObject) {
+    readonly loginUrl: string = '/' + PageRoutes.authPageRoute;
     isLoading = false;
     hide = true;
     formGroup: FormGroup<SignUpForm>;

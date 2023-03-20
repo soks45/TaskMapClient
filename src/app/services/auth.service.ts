@@ -3,12 +3,12 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { defaultPageRoute, PageRoutes } from 'app/app-routing.module';
-import { InputUser, User } from 'app/models/user';
+import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { delay, finalize, map, tap } from 'rxjs/operators';
+import { delay, finalize, tap } from 'rxjs/operators';
 
-interface LoginResult extends User {
+interface LoginResult {
     accessToken: string;
     refreshToken: string;
 }
@@ -21,22 +21,22 @@ export interface Credentials {
 @Injectable({
     providedIn: 'root',
 })
-// TODO refactor this service
 export class AuthService implements OnDestroy {
     private timer: Subscription | null = null;
-    private _user = new BehaviorSubject<User | null>(null);
-    user$ = this._user.asObservable();
-    isAuthed$ = this.user$.pipe(map((u) => !!u));
+    private isAuthedSource$ = new BehaviorSubject<boolean>(false);
+    isAuthed$ = this.isAuthedSource$.asObservable();
 
     private storageEventListener(event: StorageEvent) {
         if (event.storageArea === localStorage) {
             if (event.key === 'logout-event') {
                 this.stopTokenTimer();
-                this._user.next(null);
+                this.isAuthedSource$.next(false);
             }
             if (event.key === 'login-event') {
                 this.stopTokenTimer();
-                this.http.get<LoginResult>(`${environment.apiUrl}/account/user`).subscribe((x) => this._user.next(x));
+                this.http
+                    .get<LoginResult>(`${environment.apiUrl}/account/user`)
+                    .subscribe(() => this.isAuthedSource$.next(true));
             }
         }
     }
@@ -59,7 +59,7 @@ export class AuthService implements OnDestroy {
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this._user.next(x);
+                    this.isAuthedSource$.next(true);
                     this.setLocalStorage(x);
                     this.startTokenTimer();
                     this.router.navigateByUrl(defaultPageRoute);
@@ -75,7 +75,7 @@ export class AuthService implements OnDestroy {
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this._user.next(x);
+                    this.isAuthedSource$.next(true);
                     this.setLocalStorage(x);
                     this.startTokenTimer();
                     this.router.navigateByUrl(defaultPageRoute);
@@ -89,7 +89,7 @@ export class AuthService implements OnDestroy {
             .pipe(
                 finalize(() => {
                     this.clearLocalStorage();
-                    this._user.next(null);
+                    this.isAuthedSource$.next(false);
                     this.stopTokenTimer();
                     this.router.navigateByUrl(PageRoutes.authPageRoute);
                 })
@@ -106,7 +106,7 @@ export class AuthService implements OnDestroy {
 
         return this.http.post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken }).pipe(
             tap((x) => {
-                this._user.next(x);
+                this.isAuthedSource$.next(true);
                 this.setLocalStorage(x);
                 this.startTokenTimer();
             })

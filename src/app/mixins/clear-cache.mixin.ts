@@ -13,7 +13,7 @@ export function ClearCacheMixin<TBase extends Constructor>(Base: TBase) {
         protected constructor(...args: any[]) {
             super(args);
 
-            this.auth.user$
+            this.auth.isAuthed$
                 .pipe(
                     takeUntil(this.destroyed$),
                     filter((u) => !u),

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from '@services/auth.service';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { Color, State, TaskB } from 'app/models/task-b';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -24,27 +23,9 @@ export class TaskCreatorService {
     readonly creatorTask$: Observable<TaskB>;
     private creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>(this.createNewDefaultTask());
 
-    constructor(private currentBoardService: CurrentBoardService, private auth: AuthService) {
+    constructor(private currentBoardService: CurrentBoardService) {
         this.creatorTask$ = this.creatorTaskSource.asObservable();
-
         this.currentBoardService.currentBoard$.pipe(tap((board) => this.edit({ boardId: board.boardId }))).subscribe();
-        this.auth.user$
-            .pipe(
-                tap((u) => {
-                    if (!u) {
-                        this.edit({
-                            userId: -1,
-                            boardId: -1,
-                        });
-                        return;
-                    }
-
-                    this.edit({
-                        userId: u.userId,
-                    });
-                })
-            )
-            .subscribe();
     }
 
     edit(task: EditTask): void {
@@ -56,7 +37,7 @@ export class TaskCreatorService {
 
     createNewDefaultTask(): TaskB {
         return {
-            taskId: 1,
+            taskId: 0,
             taskText: 'some task definition',
             state: State.Main,
             x: 0,
@@ -64,8 +45,8 @@ export class TaskCreatorService {
             taskLabel: 'New Task',
             createdDate: new Date().toString(),
             color: Color.Green,
-            boardId: -1,
-            userId: -1,
+            boardId: 0,
+            userId: 0,
             next_task_id: 0,
         };
     }

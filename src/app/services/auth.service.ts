@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
+import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
 import { defaultPageRoute, PageRoutes } from 'app/app-routing.module';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
@@ -81,6 +82,17 @@ export class AuthService implements OnDestroy {
                     this.router.navigateByUrl(defaultPageRoute);
                 })
             );
+    }
+
+    loginWithOAuth(idToken: OAuthKey): Observable<LoginResult> {
+        return this.http.post<LoginResult>(`${environment.apiUrl}/account/OAuthLogin`, idToken).pipe(
+            tap((x: LoginResult) => {
+                this.isAuthedSource$.next(true);
+                this.setLocalStorage(x);
+                this.startTokenTimer();
+                this.router.navigateByUrl(defaultPageRoute);
+            })
+        );
     }
 
     logout(): void {

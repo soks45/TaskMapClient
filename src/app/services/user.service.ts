@@ -21,8 +21,11 @@ export class UserService {
     }
 
     uploadAvatar(avatar: File): Observable<void> {
+        const formData = new FormData();
+        formData.append('avatar', avatar);
+
         return this.uploadService
-            .upload(avatar, `${environment.apiUrl}/account/upload-avatar`)
+            .upload(formData, `${environment.apiUrl}/account/upload-avatar`)
             .pipe(tap(() => this.reload()));
     }
 

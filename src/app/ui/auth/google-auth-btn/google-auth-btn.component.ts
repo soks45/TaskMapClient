@@ -1,5 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { environment } from '@environments/environment';
+import { AuthService } from '@services/auth.service';
+
+export interface OAuthKey {
+    idToken: string;
+}
 
 @Component({
     selector: 'tm-google-auth-btn',
@@ -7,9 +12,7 @@ import { environment } from '@environments/environment';
     styleUrls: ['./google-auth-btn.component.scss'],
 })
 export class GoogleAuthBtnComponent implements OnInit {
-    @Output() authed: EventEmitter<{ idToken: string }> = new EventEmitter<{ idToken: string }>();
-
-    constructor() {}
+    constructor(private authService: AuthService) {}
 
     ngOnInit(): void {
         this.setUpGoogle();
@@ -38,7 +41,7 @@ export class GoogleAuthBtnComponent implements OnInit {
         );
     }
 
-    async handleCredentialResponse(response: { credential: string }) {
-        this.authed.emit({ idToken: response.credential });
+    handleCredentialResponse(response: { credential: string }) {
+        this.authService.loginWithOAuth({ idToken: response.credential }).subscribe();
     }
 }

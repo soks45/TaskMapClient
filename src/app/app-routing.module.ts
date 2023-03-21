@@ -22,15 +22,20 @@ const routes: Routes = [
         loadChildren: () => import('@pages/auth/auth.module').then((m) => m.AuthModule),
     },
     {
-        path: PageRoutes.dashboardPageRoute,
-        loadChildren: () => import('@pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+        path: '',
         canActivate: [AuthGuard],
+        children: [
+            {
+                path: PageRoutes.dashboardPageRoute,
+                loadChildren: () => import('@pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+            },
+            {
+                path: PageRoutes.boardPageRoute,
+                loadChildren: () => import('@pages/board/board-page.module').then((m) => m.BoardPageModule),
+            },
+        ],
     },
-    {
-        path: PageRoutes.boardPageRoute,
-        loadChildren: () => import('@pages/board/board-page.module').then((m) => m.BoardPageModule),
-        canActivate: [AuthGuard],
-    },
+
     {
         path: PageRoutes.notFoundPageRoute,
         loadChildren: () => import('@pages/not-found/not-found-page.module').then((m) => m.NotFoundPageModule),

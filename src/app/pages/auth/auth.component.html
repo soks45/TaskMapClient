@@ -1,14 +1,14 @@
-<div class="auth-page">
-    <div class="auth-page__left-block">
+<div class='auth-page'>
+    <div class='auth-page__left-block'>
         <tm-task-map></tm-task-map>
     </div>
-    <div class="auth-page__vertical-divider"></div>
-    <div class="auth-page__right-block">
-        <tm-nav-tabs [items]="authPages" class="auth-page__nav">
+    <div class='auth-page__vertical-divider'></div>
+    <div class='auth-page__right-block'>
+        <tm-nav-tabs [items]='authPages' class='auth-page__nav'>
             <router-outlet></router-outlet>
 
-            <div class="auth-page__google-btn">
-                <tm-google-auth-btn (authed)="onGoogleAuthed($event)"></tm-google-auth-btn>
+            <div class='auth-page__google-btn'>
+                <tm-google-auth-btn></tm-google-auth-btn>
             </div>
         </tm-nav-tabs>
     </div>

@@ -8,10 +8,7 @@ import { Observable } from 'rxjs';
 export class UploadService {
     constructor(private http: HttpClient) {}
 
-    upload(file: File, endpoint: string): Observable<void> {
-        const formData = new FormData();
-        formData.append('avatart', file);
-
+    upload(formData: FormData, endpoint: string): Observable<void> {
         return this.http.post<void>(endpoint, formData, {
             reportProgress: true,
             responseType: 'json',

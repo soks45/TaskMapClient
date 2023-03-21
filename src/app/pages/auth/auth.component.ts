@@ -17,6 +17,4 @@ export class AuthComponent {
             title: 'sign up',
         },
     ];
-
-    onGoogleAuthed($event: { idToken: string }): void {}
 }

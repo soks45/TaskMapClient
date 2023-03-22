@@ -16,12 +16,14 @@ export class UnauthorizedInterceptor implements HttpInterceptor {
         return next.handle(request).pipe(
             catchError((err) => {
                 if (err.status === 403 || err.status === 401) {
-                    this.authService.clearLocalStorage();
+                    this.authService.unauthorize();
                     this.router.navigateByUrl(PageRoutes.authPageRoute);
                 }
+
                 if (!environment.production) {
                     this.messages.error(err);
                 }
+
                 const error = (err && err.error && err.error.message) || err.statusText;
                 return throwError(error);
             })

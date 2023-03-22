@@ -1,6 +1,7 @@
-import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@guards/auth.guard';
+import { inject, NgModule } from '@angular/core';
+import { PreloadAllModules, Router, RouterModule, Routes } from '@angular/router';
+import { AuthService } from '@services/auth.service';
+import { tap } from 'rxjs';
 
 export enum PageRoutes {
     authPageRoute = 'auth',
@@ -23,7 +24,17 @@ const routes: Routes = [
     },
     {
         path: '',
-        canActivate: [AuthGuard],
+        canActivate: [() => {
+            const router = inject(Router);
+
+            return inject(AuthService).isAuthed$.pipe(
+                tap((isAuthed) => {
+                    if (!isAuthed) {
+                        router.navigateByUrl(PageRoutes.authPageRoute);
+                    }
+                })
+            );
+        }],
         children: [
             {
                 path: PageRoutes.dashboardPageRoute,
@@ -54,4 +65,5 @@ const routes: Routes = [
     ],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

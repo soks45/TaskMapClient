@@ -9,6 +9,7 @@ import { TaskB } from 'app/models/task-b';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+// TODO refactor this service
 @Injectable({
     providedIn: 'root',
 })

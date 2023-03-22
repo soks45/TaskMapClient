@@ -3,6 +3,7 @@ import { APP_INITIALIZER, enableProdMode, ErrorHandler, importProvidersFrom } fr
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 
 import { environment } from '@environments/environment';
 import { InterceptorsModule } from '@interceptors/interceptors.module';
@@ -11,8 +12,8 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { AuthService } from '@services/auth.service';
 import { appInitializer } from 'app/app-initializer';
-import { AppRoutingModule } from 'app/app-routing.module';
 import { AppComponent } from 'app/app.component';
+import { APP_ROUTES } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
 import { CookieService } from 'ngx-cookie-service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
@@ -25,7 +26,6 @@ bootstrapApplication(AppComponent, {
     providers: [
         importProvidersFrom(
             BrowserModule,
-            AppRoutingModule,
             InterceptorsModule,
             LoggerModule.forRoot({
                 level: NgxLoggerLevel.TRACE,
@@ -51,5 +51,6 @@ bootstrapApplication(AppComponent, {
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations(),
+        provideRouter(APP_ROUTES),
     ],
 }).catch((err) => console.error(err));

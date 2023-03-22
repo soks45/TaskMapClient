@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserAvatarComponent } from '@ui/user-avatar/user-avatar.component';
-import { PageRoutes } from 'app/app-routing.module';
+import { PageRoutes } from 'app/app.routes';
 
 @Component({
     selector: 'tm-authed-header',

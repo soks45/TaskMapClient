@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
-import { defaultPageRoute, PageRoutes } from 'app/app-routing.module';
+import { defaultPageRoute, PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';

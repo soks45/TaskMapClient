@@ -1,18 +1,18 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { RouterLink } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
-import { PageRoutes } from 'app/app-routing.module';
+import { PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
-import { RouterLink } from '@angular/router';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { NgIf } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 interface SignUpForm {
     firstName: FormControl<string>;

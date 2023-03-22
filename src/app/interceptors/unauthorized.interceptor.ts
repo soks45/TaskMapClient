@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 import { MessagesService } from '@services/messages.service';
-import { PageRoutes } from 'app/app-routing.module';
+import { PageRoutes } from 'app/app.routes';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 

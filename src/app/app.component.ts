@@ -3,7 +3,7 @@ import { GuardsCheckEnd, Router, RouterOutlet } from '@angular/router';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { CustomIconsService } from '@services/custom-icons.service';
 import { HeaderComponent } from '@ui/header/header.component';
-import { PageRoutes } from 'app/app-routing.module';
+import { PageRoutes } from 'app/app.routes';
 import { filter } from 'rxjs';
 
 @Component({

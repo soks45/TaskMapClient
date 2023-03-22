@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLinkWithHref } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { SignUpFormComponent } from 'app/ui/auth/sign-up-form/sign-up-form.component';
 
 @NgModule({
@@ -17,7 +17,7 @@ import { SignUpFormComponent } from 'app/ui/auth/sign-up-form/sign-up-form.compo
         MatButtonModule,
         MatIconModule,
         MatInputModule,
-        RouterLinkWithHref,
+        RouterLink,
     ],
     exports: [SignUpFormComponent],
 })

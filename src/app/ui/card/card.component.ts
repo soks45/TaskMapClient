@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { TaskService } from '@services/task/task.service';
-import { EditCardDialogComponent, EditDialogData } from '@ui/board/edit-card-dialog/edit-card-dialog.component';
+import { EditCardDialogComponent, EditDialogData } from '@ui/dialogs/edit-card-dialog/edit-card-dialog.component';
 import { State, TaskB } from 'app/models/task-b';
 
 @Component({

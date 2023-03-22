@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop';
+import { AsyncPipe, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
@@ -8,10 +9,9 @@ import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
 import { TaskB } from 'app/models/task-b';
 import { Observable, switchMap, takeUntil } from 'rxjs';
-import { TaskCreatorComponent } from './task-creator/task-creator.component';
-import { CardComponent } from './card/card.component';
 import { AdaptiveDragComponent } from '../adaptive-drag/adaptive-drag.component';
-import { NgFor, AsyncPipe } from '@angular/common';
+import { CardComponent } from '../card/card.component';
+import { TaskCreatorComponent } from '../task-creator/task-creator.component';
 
 @Component({
     selector: 'tm-board',

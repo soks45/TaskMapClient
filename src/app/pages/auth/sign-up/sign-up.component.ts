@@ -8,4 +8,4 @@ import { SignUpFormComponent } from '@ui/auth/sign-up-form/sign-up-form.componen
     standalone: true,
     imports: [SignUpFormComponent],
 })
-export class SignUpComponent {}
+export default class SignUpComponent {}

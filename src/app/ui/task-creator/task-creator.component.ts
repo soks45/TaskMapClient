@@ -1,17 +1,17 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Point, CdkDragHandle } from '@angular/cdk/drag-drop';
-import { DatePipe, NgIf, AsyncPipe } from '@angular/common';
+import { CdkDragHandle, Point } from '@angular/cdk/drag-drop';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { Color, TaskB } from 'app/models/task-b';
+import { CardComponent } from 'app/ui/card/card.component';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { CardComponent } from '../card/card.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'tm-task-creator [newPos]',

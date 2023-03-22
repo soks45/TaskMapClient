@@ -8,4 +8,4 @@ import { BoardComponent } from '@ui/board/board.component';
     standalone: true,
     imports: [BoardComponent],
 })
-export class BoardPageComponent {}
+export default class BoardPageComponent {}

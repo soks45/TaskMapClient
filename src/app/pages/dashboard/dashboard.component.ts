@@ -28,7 +28,7 @@ interface BoardWithTasks extends Board {
     standalone: true,
     imports: [CdkDropListGroup, NgStyle, NgFor, CdkDropList, CdkDrag, CardComponent, CdkDragPreview, AsyncPipe],
 })
-export class DashboardComponent implements OnInit {
+export default class DashboardComponent implements OnInit {
     boards$?: Observable<BoardWithTasks[]>;
     isLoading: boolean = false;
     readonly idPrefix = 'boardId-';

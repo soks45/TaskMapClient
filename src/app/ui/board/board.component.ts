@@ -1,13 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
 import { TaskB } from 'app/models/task-b';
-import { Observable, takeUntil, tap } from 'rxjs';
+import { Observable, switchMap, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'tm-board',
@@ -21,20 +21,19 @@ import { Observable, takeUntil, tap } from 'rxjs';
         ]),
     ],
 })
-export class BoardComponent extends DestroyMixin(BaseObject) {
+export class BoardComponent extends DestroyMixin(BaseObject) implements OnInit {
     tasks$?: Observable<TaskB[]>;
     boundaryClassName = 'board';
 
     constructor(private taskService: TaskService, private currentBoard: CurrentBoardService) {
         super();
+    }
 
-        this.currentBoard
-            .currentBoard()
-            .pipe(
-                takeUntil(this.destroyed$),
-                tap((b) => (this.tasks$ = this.taskService.get(b.boardId)))
-            )
-            .subscribe();
+    ngOnInit(): void {
+        this.tasks$ = this.currentBoard.currentBoard().pipe(
+            takeUntil(this.destroyed$),
+            switchMap((b) => this.taskService.get(b.boardId))
+        );
     }
 
     initCreatorPosition: InitItemPosition = (boundarySize: Point, sizeOfItem: Point): Point => {

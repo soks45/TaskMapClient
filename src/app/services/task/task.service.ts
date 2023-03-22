@@ -34,14 +34,14 @@ export class TaskService implements CRUD<TaskB> {
             );
     }
 
-    edit(entity: TaskB, shouldReload: boolean = true): Observable<void> {
+    edit(entity: TaskB): Observable<void> {
         return this.http
             .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
             .pipe(
                 catchError((err) => {
                     throw err;
                 }),
-                tap(() => (shouldReload ? this.reload(entity.boardId) : null))
+                tap(() => this.reload(entity.boardId))
             );
     }
 
@@ -114,9 +114,5 @@ export class TaskService implements CRUD<TaskB> {
         const source: ReplaySubject<TaskB[]> = new ReplaySubject<TaskB[]>(1);
         this.tasksSource.setItem(id, source);
         this.tasks.setItem(id, source.asObservable());
-    }
-
-    private clearCache(): void {
-        this.cache.forEach((value, key) => this.cache.removeItem(key));
     }
 }

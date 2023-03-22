@@ -42,13 +42,10 @@ export class CardComponent extends DestroyMixin(BaseObject) {
 
     newTaskPosition(newPosition: Point): void {
         this.taskService
-            .edit(
-                {
-                    ...this.task,
-                    ...newPosition,
-                },
-                false
-            )
+            .edit({
+                ...this.task,
+                ...newPosition,
+            })
             .subscribe();
     }
 }

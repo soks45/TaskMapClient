@@ -1,25 +1,25 @@
-<div class="dashboard-page">
+<div class='dashboard-page'>
     <div
-        class="dashboard-page__boards"
+        class='dashboard-page__boards'
         cdkDropListGroup
-        [cdkDropListGroupDisabled]="isLoading"
-        [ngStyle]="isLoading ? { opacity: 0.7 } : null"
+        [cdkDropListGroupDisabled]='isLoading'
+        [ngStyle]='isLoading ? { opacity: 0.7 } : null'
     >
         <div
-            class="dashboard-page__board"
-            *ngFor="let board of boards$ | async"
+            class='dashboard-page__board'
+            *ngFor='let board of boards$ | async'
             cdkDropList
-            [cdkDropListData]="board.tasks"
-            (cdkDropListDropped)="drop($event)"
-            cdkDropListOrientation="vertical"
-            [id]="setId(board.boardId)"
+            [cdkDropListData]='board.tasks'
+            (cdkDropListDropped)='drop($event)'
+            cdkDropListOrientation='vertical'
+            [id]='setId(board.boardId)'
         >
-            <div class="dashboard-page__board-header">
+            <div class='dashboard-page__board-header'>
                 {{ board.boardName }}
             </div>
-            <div class="dashboard-page__task" *ngFor="let task of board.tasks" cdkDrag [cdkDragData]="task">
-                <tm-card [task]="task" [reduced]="true"></tm-card>
-                <tm-card [task]="task" *cdkDragPreview></tm-card>
+            <div class='dashboard-page__task' *ngFor='let task of board.tasks' cdkDrag [cdkDragData]='task'>
+                <tm-card [task]='task' [reduced]='true' (click)='card.reduced = !card.reduced' #card></tm-card>
+                <tm-card [task]='task' *cdkDragPreview></tm-card>
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@ import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { TaskService } from '@services/task/task.service';
 import { EditCardDialogComponent, EditDialogData } from '@ui/board/edit-card-dialog/edit-card-dialog.component';
-import { TaskB } from 'app/models/task-b';
+import { State, TaskB } from 'app/models/task-b';
 
 @Component({
     selector: 'tm-card [task]',
@@ -19,7 +19,7 @@ import { TaskB } from 'app/models/task-b';
 export class CardComponent extends DestroyMixin(BaseObject) {
     @Input() task!: TaskB;
     @Input() fromCreator: boolean = false;
-    @Input() reduced = false;
+    readonly states = State;
 
     constructor(private taskService: TaskService, private dialog: MatDialog) {
         super();
@@ -49,6 +49,15 @@ export class CardComponent extends DestroyMixin(BaseObject) {
             .edit({
                 ...this.task,
                 ...newPosition,
+            })
+            .subscribe();
+    }
+
+    changeState(): void {
+        this.taskService
+            .edit({
+                ...this.task,
+                state: this.task.state === this.states.Main ? this.states.Short : this.states.Main,
             })
             .subscribe();
     }

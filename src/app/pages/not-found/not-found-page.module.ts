@@ -5,7 +5,6 @@ import { NotFoundPageRoutingModule } from './not-found-page-routing.module';
 import { NotFoundPageComponent } from './not-found-page.component';
 
 @NgModule({
-    declarations: [NotFoundPageComponent],
-    imports: [CommonModule, NotFoundPageRoutingModule],
+    imports: [CommonModule, NotFoundPageRoutingModule, NotFoundPageComponent],
 })
 export class NotFoundPageModule {}

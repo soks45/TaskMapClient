@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { GuardsCheckEnd, Router } from '@angular/router';
+import { GuardsCheckEnd, Router, RouterOutlet } from '@angular/router';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { CustomIconsService } from '@services/custom-icons.service';
+import { HeaderComponent } from '@ui/header/header.component';
 import { PageRoutes } from 'app/app-routing.module';
 import { filter } from 'rxjs';
 
@@ -8,6 +10,8 @@ import { filter } from 'rxjs';
     selector: 'tm-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
+    standalone: true,
+    imports: [LoadingBarModule, RouterOutlet, HeaderComponent],
 })
 export class AppComponent {
     constructor(private icons: CustomIconsService, private router: Router) {

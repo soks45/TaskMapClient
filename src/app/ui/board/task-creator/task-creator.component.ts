@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Point } from '@angular/cdk/drag-drop';
-import { DatePipe } from '@angular/common';
+import { Point, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { DatePipe, NgIf, AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
@@ -9,6 +9,9 @@ import { TaskService } from '@services/task/task.service';
 import { Color, TaskB } from 'app/models/task-b';
 import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { CardComponent } from '../card/card.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'tm-task-creator [newPos]',
@@ -23,6 +26,8 @@ import { finalize } from 'rxjs/operators';
             transition('* => void', animate(100)),
         ]),
     ],
+    standalone: true,
+    imports: [MatButtonModule, CdkDragHandle, MatIconModule, NgIf, CardComponent, AsyncPipe],
 })
 export class TaskCreatorComponent extends DestroyMixin(BaseObject) {
     @Input() newPos!: Point;

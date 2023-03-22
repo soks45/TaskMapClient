@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { MessagesService } from '@services/messages.service';
@@ -8,6 +8,12 @@ import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
 import { finalize } from 'rxjs/operators';
+import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgIf, NgFor } from '@angular/common';
 
 export interface EditDialogData {
     fromCreator: boolean;
@@ -26,6 +32,19 @@ interface EditCardForm {
     selector: 'tm-edit-card-dialog',
     templateUrl: './edit-card-dialog.component.html',
     styleUrls: ['./edit-card-dialog.component.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        NgIf,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        NgFor,
+        MatOptionModule,
+        MatButtonModule,
+    ],
 })
 export class EditCardDialogComponent extends FormMixin(BaseObject) {
     isNew = false;

@@ -10,6 +10,7 @@ export interface OAuthKey {
     selector: 'tm-google-auth-btn',
     templateUrl: './google-auth-btn.component.html',
     styleUrls: ['./google-auth-btn.component.scss'],
+    standalone: true,
 })
 export class GoogleAuthBtnComponent implements OnInit {
     constructor(private authService: AuthService) {}

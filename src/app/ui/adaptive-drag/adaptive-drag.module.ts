@@ -5,8 +5,7 @@ import { DragViewService } from '@ui/adaptive-drag/drag-view.service';
 import { AdaptiveDragComponent } from './adaptive-drag.component';
 
 @NgModule({
-    declarations: [AdaptiveDragComponent],
-    imports: [CommonModule, DragDropModule],
+    imports: [CommonModule, DragDropModule, AdaptiveDragComponent],
     exports: [AdaptiveDragComponent],
     providers: [DragViewService],
 })

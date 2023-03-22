@@ -2,11 +2,15 @@ import { Component } from '@angular/core';
 import { UserService } from '@services/user.service';
 import { User } from 'app/models/user';
 import { Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'tm-user-avatar',
     templateUrl: './user-avatar.component.html',
     styleUrls: ['./user-avatar.component.scss'],
+    standalone: true,
+    imports: [NgIf, MatIconModule, AsyncPipe],
 })
 export class UserAvatarComponent {
     user$: Observable<User>;

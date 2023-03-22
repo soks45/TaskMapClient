@@ -8,6 +8,10 @@ import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
 import { TaskB } from 'app/models/task-b';
 import { Observable, switchMap, takeUntil } from 'rxjs';
+import { TaskCreatorComponent } from './task-creator/task-creator.component';
+import { CardComponent } from './card/card.component';
+import { AdaptiveDragComponent } from '../adaptive-drag/adaptive-drag.component';
+import { NgFor, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'tm-board',
@@ -20,6 +24,8 @@ import { Observable, switchMap, takeUntil } from 'rxjs';
             transition('void => *', animate(200)),
         ]),
     ],
+    standalone: true,
+    imports: [NgFor, AdaptiveDragComponent, CardComponent, TaskCreatorComponent, AsyncPipe],
 })
 export class BoardComponent extends DestroyMixin(BaseObject) implements OnInit {
     tasks$?: Observable<TaskB[]>;

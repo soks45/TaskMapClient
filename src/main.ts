@@ -1,13 +1,55 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { APP_INITIALIZER, enableProdMode, ErrorHandler, importProvidersFrom } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { environment } from '@environments/environment';
+import { InterceptorsModule } from '@interceptors/interceptors.module';
+import { LoadingBarModule } from '@ngx-loading-bar/core';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
+import { AuthService } from '@services/auth.service';
+import { appInitializer } from 'app/app-initializer';
+import { AppRoutingModule } from 'app/app-routing.module';
+import { AppComponent } from 'app/app.component';
+import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
+import { CookieService } from 'ngx-cookie-service';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 if (environment.production) {
     enableProdMode();
 }
 
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+    providers: [
+        importProvidersFrom(
+            BrowserModule,
+            AppRoutingModule,
+            InterceptorsModule,
+            LoggerModule.forRoot({
+                level: NgxLoggerLevel.TRACE,
+                serverLogLevel: NgxLoggerLevel.ERROR,
+                colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
+                serverLoggingUrl: environment.logUrl,
+            }),
+            MatSnackBarModule,
+            LoadingBarHttpClientModule,
+            LoadingBarRouterModule,
+            LoadingBarModule
+        ),
+        {
+            provide: APP_INITIALIZER,
+            useFactory: appInitializer,
+            multi: true,
+            deps: [AuthService],
+        },
+        CookieService,
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler,
+        },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideAnimations(),
+    ],
+}).catch((err) => console.error(err));

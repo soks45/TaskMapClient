@@ -1,4 +1,4 @@
-import { CdkDragEnd, Point } from '@angular/cdk/drag-drop';
+import { CdkDragEnd, Point, CdkDrag } from '@angular/cdk/drag-drop';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -13,6 +13,7 @@ import { DestroyMixin } from '@mixins/destroy.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { DragViewService } from '@ui/adaptive-drag/drag-view.service';
 import { filter, merge, Subject, take, takeUntil, tap } from 'rxjs';
+import { NgIf } from '@angular/common';
 
 export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
 
@@ -20,6 +21,8 @@ export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
     selector: 'tm-adaptive-drag [initItemPosition] [boundary]',
     templateUrl: './adaptive-drag.component.html',
     styleUrls: ['./adaptive-drag.component.scss'],
+    standalone: true,
+    imports: [CdkDrag, NgIf],
 })
 export class AdaptiveDragComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
     @Input() initItemPosition!: InitItemPosition;

@@ -1,7 +1,17 @@
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDragPreview,
+    CdkDropList,
+    CdkDropListGroup,
+    moveItemInArray,
+    transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import { AsyncPipe, NgFor, NgStyle } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BoardService } from '@services/board/board.service';
 import { TaskService } from '@services/task/task.service';
+import { CardComponent } from '@ui/board/card/card.component';
 import { Board } from 'app/models/board';
 import { TaskB } from 'app/models/task-b';
 import { combineLatest, Observable, switchMap } from 'rxjs';
@@ -15,6 +25,8 @@ interface BoardWithTasks extends Board {
     selector: 'tm-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    standalone: true,
+    imports: [CdkDropListGroup, NgStyle, NgFor, CdkDropList, CdkDrag, CardComponent, CdkDragPreview, AsyncPipe],
 })
 export class DashboardComponent implements OnInit {
     boards$?: Observable<BoardWithTasks[]>;

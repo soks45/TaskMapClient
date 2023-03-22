@@ -19,7 +19,7 @@ const routes: Routes = [
     },
     {
         path: PageRoutes.authPageRoute,
-        loadChildren: () => import('@pages/auth/auth.module').then((m) => m.AuthModule),
+        loadChildren: () => import('@pages/auth/auth.routes').then((m) => m.routes),
     },
     {
         path: '',
@@ -27,22 +27,22 @@ const routes: Routes = [
         children: [
             {
                 path: PageRoutes.dashboardPageRoute,
-                loadChildren: () => import('@pages/dashboard/dashboard.module').then((m) => m.DashboardModule),
+                loadChildren: () => import('@pages/dashboard/dashboard.routes').then((m) => m.routes),
             },
             {
                 path: PageRoutes.boardPageRoute,
-                loadChildren: () => import('@pages/board/board-page.module').then((m) => m.BoardPageModule),
+                loadChildren: () => import('@pages/board/board.routes').then((m) => m.routes),
             },
         ],
     },
 
     {
         path: PageRoutes.notFoundPageRoute,
-        loadChildren: () => import('@pages/not-found/not-found-page.module').then((m) => m.NotFoundPageModule),
+        loadChildren: () => import('@pages/not-found/not-found-page.routes').then((m) => m.routes),
     },
     {
         path: '**',
-        loadChildren: () => import('@pages/not-found/not-found-page.module').then((m) => m.NotFoundPageModule),
+        loadChildren: () => import('@pages/not-found/not-found-page.routes').then((m) => m.routes),
     },
 ];
 

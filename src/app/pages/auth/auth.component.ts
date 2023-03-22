@@ -11,7 +11,7 @@ import { TaskMapComponent } from './components/task-map/task-map.component';
     standalone: true,
     imports: [TaskMapComponent, NavTabsComponent, RouterOutlet, GoogleAuthBtnComponent],
 })
-export class AuthComponent {
+export default class AuthComponent {
     authPages: NavTabItem[] = [
         {
             link: 'sign-in',

@@ -1,17 +1,19 @@
-<div class="nav-tabs">
-    <nav mat-tab-nav-bar class="nav-tabs__nav">
-        <ng-container *ngFor="let item of items">
+<div class='nav-tabs'>
+    <nav mat-tab-nav-bar class='nav-tabs__nav' [tabPanel]='tabPanel'>
+        <ng-container *ngFor='let item of items'>
             <a mat-tab-link
-               class="nav-tabs__item"
-               [routerLinkActive]="activeLinkClassNames"
-               #rla="routerLinkActive"
-               [active]="rla.isActive"
-               [routerLink]="item.link"
-               [routerLinkActiveOptions]="{ exact: true }"
+               class='nav-tabs__item'
+               [routerLinkActive]='activeLinkClassNames'
+               #rla='routerLinkActive'
+               [active]='rla.isActive'
+               [routerLink]='item.link'
+               [routerLinkActiveOptions]='{ exact: true }'
             >
                 {{ item.title | titlecase }}
             </a>
         </ng-container>
     </nav>
-    <ng-content></ng-content>
+    <mat-tab-nav-panel #tabPanel>
+        <ng-content></ng-content>
+    </mat-tab-nav-panel>
 </div>

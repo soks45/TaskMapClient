@@ -4,8 +4,6 @@
     position: relative;
 
     &__show-btn {
-        width: 40px;
-        height: 40px;
     }
 
     &__header {
@@ -57,11 +55,19 @@
         border-radius: 5px;
         color: rgb(33, 33, 33, 0.9);
         background-color: #212121;
+        border: none;
     }
 }
 
 
 .btn {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    border: none;
+    width: 24px;
+    height: 24px;
+
     &--purple {
         background: linear-gradient(335.54deg, #f989f0 15.6%, rgba(249, 137, 240, 0.6) 100%);
     }
@@ -77,11 +83,6 @@
 
 .edit-icon {
     scale: 0.7;
-}
-
-.selected-icon {
-    margin-bottom: 2px;
-    margin-right: 4px;
 }
 
 @keyframes fading {

@@ -1,32 +1,10 @@
 .edit-card-dialog {
     display: flex;
     flex-direction: column;
-    min-width: 300px;
-
-    &__header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
+    min-width: 400px;
 
     &__content {
         display: flex;
         flex-direction: column;
-    }
-
-    &__actions {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-    &__close-button {
-        border: transparent;
-        background-color: transparent;
-        width: 25px;
-        height: 25px;
-        padding: 0;
-        border-radius: 15px;
-        transition: 0s;
     }
 }

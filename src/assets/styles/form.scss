@@ -21,7 +21,6 @@ $submit-btn-width: $form-field-width - 4px;
     &__form-field {
         width: $form-field-width;
         margin: 0 auto;
-        display: flex;
     }
 
     &__actions {
@@ -67,6 +66,5 @@ $submit-btn-width: $form-field-width - 4px;
 
     &__error {
         font-size: 75%;
-
     }
 }

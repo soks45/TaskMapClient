@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
-import { InputUser, User } from '@models/user';
-import { defaultPageRoute, PageRoutes } from 'app/app-routing.module';
+import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
+import { defaultPageRoute, PageRoutes } from 'app/app.routes';
+import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { delay, finalize, map, tap } from 'rxjs/operators';
+import { delay, finalize, tap } from 'rxjs/operators';
 
-interface LoginResult extends User {
+interface LoginResult {
     accessToken: string;
     refreshToken: string;
 }
@@ -21,33 +22,15 @@ export interface Credentials {
 @Injectable({
     providedIn: 'root',
 })
-// TODO refactor this service
-export class AuthService implements OnDestroy {
+export class AuthService {
     private timer: Subscription | null = null;
-    private _user = new BehaviorSubject<User | null>(null);
-    user$ = this._user.asObservable();
-    isAuthed$ = this.user$.pipe(map((u) => !!u));
+    private isAuthedSource$ = new BehaviorSubject<boolean>(false);
+    private accessTokenKey = 'K@#:@UC';
+    private refreshTokenKey = 'a;kldw@#)1';
 
-    private storageEventListener(event: StorageEvent) {
-        if (event.storageArea === localStorage) {
-            if (event.key === 'logout-event') {
-                this.stopTokenTimer();
-                this._user.next(null);
-            }
-            if (event.key === 'login-event') {
-                this.stopTokenTimer();
-                this.http.get<LoginResult>(`${environment.apiUrl}/account/user`).subscribe((x) => this._user.next(x));
-            }
-        }
-    }
+    readonly isAuthed$ = this.isAuthedSource$.asObservable();
 
-    constructor(private router: Router, private http: HttpClient) {
-        window.addEventListener('storage', this.storageEventListener.bind(this));
-    }
-
-    ngOnDestroy(): void {
-        window.removeEventListener('storage', this.storageEventListener.bind(this));
-    }
+    constructor(private router: Router, private http: HttpClient) {}
 
     signup(user: InputUser, password: string): Observable<LoginResult> {
         const userId = 0;
@@ -59,8 +42,8 @@ export class AuthService implements OnDestroy {
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this._user.next(x);
-                    this.setLocalStorage(x);
+                    this.isAuthedSource$.next(true);
+                    this.saveTokens(x);
                     this.startTokenTimer();
                     this.router.navigateByUrl(defaultPageRoute);
                 })
@@ -75,12 +58,23 @@ export class AuthService implements OnDestroy {
             })
             .pipe(
                 tap((x: LoginResult) => {
-                    this._user.next(x);
-                    this.setLocalStorage(x);
+                    this.isAuthedSource$.next(true);
+                    this.saveTokens(x);
                     this.startTokenTimer();
                     this.router.navigateByUrl(defaultPageRoute);
                 })
             );
+    }
+
+    loginWithOAuth(idToken: OAuthKey): Observable<LoginResult> {
+        return this.http.post<LoginResult>(`${environment.apiUrl}/account/OAuthLogin`, idToken).pipe(
+            tap((x: LoginResult) => {
+                this.isAuthedSource$.next(true);
+                this.saveTokens(x);
+                this.startTokenTimer();
+                this.router.navigateByUrl(defaultPageRoute);
+            })
+        );
     }
 
     logout(): void {
@@ -88,8 +82,8 @@ export class AuthService implements OnDestroy {
             .post<void>(`${environment.apiUrl}/account/logout`, {})
             .pipe(
                 finalize(() => {
-                    this.clearLocalStorage();
-                    this._user.next(null);
+                    this.removeTokens();
+                    this.isAuthedSource$.next(false);
                     this.stopTokenTimer();
                     this.router.navigateByUrl(PageRoutes.authPageRoute);
                 })
@@ -97,39 +91,52 @@ export class AuthService implements OnDestroy {
             .subscribe();
     }
 
-    refreshToken(): Observable<LoginResult | null> {
-        const refreshToken = localStorage.getItem('refresh_token');
+    refreshTokens(): Observable<LoginResult | null> {
+        const refreshToken = localStorage.getItem(this.refreshTokenKey);
         if (!refreshToken) {
-            this.clearLocalStorage();
+            this.removeTokens();
             return of(null);
         }
 
         return this.http.post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken }).pipe(
             tap((x) => {
-                this._user.next(x);
-                this.setLocalStorage(x);
+                this.isAuthedSource$.next(true);
+                this.saveTokens(x);
                 this.startTokenTimer();
             })
         );
     }
 
-    setLocalStorage(x: LoginResult): void {
-        localStorage.setItem('access_token', x.accessToken);
-        localStorage.setItem('refresh_token', x.refreshToken);
-        localStorage.setItem('login-event', 'login' + Math.random());
+    unauthorize(): void {
+        this.removeTokens();
+        this.isAuthedSource$.next(false);
     }
 
-    clearLocalStorage(): void {
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.setItem('logout-event', 'logout' + Math.random());
+    get accessToken(): string | null {
+        return localStorage.getItem(this.accessTokenKey);
+    }
+
+    get refreshToken(): string | null {
+        return localStorage.getItem(this.accessTokenKey);
+    }
+
+    private saveTokens(x: LoginResult): void {
+        localStorage.setItem(this.accessTokenKey, x.accessToken);
+        localStorage.setItem(this.refreshTokenKey, x.refreshToken);
+    }
+
+    private removeTokens(): void {
+        localStorage.removeItem(this.accessTokenKey);
+        localStorage.removeItem(this.refreshTokenKey);
     }
 
     private getTokenRemainingTime(): number {
-        const accessToken = localStorage.getItem('access_token');
+        const accessToken = localStorage.getItem(this.accessTokenKey);
+
         if (!accessToken) {
             return 0;
         }
+
         const jwtToken = JSON.parse(atob(accessToken.split('.')[1]));
         const expires = new Date(jwtToken.exp * 1000);
         return expires.getTime() - Date.now();
@@ -140,7 +147,7 @@ export class AuthService implements OnDestroy {
         this.timer = of(true)
             .pipe(
                 delay(timeout),
-                tap(() => this.refreshToken().subscribe())
+                tap(() => this.refreshTokens().subscribe())
             )
             .subscribe();
     }

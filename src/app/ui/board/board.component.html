@@ -1,22 +1,27 @@
 <div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance>
-    <ng-container *ngFor="let task of (tasks$ | async)">
-        <tm-adaptive-drag [initItemPosition]="initCardPosition(task)"
-                          [boundary]="board"
-                          (newPosition)="taskCard.newTaskPosition($event)"
+    <ng-container *ngFor="let task of tasks$ | async">
+        <tm-adaptive-drag
+            [initItemPosition]="initCardPosition(task)"
+            [boundary]="board"
+            (newPosition)="taskCard.newTaskPosition($event)"
         >
             <tm-card [task]="task" #taskCard></tm-card>
         </tm-adaptive-drag>
     </ng-container>
 
-    <tm-adaptive-drag class="board__task-creator"
-                      [initItemPosition]="initCreatorPosition"
-                      [boundary]="board"
-                      #taskCreatorDrag>
+    <tm-adaptive-drag
+        class="board__task-creator"
+        [initItemPosition]="initCreatorPosition"
+        [boundary]="board"
+        #taskCreatorDrag
+    >
         <tm-task-creator
-            [newPos]="taskCreatorDrag.getRelativePositionForPoint({
-                x: taskCreatorDrag.absolutePosition.x + 20,
-                y: taskCreatorDrag.absolutePosition.y + 55
-            })"></tm-task-creator>
+            [newPos]="
+                taskCreatorDrag.getRelativePositionForPoint({
+                    x: taskCreatorDrag.absolutePosition.x + 20,
+                    y: taskCreatorDrag.absolutePosition.y + 55
+                })
+            "
+        ></tm-task-creator>
     </tm-adaptive-drag>
 </div>
-

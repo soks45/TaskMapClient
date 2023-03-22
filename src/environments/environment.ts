@@ -2,14 +2,16 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+import { Env } from '@environments/env';
+
+export const environment: Env = {
     production: false,
     apiUrl: 'https://localhost:5001/api',
     signalRHubs: {
         Tasks: 'https://localhost:5001/hub/task',
     },
     logUrl: 'https://localhost:5001/api/send-log',
-    authClientId: 'id',
+    authClientId: '912961596350-0pbhiqf40bpa8ubdvt3h9s2jjo261nt1.apps.googleusercontent.com',
 };
 
 /*

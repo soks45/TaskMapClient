@@ -1,12 +1,7 @@
-.content {
-    width: 100%;
-    height: 88%;
-    position: relative;
-    background-color: white;
-    justify-content: center;
-    vertical-align: center;
-}
-
 .app {
-    height: 100%;
+    &__header {
+    }
+
+    &__content {
+    }
 }

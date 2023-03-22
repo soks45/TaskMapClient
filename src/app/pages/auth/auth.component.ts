@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
-import { NavTabItem } from '@ui/nav-tabs/nav-tabs.component';
+import { RouterOutlet } from '@angular/router';
+import { GoogleAuthBtnComponent } from '@ui/auth/google-auth-btn/google-auth-btn.component';
+import { NavTabItem, NavTabsComponent } from '@ui/nav-tabs/nav-tabs.component';
+import { TaskMapComponent } from './components/task-map/task-map.component';
 
 @Component({
     selector: 'tm-auth',
     templateUrl: './auth.component.html',
     styleUrls: ['./auth.component.scss'],
+    standalone: true,
+    imports: [TaskMapComponent, NavTabsComponent, RouterOutlet, GoogleAuthBtnComponent],
 })
-export class AuthComponent {
+export default class AuthComponent {
     authPages: NavTabItem[] = [
         {
             link: 'sign-in',
@@ -17,6 +22,4 @@ export class AuthComponent {
             title: 'sign up',
         },
     ];
-
-    onGoogleAuthed($event: { idToken: string }): void {}
 }

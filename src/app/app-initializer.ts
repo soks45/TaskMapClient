@@ -1,6 +1,7 @@
 import { AuthService } from '@services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export function appInitializer(authService: AuthService): () => Observable<any> {
-    return () => authService.refreshToken();
+    return () => authService.refreshTokens().pipe(catchError(() => of()));
 }

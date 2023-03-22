@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { AuthService, Credentials } from '@services/auth.service';
 import { finalize } from 'rxjs/operators';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 interface LoginForm {
     username: FormControl<string>;
@@ -14,6 +19,16 @@ interface LoginForm {
     selector: 'tm-sign-in-form',
     templateUrl: './sign-in-form.component.html',
     styleUrls: ['./sign-in-form.component.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NgIf,
+        MatButtonModule,
+        MatIconModule,
+    ],
 })
 export class SignInFormComponent extends FormMixin(BaseObject) {
     formGroup: FormGroup<LoginForm>;

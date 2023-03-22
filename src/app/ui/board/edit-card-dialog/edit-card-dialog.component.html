@@ -1,12 +1,9 @@
 <form [formGroup]="formGroup" class="edit-card-dialog">
-    <header mat-dialog-title class="edit-card-dialog__header">
-        <p *ngIf="isNew; else edit">Create New Task</p>
+    <header mat-dialog-title>
+        <h2 *ngIf="isNew; else edit">Create New Task</h2>
         <ng-template #edit>
-            <p>Edit Task</p>
+            <h2>Edit Task</h2>
         </ng-template>
-        <button [mat-dialog-close] class="edit-card-dialog__close-button">
-            <mat-icon>close</mat-icon>
-        </button>
     </header>
     <div mat-dialog-content class="edit-card-dialog__content">
         <mat-form-field>
@@ -34,7 +31,7 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <div mat-dialog-actions class="edit-card-dialog__actions">
+    <div mat-dialog-actions class="edit-card-dialog__actions" [align]="'end'">
         <button mat-raised-button class="mat-primary" (click)="onSubmit()">Submit</button>
         <button mat-button (click)="onCancel()">Cancel</button>
     </div>

@@ -2,62 +2,63 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
-        "baseUrl": "src",
-        "paths": {
-            "@decorators/*": [
-                "app/decorators/*"
-            ],
-            "@guards/*": [
-                "app/guards/*"
-            ],
-            "@interceptors/*": [
-                "app/interceptors/*"
-            ],
-            "@mixins/*": [
-                "app/mixins/*"
-            ],
-            "@pages/*": [
-                "app/pages/*"
-            ],
-            "@services/*": [
-                "app/services/*"
-            ],
-            "@ui/*": [
-                "app/ui/*"
-            ],
-            "@models/*": [
-                "models/*"
-            ],
-            "@environments/*": [
-                "environments/*"
-            ],
-            "@directives/*": [
-                "app/directives/*"
-            ],
-            "@validators/*": [
-                "app/validators/*"
-            ]
-        },
-        "outDir": "./dist/out-tsc",
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
-        "noImplicitOverride": true,
-        "noPropertyAccessFromIndexSignature": true,
-        "noImplicitReturns": true,
-        "noFallthroughCasesInSwitch": true,
-        "sourceMap": true,
-        "declaration": false,
-        "downlevelIteration": true,
-        "experimentalDecorators": true,
-        "moduleResolution": "node",
-        "importHelpers": true,
-        "target": "es2020",
-        "module": "es2020",
-        "lib": [
-            "es2020",
-            "dom"
+      "allowSyntheticDefaultImports": true,
+      "baseUrl": "src",
+      "paths": {
+        "@decorators/*": [
+          "app/decorators/*"
+        ],
+        "@guards/*": [
+          "app/guards/*"
+        ],
+        "@interceptors/*": [
+          "app/interceptors/*"
+        ],
+        "@mixins/*": [
+          "app/mixins/*"
+        ],
+        "@pages/*": [
+          "app/pages/*"
+        ],
+        "@services/*": [
+          "app/services/*"
+        ],
+        "@ui/*": [
+          "app/ui/*"
+        ],
+        "@models/*": [
+          "models/*"
+        ],
+        "@environments/*": [
+          "environments/*"
+        ],
+        "@directives/*": [
+          "app/directives/*"
+        ],
+        "@validators/*": [
+          "app/validators/*"
         ]
+      },
+      "outDir": "./dist/out-tsc",
+      "forceConsistentCasingInFileNames": true,
+      "strict": true,
+      "noImplicitOverride": true,
+      "noPropertyAccessFromIndexSignature": true,
+      "noImplicitReturns": true,
+      "noFallthroughCasesInSwitch": true,
+      "sourceMap": true,
+      "declaration": false,
+      "downlevelIteration": true,
+      "experimentalDecorators": true,
+      "moduleResolution": "node",
+      "importHelpers": true,
+      "target": "ES2022",
+      "module": "es2020",
+      "lib": [
+        "es2020",
+        "dom"
+      ],
+      "useDefineForClassFields": false
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false,

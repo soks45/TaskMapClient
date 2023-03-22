@@ -1,3 +1,6 @@
+$form-field-width: 260px;
+$submit-btn-width: $form-field-width - 4px;
+
 .std-form {
     border-radius: 6px;
     min-width: 420px;
@@ -18,7 +21,6 @@
     &__form-field {
         width: $form-field-width;
         margin: 0 auto;
-        display: flex;
     }
 
     &__actions {
@@ -64,6 +66,5 @@
 
     &__error {
         font-size: 75%;
-
     }
 }

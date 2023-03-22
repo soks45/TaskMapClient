@@ -1,17 +1,19 @@
 <div class="authed-header">
     <nav class="authed-header__routes">
-        <a class="authed-header__menu-item"
-           [routerLinkActive]="'authed-header__menu-item--selected'"
-           [routerLink]="[routes.dashboardPageRoute]">
+        <a
+            class="authed-header__menu-item"
+            [routerLinkActive]="'authed-header__menu-item--selected'"
+            [routerLink]="[routes.dashboardPageRoute]"
+        >
             <span class="menu-item__title">Dashboard</span>
         </a>
-        <a class="authed-header__menu-item"
-           [routerLinkActive]="'authed-header__menu-item--selected'"
-           [routerLink]="[routes.boardPageRoute]">
+        <a
+            class="authed-header__menu-item"
+            [routerLinkActive]="'authed-header__menu-item--selected'"
+            [routerLink]="[routes.boardPageRoute]"
+        >
             <span class="menu-item__title">Board</span>
         </a>
     </nav>
-    <div class="authed-header__user" mat-button>
-        <mat-icon svgIcon="account" class="authed-header__account-icon"></mat-icon>
-    </div>
+    <tm-user-avatar></tm-user-avatar>
 </div>

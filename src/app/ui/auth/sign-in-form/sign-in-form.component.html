@@ -4,13 +4,16 @@
             <mat-label>username</mat-label>
             <input type="text" matInput formControlName="username" autocomplete="true" />
             <mat-error>
-            <span *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']">
-                This field is required
-            </span>
                 <span
-                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']">
-                Too many symbols
-            </span>
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']"
+                >
+                    This field is required
+                </span>
+                <span
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']"
+                >
+                    Too many symbols
+                </span>
             </mat-error>
         </mat-form-field>
 
@@ -45,7 +48,7 @@
 
     <div class="std-form__actions">
         <div class="std-form__submit-btn-wrapper">
-            <button mat-raised-button class="std-form__submit-btn" (click)="onSubmit()">Sign In</button>
+            <button class="std-form__submit-btn" (click)="onSubmit()">Sign In</button>
         </div>
     </div>
 </form>

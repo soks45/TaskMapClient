@@ -10,6 +10,7 @@ export interface ShortUser {
     firstName: string;
     lastName: string;
     lastBoardId: number;
+    avatar: string;
 }
 
 export interface User extends ShortUser {}

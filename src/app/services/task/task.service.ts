@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { CRUD } from '@models/CRUD';
-import { TaskB } from '@models/task-b';
 import { ConverterService } from '@services/converter.service';
 import { MessagesService } from '@services/messages.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
+import { CRUD } from 'app/models/CRUD';
+import { TaskB } from 'app/models/task-b';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
+// TODO refactor this service
 @Injectable({
     providedIn: 'root',
 })
@@ -34,14 +35,30 @@ export class TaskService implements CRUD<TaskB> {
             );
     }
 
-    edit(entity: TaskB, shouldReload: boolean = true): Observable<void> {
+    edit(entity: TaskB): Observable<void> {
         return this.http
             .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
             .pipe(
                 catchError((err) => {
                     throw err;
                 }),
-                tap(() => (shouldReload ? this.reload(entity.boardId) : null))
+                tap(() => this.reload(entity.boardId))
+            );
+    }
+
+    moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
+        return this.http
+            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {
+                withCredentials: true,
+            })
+            .pipe(
+                tap(() => {
+                    this.reload(boardId);
+
+                    if (boardId !== newBoardId) {
+                        this.reload(newBoardId);
+                    }
+                })
             );
     }
 
@@ -98,9 +115,5 @@ export class TaskService implements CRUD<TaskB> {
         const source: ReplaySubject<TaskB[]> = new ReplaySubject<TaskB[]>(1);
         this.tasksSource.setItem(id, source);
         this.tasks.setItem(id, source.asObservable());
-    }
-
-    private clearCache(): void {
-        this.cache.forEach((value, key) => this.cache.removeItem(key));
     }
 }

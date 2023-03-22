@@ -1,7 +1,4 @@
-<div
-    class="card-box"
-    [ngClass]="[!reduced ? 'card-box--normal' : 'card-box--reduced', 'card-box--' + task.color]"
->
+<div class="card-box" [ngClass]="[!reduced ? 'card-box--normal' : 'card-box--reduced', 'card-box--' + task.color]">
     <header class="card-box__header">
         <div class="card-box__header-label">{{ task.taskLabel }}</div>
         <div class="card-box__header-actions" *ngIf="!reduced">

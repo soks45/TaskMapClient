@@ -1,10 +1,17 @@
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { RouterLink } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { InputUser } from '@models/user';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
+import { PageRoutes } from 'app/app.routes';
+import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
 
 interface SignUpForm {
@@ -21,8 +28,20 @@ interface SignUpForm {
     selector: 'tm-sign-up-form',
     templateUrl: './sign-up-form.component.html',
     styleUrls: ['./sign-up-form.component.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NgIf,
+        MatButtonModule,
+        MatIconModule,
+        RouterLink,
+    ],
 })
 export class SignUpFormComponent extends FormMixin(BaseObject) {
+    readonly loginUrl: string = '/' + PageRoutes.authPageRoute;
     isLoading = false;
     hide = true;
     formGroup: FormGroup<SignUpForm>;

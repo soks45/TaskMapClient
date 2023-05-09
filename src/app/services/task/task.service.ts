@@ -28,7 +28,7 @@ export class TaskService implements CRUD<TaskB> {
         return this.http
             .post<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
             .pipe(
-                catchError((err) => {
+                catchError((err: unknown) => {
                     throw err;
                 }),
                 tap(() => this.reload(entity.boardId))
@@ -39,7 +39,7 @@ export class TaskService implements CRUD<TaskB> {
         return this.http
             .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
             .pipe(
-                catchError((err) => {
+                catchError((err: unknown) => {
                     throw err;
                 }),
                 tap(() => this.reload(entity.boardId))
@@ -64,7 +64,7 @@ export class TaskService implements CRUD<TaskB> {
 
     delete(entity: TaskB): Observable<void> {
         return this.http.delete<void>(`${environment.apiUrl}/task/${entity.taskId}`, { withCredentials: true }).pipe(
-            catchError((err) => {
+            catchError((err: unknown) => {
                 throw err;
             }),
             tap(() => this.reload(entity.boardId))
@@ -74,7 +74,6 @@ export class TaskService implements CRUD<TaskB> {
     removeSource(id: number): void {
         const source = this.tasksSource.getItem(id);
         source?.complete();
-        source?.unsubscribe();
         this.tasksSource.removeItem(id);
         this.tasks.removeItem(id);
     }
@@ -95,9 +94,7 @@ export class TaskService implements CRUD<TaskB> {
                         resetOnComplete: false,
                         resetOnRefCountZero: false,
                     }),
-                    catchError((err) => {
-                        this.messages.error(err);
-                        this.cache.removeItem(id);
+                    catchError((err: unknown) => {
                         throw err;
                     })
                 )

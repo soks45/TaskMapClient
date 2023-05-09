@@ -44,12 +44,12 @@ export class TaskHubService implements ModifiedHub {
 
     public startConnection(): Observable<void> {
         return from(this.hubConnection.start().then(() => console.log('new start conn'))).pipe(
-            tap(this.newConnectionStateCallback)
+            tap(() => this.newConnectionStateCallback())
         );
     }
 
     public stopConnection(): Observable<void> {
-        return from(this.hubConnection.stop()).pipe(tap(this.newConnectionStateCallback));
+        return from(this.hubConnection.stop()).pipe(tap(() => this.newConnectionStateCallback()));
     }
 
     on(methodName: string, args: any): void {

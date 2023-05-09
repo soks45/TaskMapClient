@@ -15,9 +15,9 @@ export function ClearCacheMixin<TBase extends Constructor>(Base: TBase) {
 
             this.auth.isAuthed$
                 .pipe(
-                    takeUntil(this.destroyed$),
                     filter((u) => !u),
-                    tap(() => (this.cache$ = undefined))
+                    tap(() => (this.cache$ = undefined)),
+                    takeUntil(this.destroyed$)
                 )
                 .subscribe();
         }

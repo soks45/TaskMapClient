@@ -30,7 +30,7 @@ export class CurrentBoardService extends ClearCacheMixin(BaseObject) {
         return this.http
             .patch<void>(`${environment.apiUrl}/account/last-board/${id}`, null, { withCredentials: true })
             .pipe(
-                catchError((err) => {
+                catchError((err: unknown) => {
                     throw err;
                 }),
                 tap(() => this.reload())
@@ -53,7 +53,7 @@ export class CurrentBoardService extends ClearCacheMixin(BaseObject) {
                         resetOnComplete: false,
                         resetOnRefCountZero: false,
                     }),
-                    catchError((err) => {
+                    catchError((err: unknown) => {
                         this.messages.error(err);
                         this.cache$ = undefined;
                         throw err;

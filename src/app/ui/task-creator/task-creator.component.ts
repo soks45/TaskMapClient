@@ -4,8 +4,6 @@ import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { DestroyMixin } from '@mixins/destroy.mixin';
-import { BaseObject } from '@mixins/mixins';
 import { TaskCreatorService } from '@services/task/task-creator.service';
 import { TaskService } from '@services/task/task.service';
 import { Color, TaskB } from 'app/models/task-b';
@@ -29,7 +27,7 @@ import { finalize } from 'rxjs/operators';
     standalone: true,
     imports: [MatButtonModule, CdkDragHandle, MatIconModule, NgIf, CardComponent, AsyncPipe],
 })
-export class TaskCreatorComponent extends DestroyMixin(BaseObject) {
+export class TaskCreatorComponent {
     @Input() newPos!: Point;
     isLoading: boolean = false;
     isShowing: boolean = true;
@@ -37,8 +35,6 @@ export class TaskCreatorComponent extends DestroyMixin(BaseObject) {
     creatorTask$: Observable<TaskB>;
 
     constructor(private taskService: TaskService, private taskCreator: TaskCreatorService) {
-        super();
-
         this.creatorTask$ = this.taskCreator.creatorTask$;
     }
 

@@ -29,7 +29,7 @@ export class BoardService extends ClearCacheMixin(BaseObject) implements CRUD<Bo
 
     add(entity: Board): Observable<void> {
         return this.http.post<void>(`${environment.apiUrl}/board`, entity, { withCredentials: true }).pipe(
-            catchError((err) => {
+            catchError((err: unknown) => {
                 throw err;
             }),
             tap(() => this.reload())
@@ -38,7 +38,7 @@ export class BoardService extends ClearCacheMixin(BaseObject) implements CRUD<Bo
 
     edit(entity: Board): Observable<void> {
         return this.http.put<void>(`${environment.apiUrl}/board`, entity, { withCredentials: true }).pipe(
-            catchError((err) => {
+            catchError((err: unknown) => {
                 throw err;
             }),
             tap(() => this.reload())
@@ -47,7 +47,7 @@ export class BoardService extends ClearCacheMixin(BaseObject) implements CRUD<Bo
 
     delete(entity: Board): Observable<void> {
         return this.http.delete<void>(`${environment.apiUrl}/board/${entity.boardId}`, { withCredentials: true }).pipe(
-            catchError((err) => {
+            catchError((err: unknown) => {
                 throw err;
             }),
             tap(() => {
@@ -66,7 +66,7 @@ export class BoardService extends ClearCacheMixin(BaseObject) implements CRUD<Bo
                     resetOnComplete: false,
                     resetOnRefCountZero: false,
                 }),
-                catchError((err) => {
+                catchError((err: unknown) => {
                     this.messages.error(err);
                     this.cache$ = undefined;
                     throw err;

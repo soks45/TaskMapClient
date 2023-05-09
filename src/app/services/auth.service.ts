@@ -6,7 +6,7 @@ import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
 import { defaultPageRoute, PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
 
 interface LoginResult {
@@ -28,7 +28,7 @@ export class AuthService {
     private accessTokenKey = 'K@#:@UC';
     private refreshTokenKey = 'a;kldw@#)1';
 
-    readonly isAuthed$ = this.isAuthedSource$.asObservable();
+    readonly isAuthed$ = this.isAuthedSource$.asObservable().pipe(distinctUntilChanged());
 
     constructor(private router: Router, private http: HttpClient) {}
 
@@ -40,14 +40,7 @@ export class AuthService {
                 ...user,
                 password: Md5.init(password),
             })
-            .pipe(
-                tap((x: LoginResult) => {
-                    this.isAuthedSource$.next(true);
-                    this.saveTokens(x);
-                    this.startTokenTimer();
-                    this.router.navigateByUrl(defaultPageRoute);
-                })
-            );
+            .pipe(tap((x: LoginResult) => this.authorize(x)));
     }
 
     login(credentials: Credentials): Observable<LoginResult> {
@@ -56,38 +49,19 @@ export class AuthService {
                 ...credentials,
                 password: Md5.init(credentials.password),
             })
-            .pipe(
-                tap((x: LoginResult) => {
-                    this.isAuthedSource$.next(true);
-                    this.saveTokens(x);
-                    this.startTokenTimer();
-                    this.router.navigateByUrl(defaultPageRoute);
-                })
-            );
+            .pipe(tap((x: LoginResult) => this.authorize(x)));
     }
 
     loginWithOAuth(idToken: OAuthKey): Observable<LoginResult> {
-        return this.http.post<LoginResult>(`${environment.apiUrl}/account/OAuthLogin`, idToken).pipe(
-            tap((x: LoginResult) => {
-                this.isAuthedSource$.next(true);
-                this.saveTokens(x);
-                this.startTokenTimer();
-                this.router.navigateByUrl(defaultPageRoute);
-            })
-        );
+        return this.http
+            .post<LoginResult>(`${environment.apiUrl}/account/OAuthLogin`, idToken)
+            .pipe(tap((x: LoginResult) => this.authorize(x)));
     }
 
     logout(): void {
         this.http
             .post<void>(`${environment.apiUrl}/account/logout`, {})
-            .pipe(
-                finalize(() => {
-                    this.removeTokens();
-                    this.isAuthedSource$.next(false);
-                    this.stopTokenTimer();
-                    this.router.navigateByUrl(PageRoutes.authPageRoute);
-                })
-            )
+            .pipe(finalize(() => this.unauthorize()))
             .subscribe();
     }
 
@@ -98,18 +72,16 @@ export class AuthService {
             return of(null);
         }
 
-        return this.http.post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken }).pipe(
-            tap((x) => {
-                this.isAuthedSource$.next(true);
-                this.saveTokens(x);
-                this.startTokenTimer();
-            })
-        );
+        return this.http
+            .post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken })
+            .pipe(tap((x) => this.authorize(x, true)));
     }
 
     unauthorize(): void {
         this.removeTokens();
         this.isAuthedSource$.next(false);
+        this.stopTokenTimer();
+        this.router.navigateByUrl(PageRoutes.authPageRoute);
     }
 
     get accessToken(): string | null {
@@ -118,6 +90,15 @@ export class AuthService {
 
     get refreshToken(): string | null {
         return localStorage.getItem(this.accessTokenKey);
+    }
+
+    private authorize(x: LoginResult, shouldNavigate: boolean = true): void {
+        this.isAuthedSource$.next(true);
+        this.saveTokens(x);
+        this.startTokenTimer();
+        if (shouldNavigate) {
+            this.router.navigateByUrl(defaultPageRoute);
+        }
     }
 
     private saveTokens(x: LoginResult): void {

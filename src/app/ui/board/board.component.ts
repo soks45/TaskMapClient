@@ -37,8 +37,8 @@ export class BoardComponent extends DestroyMixin(BaseObject) implements OnInit {
 
     ngOnInit(): void {
         this.tasks$ = this.currentBoard.currentBoard().pipe(
-            takeUntil(this.destroyed$),
-            switchMap((b) => this.taskService.get(b.boardId))
+            switchMap((b) => this.taskService.get(b.boardId)),
+            takeUntil(this.destroyed$)
         );
     }
 

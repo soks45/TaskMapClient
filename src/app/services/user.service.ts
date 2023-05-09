@@ -43,7 +43,7 @@ export class UserService {
                     resetOnComplete: false,
                     resetOnRefCountZero: false,
                 }),
-                catchError((err) => {
+                catchError((err: unknown) => {
                     this.cache$ = undefined;
                     throw err;
                 })

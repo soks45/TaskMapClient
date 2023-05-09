@@ -66,29 +66,29 @@ export class AdaptiveDragComponent extends DestroyMixin(BaseObject) implements A
         });
 
         const rBoundary$ = this.resizesBoundary$.pipe(
-            takeUntil(this.destroyed$),
             filter(() => this.isInited),
-            tap(() => this.setAbsolutePosition())
+            tap(() => this.setAbsolutePosition()),
+            takeUntil(this.destroyed$)
         );
 
         rBoundary$.subscribe();
 
         const rItem$ = this.resizesItem$.pipe(
-            takeUntil(this.destroyed$),
             filter(() => this.isInited),
-            tap(() => this.setRelativePosition())
+            tap(() => this.setRelativePosition()),
+            takeUntil(this.destroyed$)
         );
 
         rItem$.subscribe();
 
         merge(rItem$, rBoundary$)
             .pipe(
-                takeUntil(this.destroyed$),
                 take(1),
                 tap(() => {
                     this.relativePosition = this.initItemPosition(this.boundarySize, this.itemSize);
                     this.setAbsolutePosition();
-                })
+                }),
+                takeUntil(this.destroyed$)
             )
             .subscribe();
     }

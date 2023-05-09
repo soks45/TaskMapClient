@@ -1,20 +1,16 @@
-import { Component } from '@angular/core';
+import { AsyncPipe, NgIf } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService } from '@services/auth.service';
-import { Observable } from 'rxjs';
 import { AuthedHeaderComponent } from './components/authed-header/authed-header.component';
-import { NgIf, AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'tm-header',
     templateUrl: './header.component.html',
     styleUrls: ['./header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [NgIf, AuthedHeaderComponent, AsyncPipe],
 })
 export class HeaderComponent {
-    isAuthed$: Observable<boolean>;
-
-    constructor(private auth: AuthService) {
-        this.isAuthed$ = this.auth.isAuthed$;
-    }
+    constructor(public auth: AuthService) {}
 }

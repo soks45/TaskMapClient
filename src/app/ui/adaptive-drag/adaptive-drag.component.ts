@@ -2,6 +2,7 @@ import { CdkDrag, CdkDragEnd, Point } from '@angular/cdk/drag-drop';
 import { NgIf } from '@angular/common';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
@@ -20,6 +21,7 @@ export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
     selector: 'tm-adaptive-drag [initItemPosition] [boundary]',
     templateUrl: './adaptive-drag.component.html',
     styleUrls: ['./adaptive-drag.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [CdkDrag, NgIf],
     providers: [DragViewService, DestroyService],

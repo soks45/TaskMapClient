@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 
@@ -10,6 +10,7 @@ export interface OAuthKey {
     selector: 'tm-google-auth-btn',
     templateUrl: './google-auth-btn.component.html',
     styleUrls: ['./google-auth-btn.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
 })
 export class GoogleAuthBtnComponent implements OnInit {

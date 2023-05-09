@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkDragHandle, Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskCreatorService } from '@services/task/task-creator.service';
@@ -15,7 +15,7 @@ import { finalize } from 'rxjs/operators';
     selector: 'tm-task-creator [newPos]',
     templateUrl: './task-creator.component.html',
     styleUrls: ['./task-creator.component.scss'],
-    providers: [DatePipe],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('smoothAppearance', [
             state('void', style({ opacity: 0.5 })),
@@ -26,6 +26,7 @@ import { finalize } from 'rxjs/operators';
     ],
     standalone: true,
     imports: [MatButtonModule, CdkDragHandle, MatIconModule, NgIf, CardComponent, AsyncPipe],
+    providers: [DatePipe],
 })
 export class TaskCreatorComponent {
     @Input() newPos!: Point;

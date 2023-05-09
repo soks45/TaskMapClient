@@ -38,6 +38,7 @@
                         "style": "kebab-case"
                     }
                 ],
+                "@angular-eslint/prefer-on-push-component-change-detection": 2,
                 "indent": [
                     "error",
                     4,

@@ -5,13 +5,13 @@
             <input type="text" matInput formControlName="firstName" autocomplete="true" />
             <mat-error>
                 <span
-                    *ngIf="formGroup.controls['firstName'].errors && formGroup.controls['firstName'].errors['required']"
+                    *ngIf="formGroup.controls['firstName'].errors && formGroup.controls['firstName'].errors?.['required']"
                 >
                     This field is required
                 </span>
                 <span
                     *ngIf="
-                        formGroup.controls['firstName'].errors && !!formGroup.controls['firstName'].errors['maxlength']
+                        formGroup.controls['firstName'].errors && !!formGroup.controls['firstName'].errors?.['maxlength']
                     "
                 >
                     Too many symbols
@@ -23,12 +23,12 @@
             <input type="text" matInput formControlName="lastName" />
             <mat-error>
                 <span
-                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['required']"
+                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors?.['required']"
                 >
                     This field is required
                 </span>
                 <span
-                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors['maxlength']"
+                    *ngIf="formGroup.controls['lastName'].errors && formGroup.controls['lastName'].errors?.['maxlength']"
                 >
                     Too many symbols
                 </span>
@@ -39,12 +39,12 @@
             <input type="text" matInput formControlName="username" />
             <mat-error>
                 <span
-                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['required']"
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors?.['required']"
                 >
                     This field is required
                 </span>
                 <span
-                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors['maxlength']"
+                    *ngIf="formGroup.controls['username'].errors && formGroup.controls['username'].errors?.['maxlength']"
                 >
                     Too many symbols
                 </span>
@@ -69,7 +69,7 @@
                     <span
                         *ngIf="
                             formGroup.controls['passwords'].controls.password.errors &&
-                            formGroup.controls['passwords']['controls']['password'].errors['required']
+                            formGroup.controls['passwords']['controls']['password'].errors?.['required']
                         "
                     >
                         This field is required
@@ -77,7 +77,7 @@
                     <span
                         *ngIf="
                             formGroup.controls['passwords']['controls']['password'].errors &&
-                            formGroup.controls['passwords']['controls']['password'].errors['maxlength']
+                            formGroup.controls['passwords']['controls']['password'].errors?.['maxlength']
                         "
                     >
                         Too many symbols
@@ -91,7 +91,7 @@
                     <span
                         *ngIf="
                             formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
-                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors['required']
+                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors?.['required']
                         "
                     >
                         This field is required
@@ -99,7 +99,7 @@
                     <span
                         *ngIf="
                             formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
-                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors['maxlength']
+                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors?.['maxlength']
                         "
                     >
                         Too many symbols
@@ -107,7 +107,7 @@
                     <span
                         *ngIf="
                             formGroup.controls['passwords']['controls']['passwordConfirm'].errors &&
-                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors['mismatch']
+                            formGroup.controls['passwords']['controls']['passwordConfirm'].errors?.['mismatch']
                         "
                     >
                         Password mismatch

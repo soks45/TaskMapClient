@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UserAvatarComponent } from '@ui/user-avatar/user-avatar.component';
 import { PageRoutes } from 'app/app.routes';
@@ -7,6 +7,7 @@ import { PageRoutes } from 'app/app.routes';
     selector: 'tm-authed-header',
     templateUrl: './authed-header.component.html',
     styleUrls: ['./authed-header.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [RouterLinkActive, RouterLink, UserAvatarComponent],
 })

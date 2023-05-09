@@ -1,6 +1,6 @@
 import { Point } from '@angular/cdk/drag-drop';
 import { DatePipe, NgClass, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskService } from '@services/task/task.service';
@@ -11,6 +11,7 @@ import { State, TaskB } from 'app/models/task-b';
     selector: 'tm-card [task]',
     templateUrl: './card.component.html',
     styleUrls: ['./card.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [NgClass, NgIf, MatIconModule, DatePipe, MatDialogModule],
 })

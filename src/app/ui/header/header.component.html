@@ -1,4 +1,4 @@
-<div class="header">
+<header class="header">
     <div class="header__content">
         <div class="header__left">
             <div class="header__logo"></div>
@@ -6,9 +6,9 @@
         </div>
 
         <div class="header__right">
-            <ng-container *ngIf="isAuthed$ | async">
+            <ng-container *ngIf="auth.isAuthed$ | async">
                 <tm-authed-header></tm-authed-header>
             </ng-container>
         </div>
     </div>
-</div>
+</header>

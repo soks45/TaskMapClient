@@ -8,7 +8,7 @@ import {
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor, NgStyle } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { BoardService } from '@services/board/board.service';
 import { TaskService } from '@services/task/task.service';
 import { CardComponent } from '@ui/card/card.component';
@@ -25,6 +25,7 @@ interface BoardWithTasks extends Board {
     selector: 'tm-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [CdkDropListGroup, NgStyle, NgFor, CdkDropList, CdkDrag, CardComponent, CdkDragPreview, AsyncPipe],
 })

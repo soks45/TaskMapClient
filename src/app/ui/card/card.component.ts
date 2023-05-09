@@ -3,8 +3,6 @@ import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { DestroyMixin } from '@mixins/destroy.mixin';
-import { BaseObject } from '@mixins/mixins';
 import { TaskService } from '@services/task/task.service';
 import { EditCardDialogComponent, EditDialogData } from '@ui/dialogs/edit-card-dialog/edit-card-dialog.component';
 import { State, TaskB } from 'app/models/task-b';
@@ -16,14 +14,12 @@ import { State, TaskB } from 'app/models/task-b';
     standalone: true,
     imports: [NgClass, NgIf, MatIconModule, DatePipe, MatDialogModule],
 })
-export class CardComponent extends DestroyMixin(BaseObject) {
+export class CardComponent {
     @Input() task!: TaskB;
     @Input() fromCreator: boolean = false;
     readonly states = State;
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {
-        super();
-    }
+    constructor(private taskService: TaskService, private dialog: MatDialog) {}
 
     deleteTask(): void {
         if (this.fromCreator) {

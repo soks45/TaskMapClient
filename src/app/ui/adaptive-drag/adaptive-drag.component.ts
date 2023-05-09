@@ -10,9 +10,8 @@ import {
     Output,
     ViewChild,
 } from '@angular/core';
-import { DestroyMixin } from '@mixins/destroy.mixin';
-import { BaseObject } from '@mixins/mixins';
 import { DragViewService } from '@ui/adaptive-drag/drag-view.service';
+import { DestroyService } from 'app/helpers/destroy.service';
 import { filter, merge, Subject, take, takeUntil, tap } from 'rxjs';
 
 export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
@@ -23,9 +22,9 @@ export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
     styleUrls: ['./adaptive-drag.component.scss'],
     standalone: true,
     imports: [CdkDrag, NgIf],
-    providers: [DragViewService],
+    providers: [DragViewService, DestroyService],
 })
-export class AdaptiveDragComponent extends DestroyMixin(BaseObject) implements AfterViewInit {
+export class AdaptiveDragComponent implements AfterViewInit {
     @Input() initItemPosition!: InitItemPosition;
     @Input() boundary!: ElementRef<HTMLElement> | HTMLElement;
     @ViewChild('dragItem') dragItem?: ElementRef;
@@ -50,9 +49,11 @@ export class AdaptiveDragComponent extends DestroyMixin(BaseObject) implements A
     resizesBoundary$: Subject<void> = new Subject<void>();
     resizesItem$: Subject<void> = new Subject<void>();
 
-    constructor(private dragView: DragViewService, private cdr: ChangeDetectorRef) {
-        super();
-    }
+    constructor(
+        private dragView: DragViewService,
+        private cdr: ChangeDetectorRef,
+        private destroyed$: DestroyService
+    ) {}
 
     ngAfterViewInit(): void {
         this.observeResizes(this.dragItem, (v) => {

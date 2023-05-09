@@ -2,11 +2,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { DestroyMixin } from '@mixins/destroy.mixin';
-import { BaseObject } from '@mixins/mixins';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
+import { DestroyService } from 'app/helpers/destroy.service';
 import { TaskB } from 'app/models/task-b';
 import { Observable, switchMap, takeUntil } from 'rxjs';
 import { AdaptiveDragComponent } from '../adaptive-drag/adaptive-drag.component';
@@ -26,14 +25,17 @@ import { TaskCreatorComponent } from '../task-creator/task-creator.component';
     ],
     standalone: true,
     imports: [NgFor, AdaptiveDragComponent, CardComponent, TaskCreatorComponent, AsyncPipe],
+    providers: [DestroyService],
 })
-export class BoardComponent extends DestroyMixin(BaseObject) implements OnInit {
+export class BoardComponent implements OnInit {
     tasks$?: Observable<TaskB[]>;
     boundaryClassName = 'board';
 
-    constructor(private taskService: TaskService, private currentBoard: CurrentBoardService) {
-        super();
-    }
+    constructor(
+        private taskService: TaskService,
+        private currentBoard: CurrentBoardService,
+        private destroyed$: DestroyService
+    ) {}
 
     ngOnInit(): void {
         this.tasks$ = this.currentBoard.currentBoard().pipe(

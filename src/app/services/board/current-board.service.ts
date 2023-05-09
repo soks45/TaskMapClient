@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { ClearCacheMixin } from '@mixins/clear-cache.mixin';
-import { BaseObject } from '@mixins/mixins';
-import { MessagesService } from '@services/messages.service';
 import { Board } from 'app/models/board';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -11,14 +8,12 @@ import { catchError } from 'rxjs/operators';
 @Injectable({
     providedIn: 'root',
 })
-export class CurrentBoardService extends ClearCacheMixin(BaseObject) {
+export class CurrentBoardService {
     readonly currentBoard$: Observable<Board>;
     private currentBoardSource: ReplaySubject<Board> = new ReplaySubject<Board>(1);
     cache$: Observable<Board> | undefined;
 
-    constructor(private http: HttpClient, private messages: MessagesService) {
-        super();
-
+    constructor(private http: HttpClient) {
         this.currentBoard$ = this.currentBoardSource.asObservable();
     }
 
@@ -52,11 +47,6 @@ export class CurrentBoardService extends ClearCacheMixin(BaseObject) {
                         resetOnError: false,
                         resetOnComplete: false,
                         resetOnRefCountZero: false,
-                    }),
-                    catchError((err: unknown) => {
-                        this.messages.error(err);
-                        this.cache$ = undefined;
-                        throw err;
                     }),
                     mergeMap((id) => this.getBoard(id))
                 );

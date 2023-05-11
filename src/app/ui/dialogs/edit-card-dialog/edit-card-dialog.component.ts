@@ -108,7 +108,6 @@ export class EditCardDialogComponent extends FormMixin(BaseObject) {
                 .edit(this.formValue)
                 .pipe(finalize(() => (this.isLoading = false)))
                 .subscribe(() => this.dialogRef.close());
-            return;
         }
     }
 

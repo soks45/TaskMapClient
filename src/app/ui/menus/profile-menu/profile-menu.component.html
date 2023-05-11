@@ -1,0 +1,10 @@
+<div [matMenuTriggerFor]="profileMenu" class="profile-menu">
+    <ng-content></ng-content>
+</div>
+
+<mat-menu #profileMenu="matMenu">
+    <button mat-menu-item (click)="authService.logout()">
+        <span>logout</span>
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-menu>

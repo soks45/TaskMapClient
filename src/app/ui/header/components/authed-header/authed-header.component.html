@@ -7,13 +7,17 @@
         >
             <span class="menu-item__title">Dashboard</span>
         </a>
-        <a
-            class="authed-header__menu-item"
-            [routerLinkActive]="'authed-header__menu-item--selected'"
-            [routerLink]="[routes.boardPageRoute]"
-        >
-            <span class="menu-item__title">Board</span>
-        </a>
+        <tm-boards-menu>
+            <a class="authed-header__menu-item"
+               [routerLinkActive]="'authed-header__menu-item--selected'"
+               [routerLink]="[routes.boardPageRoute]"
+            >
+                <span class="menu-item__title">Board</span>
+            </a>
+        </tm-boards-menu>
     </nav>
-    <tm-user-avatar></tm-user-avatar>
+
+    <tm-profile-menu>
+        <tm-user-avatar></tm-user-avatar>
+    </tm-profile-menu>
 </div>

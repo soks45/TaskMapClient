@@ -1,5 +1,5 @@
 <label class="user-avatar">
-    <input type="file" accept="image/*" class="user-avatar__input" (change)="selectFile($event)" />
+    <!--<input type="file" accept="image/*" class="user-avatar__input" (change)="selectFile($event)" />-->
     <ng-container *ngIf="userService.getUser() | async as user">
         <ng-container *ngIf="user.avatar; else emptyAvatar">
             <img [src]="user.avatar" alt="avatar" class="user-avatar__image" />

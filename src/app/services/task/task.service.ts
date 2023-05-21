@@ -7,7 +7,6 @@ import { MemoryStorage } from 'app/helpers/memory-storage';
 import { CRUD } from 'app/models/CRUD';
 import { TaskB } from 'app/models/task-b';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 // TODO refactor this service
 @Injectable({
@@ -27,30 +26,18 @@ export class TaskService implements CRUD<TaskB> {
     add(entity: TaskB): Observable<void> {
         return this.http
             .post<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
-            .pipe(
-                catchError((err: unknown) => {
-                    throw err;
-                }),
-                tap(() => this.reload(entity.boardId))
-            );
+            .pipe(tap(() => this.reload(entity.boardId)));
     }
 
     edit(entity: TaskB): Observable<void> {
         return this.http
             .put<void>(`${environment.apiUrl}/task`, this.converter.taskBServer(entity), { withCredentials: true })
-            .pipe(
-                catchError((err: unknown) => {
-                    throw err;
-                }),
-                tap(() => this.reload(entity.boardId))
-            );
+            .pipe(tap(() => this.reload(entity.boardId)));
     }
 
     moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
         return this.http
-            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {
-                withCredentials: true,
-            })
+            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {})
             .pipe(
                 tap(() => {
                     this.reload(boardId);
@@ -63,12 +50,9 @@ export class TaskService implements CRUD<TaskB> {
     }
 
     delete(entity: TaskB): Observable<void> {
-        return this.http.delete<void>(`${environment.apiUrl}/task/${entity.taskId}`, { withCredentials: true }).pipe(
-            catchError((err: unknown) => {
-                throw err;
-            }),
-            tap(() => this.reload(entity.boardId))
-        );
+        return this.http
+            .delete<void>(`${environment.apiUrl}/task/${entity.taskId}`, { withCredentials: true })
+            .pipe(tap(() => this.reload(entity.boardId)));
     }
 
     removeSource(id: number): void {
@@ -93,9 +77,6 @@ export class TaskService implements CRUD<TaskB> {
                         resetOnError: false,
                         resetOnComplete: false,
                         resetOnRefCountZero: false,
-                    }),
-                    catchError((err: unknown) => {
-                        throw err;
                     })
                 )
             );

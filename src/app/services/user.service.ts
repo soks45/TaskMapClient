@@ -3,9 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 import { UploadService } from '@services/upload.service';
-import { User } from 'app/models/user';
+import { ShortUser, User } from 'app/models/user';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -29,6 +28,10 @@ export class UserService {
             .pipe(tap(() => this.reload()));
     }
 
+    getUsers(): Observable<ShortUser[]> {
+        return this.http.get<ShortUser[]>(`${environment.apiUrl}/account/list`, { withCredentials: true });
+    }
+
     private reload(): void {
         this.cache$ = undefined;
         this.load().subscribe();
@@ -42,10 +45,6 @@ export class UserService {
                     resetOnError: false,
                     resetOnComplete: false,
                     resetOnRefCountZero: false,
-                }),
-                catchError((err: unknown) => {
-                    this.cache$ = undefined;
-                    throw err;
                 })
             );
         }

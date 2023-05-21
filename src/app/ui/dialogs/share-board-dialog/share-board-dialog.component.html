@@ -1,0 +1,34 @@
+<form [formGroup]="formGroup" class="share-board-dialog">
+    <header mat-dialog-title>
+        <h2>Share Board</h2>
+    </header>
+    <div mat-dialog-content class="share-board-dialog__content">
+        <mat-form-field>
+            <mat-label>Access Rights</mat-label>
+            <mat-select formControlName="accessRights">
+                <mat-option *ngFor="let right of accessRights" [value]="right">{{right}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Users</mat-label>
+            <mat-select formControlName="userIdList" [multiple]="true">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="multiSelect"
+                                           placeholderLabel="Find user..."
+                                           noEntriesFoundLabel="no matching user found"
+                                           ngModel (ngModelChange)="filterMyOptions($event)"
+                    ></ngx-mat-select-search>
+                </mat-option>
+
+                <mat-option *ngFor="let user of filteredUsers$ | async" [value]="user.userId">{{user.username}}</mat-option>
+
+            </mat-select>
+            <mat-error *ngIf="formGroup.controls.userIdList.errors?.['required']">Choose users</mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions [align]="'end'">
+        <button mat-raised-button color="primary" (click)="onSubmit()">Share</button>
+        <button mat-stroked-button (click)="onCancel()">Cancel</button>
+    </div>
+</form>

@@ -20,7 +20,6 @@ export class ProfileMenuComponent {
     constructor(public authService: AuthService, public userService: UserService) {}
 
     selectFile($event: any) {
-        console.log('123');
         this.selectedFiles = $event.target.files;
 
         if (this.selectedFiles && this.selectedFiles[0]) {

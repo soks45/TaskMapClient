@@ -1,19 +1,27 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '@environments/environment';
+import { AuthService } from '@services/auth.service';
 import { Board } from 'app/models/board';
-import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
+import { AsyncSubject, filter, mergeMap, Observable, ReplaySubject, share, Subject, takeUntil, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class CurrentBoardService {
+export class CurrentBoardService implements OnDestroy {
     readonly currentBoard$: Observable<Board>;
     private currentBoardSource: ReplaySubject<Board> = new ReplaySubject<Board>(1);
+    private destroy$: Subject<void> = new Subject<void>();
     cache$: Observable<Board> | undefined;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private authService: AuthService) {
         this.currentBoard$ = this.currentBoardSource.asObservable();
+        this.authService.isAuthed$
+            .pipe(
+                filter((authed) => !authed),
+                takeUntil(this.destroy$)
+            )
+            .subscribe(() => (this.cache$ = undefined));
     }
 
     currentBoard(): Observable<Board> {
@@ -51,5 +59,10 @@ export class CurrentBoardService {
 
     private getBoard(id: number): Observable<Board> {
         return this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }

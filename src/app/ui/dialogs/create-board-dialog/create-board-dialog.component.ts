@@ -12,7 +12,7 @@ import { BaseObject } from '@mixins/mixins';
 import { BoardService } from '@services/board/board.service';
 import { MessagesService } from '@services/messages.service';
 import { UserService } from '@services/user.service';
-import { Board } from 'app/models/board';
+import { AccessRights, Board } from 'app/models/board';
 import { Observable, switchMap, take } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
@@ -91,6 +91,8 @@ export class CreateBoardDialogComponent extends FormMixin(BaseObject) {
             map((user) => ({
                 userId: user.userId,
                 boardId: 0,
+                accessRights: AccessRights.administrating,
+                isShared: true,
                 createdDate: new Date().toString(),
                 ...this.formGroup.getRawValue(),
             }))

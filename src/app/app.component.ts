@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { GuardsCheckEnd, Router, RouterOutlet } from '@angular/router';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
+
 import { CustomIconsService } from '@services/custom-icons.service';
 import { HeaderComponent } from '@ui/header/header.component';
 import { PageRoutes } from 'app/app.routes';
 import { DestroyService } from 'app/helpers/destroy.service';
-import { filter, takeUntil } from 'rxjs';
+import { filter, takeUntil, tap } from 'rxjs';
 
 @Component({
     selector: 'tm-root',
@@ -30,5 +31,12 @@ export class AppComponent {
                     this.router.navigate([PageRoutes.notFoundPageRoute]);
                 }
             });
+
+        this.router.events
+            .pipe(
+                tap((v) => console.log(v)),
+                takeUntil(this.destroy$)
+            )
+            .subscribe();
     }
 }

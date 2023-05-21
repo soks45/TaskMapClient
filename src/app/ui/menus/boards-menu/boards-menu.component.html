@@ -4,12 +4,12 @@
 
 <mat-menu #boardsMenu="matMenu" class="boards-menu">
     <button mat-menu-item class="boards-menu__item" *ngFor="let board of boardsService.get() | async">
-        <span class="boards-menu__name">{{board.boardName}}</span>
+        <span class="boards-menu__name">{{ board.boardName }}</span>
         <mat-icon>grid_view</mat-icon>
     </button>
 
-    <button mat-menu-item class="boards-menu__item">
-        <span class="boards-menu__name" (click)="onCreateNewBoard()">create new board</span>
+    <button mat-menu-item class="boards-menu__item" (click)="onCreateNewBoard()">
+        <span class="boards-menu__name">create new board</span>
         <mat-icon>add_circle</mat-icon>
     </button>
 </mat-menu>

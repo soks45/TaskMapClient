@@ -1,22 +1,24 @@
-<div class='card-box'
-     [ngClass]="[task.state === states.Main ? 'card-box--normal' : 'card-box--reduced', 'card-box--' + task.color]"
-     (dblclick)='changeState()'>
-    <header class='card-box__header'>
-        <div class='card-box__header-label'>{{ task.taskLabel }}</div>
-        <div class='card-box__header-actions' *ngIf='task.state === states.Main'>
-            <button class='action-button' style='transform: scale(0.85)' (click)='editTask()'>
+<div
+    class="card-box"
+    [ngClass]="[task.state === states.Main ? 'card-box--normal' : 'card-box--reduced', 'card-box--' + task.color]"
+    (dblclick)="changeState()"
+>
+    <header class="card-box__header">
+        <div class="card-box__header-label">{{ task.taskLabel }}</div>
+        <div class="card-box__header-actions" *ngIf="task.state === states.Main">
+            <button class="action-button" style="transform: scale(0.85)" (click)="editTask()">
                 <mat-icon>create</mat-icon>
             </button>
-            <button class='action-button' (click)='deleteTask()'>
+            <button class="action-button" (click)="deleteTask()">
                 <mat-icon>close</mat-icon>
             </button>
         </div>
     </header>
 
-    <ng-container *ngIf='task.state === states.Main'>
-        <div class='card-box__body'>
+    <ng-container *ngIf="task.state === states.Main">
+        <div class="card-box__body">
             {{ task.taskText }}
         </div>
-        <div class='card-box__date'>{{ task.createdDate | date: 'dd-MM-yyyy' }}</div>
+        <div class="card-box__date">{{ task.createdDate | date: 'dd-MM-yyyy' }}</div>
     </ng-container>
 </div>

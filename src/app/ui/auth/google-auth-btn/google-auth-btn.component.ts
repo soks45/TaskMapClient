@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, NgZone, OnInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 
@@ -14,33 +14,35 @@ export interface OAuthKey {
     standalone: true,
 })
 export class GoogleAuthBtnComponent implements OnInit {
-    constructor(private authService: AuthService) {}
+    constructor(private authService: AuthService, private ngZone: NgZone) {}
 
     ngOnInit(): void {
         this.setUpGoogle();
     }
 
     private setUpGoogle(): void {
-        // @ts-ignore
-        google.accounts.id.initialize({
-            client_id: environment.authClientId,
-            callback: this.handleCredentialResponse.bind(this),
-            auto_select: false,
-            cancel_on_tap_outside: true,
-        });
-
-        // @ts-ignore
-        google.accounts.id.renderButton(
+        this.ngZone.runOutsideAngular(() => {
             // @ts-ignore
-            document.getElementById('google-button'),
-            {
-                scope: 'profile email',
-                width: 200,
-                height: 50,
-                longtitle: true,
-                theme: 'dark',
-            }
-        );
+            google.accounts.id.initialize({
+                client_id: environment.authClientId,
+                callback: this.handleCredentialResponse.bind(this),
+                auto_select: false,
+                cancel_on_tap_outside: true,
+            });
+
+            // @ts-ignore
+            google.accounts.id.renderButton(
+                // @ts-ignore
+                document.getElementById('google-button'),
+                {
+                    scope: 'profile email',
+                    width: 200,
+                    height: 50,
+                    longtitle: true,
+                    theme: 'dark',
+                }
+            );
+        });
     }
 
     handleCredentialResponse(response: { credential: string }) {

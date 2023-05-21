@@ -6,7 +6,7 @@ import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
 import { defaultPageRoute, PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
-import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription, switchMap } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
 
 interface LoginResult {
@@ -128,7 +128,7 @@ export class AuthService {
         this.timer = of(true)
             .pipe(
                 delay(timeout),
-                tap(() => this.refreshTokens().subscribe())
+                switchMap(() => this.refreshTokens())
             )
             .subscribe();
     }

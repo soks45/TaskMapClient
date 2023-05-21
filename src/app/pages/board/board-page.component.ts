@@ -24,13 +24,21 @@ export default class BoardPageComponent implements OnInit {
 
     ngOnInit(): void {
         const url = this.router.routerState.snapshot.url;
-        const id = url.replace('/' + PageRoutes.boardPageRoute, '');
+        const idString = url.replace('/' + PageRoutes.boardPageRoute, '').replace('/', '');
 
-        if (!id) {
-            this.currentBoard
-                .currentBoard()
-                .pipe(takeUntil(this.destroyed$))
-                .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
+        if (!idString) {
+            this.navigateToLastBoard();
         }
+
+        if (Number(idString) < 0 || !Number.isSafeInteger(Number(idString))) {
+            this.navigateToLastBoard();
+        }
+    }
+
+    private navigateToLastBoard(): void {
+        this.currentBoard
+            .currentBoard()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
     }
 }

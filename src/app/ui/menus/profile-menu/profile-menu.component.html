@@ -3,6 +3,12 @@
 </div>
 
 <mat-menu #profileMenu="matMenu">
+    <input type="file" accept="image/*" class="profile-menu__avatar-selector" (change)="selectFile($event)" #file />
+    <button mat-menu-item (click)="file.click()">
+        <span>change avatar</span>
+        <mat-icon>account_circle</mat-icon>
+    </button>
+
     <button mat-menu-item (click)="authService.logout()">
         <span>logout</span>
         <mat-icon>logout</mat-icon>

@@ -1,3 +1,11 @@
 .profile-menu {
     display: inline;
 }
+
+.profile-menu {
+    cursor: pointer;
+
+    &__avatar-selector {
+        display: none;
+    }
+}

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '@services/auth.service';
+import { UserService } from '@services/user.service';
 
 @Component({
     selector: 'tm-profile-menu',
@@ -14,6 +15,16 @@ import { AuthService } from '@services/auth.service';
 })
 export class ProfileMenuComponent {
     @ViewChild('profileMenu') menu!: MatMenu;
+    selectedFiles?: FileList;
 
-    constructor(public authService: AuthService) {}
+    constructor(public authService: AuthService, public userService: UserService) {}
+
+    selectFile($event: any) {
+        console.log('123');
+        this.selectedFiles = $event.target.files;
+
+        if (this.selectedFiles && this.selectedFiles[0]) {
+            this.userService.uploadAvatar(this.selectedFiles[0]).subscribe();
+        }
+    }
 }

@@ -12,15 +12,5 @@ import { UserService } from '@services/user.service';
     imports: [NgIf, MatIconModule, AsyncPipe, NgOptimizedImage],
 })
 export class UserAvatarComponent {
-    selectedFiles?: FileList;
-
     constructor(public userService: UserService) {}
-
-    selectFile($event: any) {
-        this.selectedFiles = $event.target.files;
-
-        if (this.selectedFiles && this.selectedFiles[0]) {
-            this.userService.uploadAvatar(this.selectedFiles[0]).subscribe();
-        }
-    }
 }

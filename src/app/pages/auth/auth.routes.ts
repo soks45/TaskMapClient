@@ -20,4 +20,4 @@ export const routes: Routes = [
             },
         ],
     },
-];
+] as Routes;

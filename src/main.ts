@@ -3,7 +3,15 @@ import { APP_INITIALIZER, enableProdMode, ErrorHandler, importProvidersFrom, inj
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter, Router, withDebugTracing, withNavigationErrorHandler, withRouterConfig } from '@angular/router';
+import {
+    PreloadAllModules,
+    provideRouter,
+    Router,
+    withComponentInputBinding,
+    withNavigationErrorHandler,
+    withPreloading,
+    withRouterConfig,
+} from '@angular/router';
 import { environment } from '@environments/environment';
 import { InterceptorsModule } from '@interceptors/interceptors.module';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
@@ -50,8 +58,9 @@ bootstrapApplication(AppComponent, {
         provideAnimations(),
         provideRouter(
             APP_ROUTES,
-            withDebugTracing(),
-            withRouterConfig({ paramsInheritanceStrategy: 'always', onSameUrlNavigation: 'reload' }),
+            withPreloading(PreloadAllModules),
+            withComponentInputBinding(),
+            withRouterConfig({ onSameUrlNavigation: 'reload', paramsInheritanceStrategy: 'always' }),
             withNavigationErrorHandler(() => inject(Router).navigate([PageRoutes.notFoundPageRoute]))
         ),
     ],

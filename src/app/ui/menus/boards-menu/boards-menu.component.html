@@ -3,7 +3,7 @@
 </div>
 
 <mat-menu #boardsMenu="matMenu" class="boards-menu">
-    <button mat-menu-item class="boards-menu__item" *ngFor="let board of boardsService.get() | async">
+    <button mat-menu-item class="boards-menu__item" *ngFor="let board of (boardsService.get() | async)" (click)='onBoardClick(board)'>
         <span class="boards-menu__name">{{ board.boardName }}</span>
         <mat-icon>grid_view</mat-icon>
     </button>

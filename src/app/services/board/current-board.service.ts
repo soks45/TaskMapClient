@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Board } from 'app/models/board';
 import { AsyncSubject, mergeMap, Observable, ReplaySubject, share, tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -24,12 +23,7 @@ export class CurrentBoardService {
     switchBoard(id: number): Observable<void> {
         return this.http
             .patch<void>(`${environment.apiUrl}/account/last-board/${id}`, null, { withCredentials: true })
-            .pipe(
-                catchError((err: unknown) => {
-                    throw err;
-                }),
-                tap(() => this.reload())
-            );
+            .pipe(tap(() => this.reload()));
     }
 
     private reload(): void {

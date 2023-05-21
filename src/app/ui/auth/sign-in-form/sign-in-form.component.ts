@@ -5,9 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { AuthService, Credentials } from '@services/auth.service';
+import { defaultPageRoute } from 'app/app.routes';
 import { finalize } from 'rxjs/operators';
 
 interface LoginForm {
@@ -36,7 +38,7 @@ export class SignInFormComponent extends FormMixin(BaseObject) {
     isLoading = false;
     hide = true;
 
-    constructor(private fb: FormBuilder, private authService: AuthService) {
+    constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
         super();
 
         this.formGroup = this.fb.group<LoginForm>({
@@ -61,6 +63,6 @@ export class SignInFormComponent extends FormMixin(BaseObject) {
         this.authService
             .login(this.formGroup.value as Credentials)
             .pipe(finalize(() => (this.isLoading = false)))
-            .subscribe();
+            .subscribe(() => this.router.navigateByUrl(defaultPageRoute));
     }
 }

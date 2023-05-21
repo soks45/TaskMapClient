@@ -6,4 +6,4 @@ export const routes: Routes = [
         loadComponent: () => import('@pages/dashboard/dashboard.component'),
         children: [],
     },
-];
+] as Routes;

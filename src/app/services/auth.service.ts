@@ -3,10 +3,10 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
-import { defaultPageRoute, PageRoutes } from 'app/app.routes';
+import { PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
-import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription, switchMap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription, switchMap, throwError } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
 
 interface LoginResult {
@@ -69,12 +69,12 @@ export class AuthService {
         const refreshToken = localStorage.getItem(this.refreshTokenKey);
         if (!refreshToken) {
             this.removeTokens();
-            return of(null);
+            return throwError(() => new Error('No token'));
         }
 
         return this.http
             .post<LoginResult>(`${environment.apiUrl}/account/refresh-token`, { refreshToken })
-            .pipe(tap((x) => this.authorize(x, true)));
+            .pipe(tap((x: LoginResult) => this.authorize(x)));
     }
 
     unauthorize(): void {
@@ -92,13 +92,10 @@ export class AuthService {
         return localStorage.getItem(this.accessTokenKey);
     }
 
-    private authorize(x: LoginResult, shouldNavigate: boolean = true): void {
+    private authorize(x: LoginResult): void {
         this.isAuthedSource$.next(true);
         this.saveTokens(x);
         this.startTokenTimer();
-        if (shouldNavigate) {
-            this.router.navigateByUrl(defaultPageRoute);
-        }
     }
 
     private saveTokens(x: LoginResult): void {

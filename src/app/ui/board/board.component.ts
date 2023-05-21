@@ -1,7 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { TaskService } from '@services/task/task.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
@@ -29,6 +29,13 @@ import { TaskCreatorComponent } from '../task-creator/task-creator.component';
     providers: [DestroyService],
 })
 export class BoardComponent implements OnInit {
+    @Input()
+    set id(boardId: string) {
+        if (boardId && isFinite(Number(boardId)) && !isNaN(Number(boardId))) {
+            this.currentBoard.switchBoard(Number(boardId)).subscribe();
+        }
+    }
+
     tasks$?: Observable<TaskB[]>;
     boundaryClassName = 'board';
 

@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, NgZone, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
+import { defaultPageRoute } from 'app/app.routes';
 
 export interface OAuthKey {
     idToken: string;
@@ -14,7 +16,7 @@ export interface OAuthKey {
     standalone: true,
 })
 export class GoogleAuthBtnComponent implements OnInit {
-    constructor(private authService: AuthService, private ngZone: NgZone) {}
+    constructor(private authService: AuthService, private ngZone: NgZone, private router: Router) {}
 
     ngOnInit(): void {
         this.setUpGoogle();
@@ -46,6 +48,8 @@ export class GoogleAuthBtnComponent implements OnInit {
     }
 
     handleCredentialResponse(response: { credential: string }) {
-        this.authService.loginWithOAuth({ idToken: response.credential }).subscribe();
+        this.authService
+            .loginWithOAuth({ idToken: response.credential })
+            .subscribe(() => this.router.navigateByUrl(defaultPageRoute));
     }
 }

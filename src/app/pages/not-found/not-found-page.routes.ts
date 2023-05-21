@@ -6,4 +6,4 @@ export const routes: Routes = [
         loadComponent: () => import('@pages/not-found/not-found-page.component'),
         children: [],
     },
-];
+] as Routes;

@@ -5,12 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
-import { PageRoutes } from 'app/app.routes';
+import { defaultPageRoute, PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
 
@@ -47,7 +47,7 @@ export class SignUpFormComponent extends FormMixin(BaseObject) {
     hide = true;
     formGroup: FormGroup<SignUpForm>;
 
-    constructor(private formBuilder: FormBuilder, private authService: AuthService) {
+    constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
         super();
 
         this.formGroup = this.formBuilder.group<SignUpForm>({
@@ -100,6 +100,6 @@ export class SignUpFormComponent extends FormMixin(BaseObject) {
                 password
             )
             .pipe(finalize(() => (this.isLoading = false)))
-            .subscribe();
+            .subscribe(() => this.router.navigateByUrl(defaultPageRoute));
     }
 }

@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CurrentBoardService } from '@services/board/current-board.service';
 import { BoardComponent } from '@ui/board/board.component';
-import { tap } from 'rxjs/operators';
+import { PageRoutes } from 'app/app.routes';
+import { DestroyService } from 'app/helpers/destroy.service';
+import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
@@ -10,12 +12,25 @@ import { tap } from 'rxjs/operators';
     styleUrls: ['./board-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [BoardComponent, RouterOutlet],
+    imports: [BoardComponent, RouterOutlet, RouterLink],
+    providers: [DestroyService],
 })
 export default class BoardPageComponent implements OnInit {
-    constructor(private route: ActivatedRoute, private router: Router, private currentBoard: CurrentBoardService) {}
+    constructor(
+        private router: Router,
+        private currentBoard: CurrentBoardService,
+        private destroyed$: DestroyService
+    ) {}
 
     ngOnInit(): void {
-        this.route.params.pipe(tap(console.log)).subscribe();
+        const url = this.router.routerState.snapshot.url;
+        const id = url.replace('/' + PageRoutes.boardPageRoute, '');
+
+        if (!id) {
+            this.currentBoard
+                .currentBoard()
+                .pipe(takeUntil(this.destroyed$))
+                .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
+        }
     }
 }

@@ -1,12 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { GuardsCheckEnd, Router, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
-
 import { CustomIconsService } from '@services/custom-icons.service';
 import { HeaderComponent } from '@ui/header/header.component';
-import { PageRoutes } from 'app/app.routes';
-import { DestroyService } from 'app/helpers/destroy.service';
-import { filter, takeUntil, tap } from 'rxjs';
 
 @Component({
     selector: 'tm-root',
@@ -15,28 +11,9 @@ import { filter, takeUntil, tap } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [LoadingBarModule, RouterOutlet, HeaderComponent],
-    providers: [DestroyService],
 })
 export class AppComponent {
-    constructor(private icons: CustomIconsService, private router: Router, private destroy$: DestroyService) {
+    constructor(private icons: CustomIconsService) {
         this.icons.init();
-
-        this.router.events
-            .pipe(
-                filter((event: any) => event instanceof GuardsCheckEnd),
-                takeUntil(this.destroy$)
-            )
-            .subscribe((event: GuardsCheckEnd) => {
-                if (!event.shouldActivate) {
-                    this.router.navigate([PageRoutes.notFoundPageRoute]);
-                }
-            });
-
-        this.router.events
-            .pipe(
-                tap((v) => console.log(v)),
-                takeUntil(this.destroy$)
-            )
-            .subscribe();
     }
 }

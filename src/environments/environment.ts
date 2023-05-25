@@ -11,7 +11,7 @@ export const environment: Env = {
         Tasks: 'https://localhost:5001/hub/task',
     },
     logUrl: 'https://localhost:5001/api/send-log',
-    authClientId: '912961596350-0pbhiqf40bpa8ubdvt3h9s2jjo261nt1.apps.googleusercontent.com',
+    authClientId: '912961596350-kegl1icmtodr5r6t5rhfeb7tf2o4vvde.apps.googleusercontent.com',
 };
 
 /*

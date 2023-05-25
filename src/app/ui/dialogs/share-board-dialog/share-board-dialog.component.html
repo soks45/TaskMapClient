@@ -17,7 +17,7 @@
                     <ngx-mat-select-search [formControl]="multiSelect"
                                            placeholderLabel="Find user..."
                                            noEntriesFoundLabel="no matching user found"
-                                           ngModel (ngModelChange)="filterMyOptions($event)"
+                                           ngModel (ngModelChange)="filter$.next($event)"
                     ></ngx-mat-select-search>
                 </mat-option>
 

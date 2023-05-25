@@ -22,6 +22,7 @@ import { appInitializer } from 'app/app-initializer';
 import { AppComponent } from 'app/app.component';
 import { APP_ROUTES, PageRoutes } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
+import { DestroyService } from 'app/helpers/destroy.service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 if (environment.production) {
@@ -54,6 +55,7 @@ bootstrapApplication(AppComponent, {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler,
         },
+        DestroyService,
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations(),
         provideRouter(

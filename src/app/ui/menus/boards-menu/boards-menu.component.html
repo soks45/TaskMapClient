@@ -5,14 +5,13 @@
 <mat-menu #boardsMenu="matMenu" class="boards-menu">
     <button mat-menu-item class="boards-menu__item" *ngFor="let board of (boardsService.get() | async)" (click)='onBoardClick(board)'>
         <span class="boards-menu__name">{{ board.boardName }}</span>
-        <mat-icon>grid_view</mat-icon>
         <mat-icon *ngIf="board.isShared; else share">folder_shared</mat-icon>
         <ng-template #share>
             <mat-icon (click)="onShare($event, board)">share</mat-icon>
         </ng-template>
     </button>
 
-    <button mat-menu-item class="boards-menu__item" (click)="onCreateNewBoard()">
+    <button mat-menu-item class="boards-menu__item" (click)="onCreateNewBoard($event)">
         <span class="boards-menu__name">create new board</span>
         <mat-icon>add_circle</mat-icon>
     </button>

@@ -23,7 +23,10 @@ export class BoardsMenuComponent {
 
     constructor(public boardsService: BoardService, private dialog: MatDialog, private router: Router) {}
 
-    onCreateNewBoard(): void {
+    onCreateNewBoard(event: MouseEvent): void {
+        event.stopPropagation();
+        event.preventDefault();
+
         this.dialog.open(CreateBoardDialogComponent, { closeOnNavigation: true });
     }
 
@@ -32,9 +35,6 @@ export class BoardsMenuComponent {
     }
 
     onShare(event: MouseEvent, board: Board): void {
-        event.stopPropagation();
-        event.preventDefault();
-
         this.dialog.open(ShareBoardDialogComponent, {
             closeOnNavigation: true,
             data: board,

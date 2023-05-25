@@ -121,10 +121,6 @@ export class ShareBoardDialogComponent extends FormMixin(BaseObject) {
         this.dialogRef.close(false);
     }
 
-    filterMyOptions(searchString: string) {
-        this.filter$.next(searchString);
-    }
-
     private get formValue(): ShareBoard {
         return {
             boardId: this.data.boardId,

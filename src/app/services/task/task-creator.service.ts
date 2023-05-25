@@ -29,7 +29,7 @@ export class TaskCreatorService {
     }
 
     edit(task: EditTask): void {
-        this.creatorTaskSource.next({
+        this.creatorTaskSource.next(<TaskB>{
             ...this.creatorTaskSource.value,
             ...task,
         });

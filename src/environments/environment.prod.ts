@@ -4,8 +4,8 @@ export const environment: Env = {
     production: true,
     apiUrl: 'https://localhost:5001',
     signalRHubs: {
-        Tasks: 'https://localhost:5001/hub/Task',
+        notifications: 'https://localhost:5001/notificationHub',
     },
     logUrl: 'https://localhost:5001/ClientLog/log',
-    authClientId: '912961596350-0pbhiqf40bpa8ubdvt3h9s2jjo261nt1.apps.googleusercontent.com',
+    authClientId: '912961596350-kegl1icmtodr5r6t5rhfeb7tf2o4vvde.apps.googleusercontent.com',
 };

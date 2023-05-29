@@ -1,7 +1,7 @@
 import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { UserService } from '@services/user.service';
+import { UserDataSource } from '@services/data-sources/user-data-source';
 
 @Component({
     selector: 'tm-user-avatar',
@@ -12,5 +12,5 @@ import { UserService } from '@services/user.service';
     imports: [NgIf, MatIconModule, AsyncPipe],
 })
 export class UserAvatarComponent {
-    constructor(public userService: UserService) {}
+    constructor(public userService: UserDataSource) {}
 }

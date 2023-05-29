@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
-import { CurrentBoardService } from '@services/board/current-board.service';
+import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { BoardComponent } from '@ui/board/board.component';
 import { PageRoutes } from 'app/app.routes';
 import { DestroyService } from 'app/helpers/destroy.service';
@@ -18,7 +18,7 @@ import { takeUntil } from 'rxjs';
 export default class BoardPageComponent implements OnInit {
     constructor(
         private router: Router,
-        private currentBoard: CurrentBoardService,
+        private currentBoard: CurrentBoardDataSource,
         private destroyed$: DestroyService
     ) {}
 
@@ -37,7 +37,7 @@ export default class BoardPageComponent implements OnInit {
 
     private navigateToLastBoard(): void {
         this.currentBoard
-            .currentBoard()
+            .getData()
             .pipe(takeUntil(this.destroyed$))
             .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
     }

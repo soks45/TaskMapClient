@@ -10,8 +10,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
 import { MessagesService } from '@services/messages.service';
-import { TaskCreatorService } from '@services/task/task-creator.service';
-import { TaskService } from '@services/task/task.service';
+import { TaskCreatorService } from '@ui/task-creator/task-creator.service';
+import { TasksService } from '@services/tasks.service';
 import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
 import { finalize } from 'rxjs/operators';
 
@@ -57,7 +57,7 @@ export class EditCardDialogComponent extends FormMixin(BaseObject) {
     constructor(
         private dialogRef: MatDialogRef<TaskB>,
         private formBuilder: FormBuilder,
-        private taskService: TaskService,
+        private taskService: TasksService,
         private messages: MessagesService,
         @Inject(MAT_DIALOG_DATA)
         private data: EditDialogData,

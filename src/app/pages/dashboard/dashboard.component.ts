@@ -9,8 +9,8 @@ import {
 } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { BoardService } from '@services/board/board.service';
-import { TaskService } from '@services/task/task.service';
+import { BoardsDataSource } from '@services/data-sources/boards.data-source';
+import { TasksService } from '@services/tasks.service';
 import { CardComponent } from '@ui/card/card.component';
 import { Board } from 'app/models/board';
 import { TaskB } from 'app/models/task-b';
@@ -34,10 +34,10 @@ export default class DashboardComponent implements OnInit {
     isLoading: boolean = false;
     readonly idPrefix = 'boardId-';
 
-    constructor(private boardService: BoardService, private tasks: TaskService) {}
+    constructor(private boardService: BoardsDataSource, private tasks: TasksService) {}
 
     ngOnInit(): void {
-        this.boards$ = this.boardService.get().pipe(
+        this.boards$ = this.boardService.getData().pipe(
             switchMap((boards) =>
                 combineLatest(
                     boards.map((board) =>

@@ -4,7 +4,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
-import { BoardService } from '@services/board/board.service';
+import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { CreateBoardDialogComponent } from '@ui/dialogs/create-board-dialog/create-board-dialog.component';
 import { ShareBoardDialogComponent } from '@ui/dialogs/share-board-dialog/share-board-dialog.component';
 import { PageRoutes } from 'app/app.routes';
@@ -21,7 +21,7 @@ import { Board } from 'app/models/board';
 export class BoardsMenuComponent {
     @ViewChild('boardsMenu') menu!: MatMenu;
 
-    constructor(public boardsService: BoardService, private dialog: MatDialog, private router: Router) {}
+    constructor(public boardsService: BoardsDataSource, private dialog: MatDialog, private router: Router) {}
 
     onCreateNewBoard(event: MouseEvent): void {
         event.stopPropagation();

@@ -1,5 +1,5 @@
 <label class="user-avatar">
-    <ng-container *ngIf="userService.getUser() | async as user">
+    <ng-container *ngIf="userService.getData() | async as user">
         <img [src]="user.avatar" alt="avatar" class="user-avatar__image" />
     </ng-container>
 </label>

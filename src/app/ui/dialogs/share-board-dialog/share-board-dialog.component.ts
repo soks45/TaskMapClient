@@ -7,23 +7,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { BoardService, ShareBoard } from '@services/board/board.service';
-import { UserService } from '@services/user.service';
+import { BoardsDataSource, ShareBoard } from '@services/data-sources/boards.data-source';
+import { UserDataSource } from '@services/data-sources/user-data-source';
+import { UsersDataSource } from '@services/data-sources/users-data-source';
 import { DestroyService } from 'app/helpers/destroy.service';
 import { AccessRights, Board } from 'app/models/board';
 import { ShortUser } from 'app/models/user';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import {
-    AsyncSubject,
-    debounceTime,
-    distinctUntilChanged,
-    Observable,
-    share,
-    startWith,
-    Subject,
-    takeUntil,
-    withLatestFrom,
-} from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, takeUntil, withLatestFrom } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 interface ShareBoardControls {
@@ -65,9 +56,10 @@ export class ShareBoardDialogComponent extends FormMixin(BaseObject) {
     constructor(
         @Inject(MAT_DIALOG_DATA) private data: Board,
         private fb: FormBuilder,
-        public userService: UserService,
+        public userDataSource: UserDataSource,
+        private usersDataSource: UsersDataSource,
         private destroyed$: DestroyService,
-        private boardService: BoardService,
+        private boardService: BoardsDataSource,
         private dialogRef: MatDialogRef<boolean>
     ) {
         super();
@@ -90,14 +82,8 @@ export class ShareBoardDialogComponent extends FormMixin(BaseObject) {
             debounceTime(1000),
             distinctUntilChanged(),
             withLatestFrom(
-                this.userService.getUsers().pipe(
-                    share<ShortUser[]>({
-                        connector: () => new AsyncSubject(),
-                        resetOnError: false,
-                        resetOnComplete: false,
-                        resetOnRefCountZero: false,
-                    }),
-                    withLatestFrom(this.userService.getUser()),
+                this.usersDataSource.getData().pipe(
+                    withLatestFrom(this.userDataSource.getData()),
                     map((value) => value[0].filter((user) => value[1].userId !== user.userId))
                 )
             ),

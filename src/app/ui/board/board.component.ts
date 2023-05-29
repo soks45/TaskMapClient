@@ -2,8 +2,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { CurrentBoardService } from '@services/board/current-board.service';
-import { TaskService } from '@services/task/task.service';
+import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
+import { TasksService } from '@services/tasks.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
 import { DestroyService } from 'app/helpers/destroy.service';
 import { TaskB } from 'app/models/task-b';
@@ -40,13 +40,13 @@ export class BoardComponent implements OnInit {
     boundaryClassName = 'board';
 
     constructor(
-        private taskService: TaskService,
-        private currentBoard: CurrentBoardService,
+        private taskService: TasksService,
+        private currentBoard: CurrentBoardDataSource,
         private destroyed$: DestroyService
     ) {}
 
     ngOnInit(): void {
-        this.tasks$ = this.currentBoard.currentBoard().pipe(
+        this.tasks$ = this.currentBoard.getData().pipe(
             switchMap((b) => this.taskService.get(b.boardId)),
             takeUntil(this.destroyed$)
         );

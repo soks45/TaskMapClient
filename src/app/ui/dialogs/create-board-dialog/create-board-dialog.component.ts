@@ -9,9 +9,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { FormMixin } from '@mixins/form.mixin';
 import { BaseObject } from '@mixins/mixins';
-import { BoardService } from '@services/board/board.service';
+import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { MessagesService } from '@services/messages.service';
-import { UserService } from '@services/user.service';
+import { UserDataSource } from '@services/data-sources/user-data-source';
 import { AccessRights, Board } from 'app/models/board';
 import { Observable, switchMap, take } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
@@ -48,8 +48,8 @@ export class CreateBoardDialogComponent extends FormMixin(BaseObject) {
         private dialogRef: MatDialogRef<boolean>,
         private formBuilder: FormBuilder,
         private messages: MessagesService,
-        private boardService: BoardService,
-        private userService: UserService
+        private boardService: BoardsDataSource,
+        private userService: UserDataSource
     ) {
         super();
 
@@ -86,7 +86,7 @@ export class CreateBoardDialogComponent extends FormMixin(BaseObject) {
     }
 
     private get formValue$(): Observable<Board> {
-        return this.userService.getUser().pipe(
+        return this.userService.getData().pipe(
             take(1),
             map((user) => ({
                 userId: user.userId,

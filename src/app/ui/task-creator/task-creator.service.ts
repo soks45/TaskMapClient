@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CurrentBoardService } from '@services/board/current-board.service';
+import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { Color, State, TaskB } from 'app/models/task-b';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
@@ -16,16 +16,17 @@ interface EditTask {
     state?: State;
 }
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class TaskCreatorService {
     readonly creatorTask$: Observable<TaskB>;
     private creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>(this.createNewDefaultTask());
 
-    constructor(private currentBoardService: CurrentBoardService) {
+    constructor(private currentBoardService: CurrentBoardDataSource) {
         this.creatorTask$ = this.creatorTaskSource.asObservable();
-        this.currentBoardService.currentBoard$.pipe(tap((board) => this.edit({ boardId: board.boardId }))).subscribe();
+        this.currentBoardService
+            .getData()
+            .pipe(tap((board) => this.edit({ boardId: board.boardId })))
+            .subscribe();
     }
 
     edit(task: EditTask): void {

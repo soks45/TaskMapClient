@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { AuthService } from '@services/auth.service';
-import { UserService } from '@services/user.service';
+import { UserDataSource } from '@services/data-sources/user-data-source';
 
 @Component({
     selector: 'tm-profile-menu',
@@ -17,7 +17,7 @@ export class ProfileMenuComponent {
     @ViewChild('profileMenu') menu!: MatMenu;
     selectedFiles?: FileList;
 
-    constructor(public authService: AuthService, public userService: UserService) {}
+    constructor(public authService: AuthService, public userService: UserDataSource) {}
 
     selectFile($event: any) {
         this.selectedFiles = $event.target.files;

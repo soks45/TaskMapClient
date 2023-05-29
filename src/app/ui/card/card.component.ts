@@ -3,7 +3,7 @@ import { DatePipe, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { TaskService } from '@services/task/task.service';
+import { TasksService } from '@services/tasks.service';
 import { EditCardDialogComponent, EditDialogData } from '@ui/dialogs/edit-card-dialog/edit-card-dialog.component';
 import { State, TaskB } from 'app/models/task-b';
 
@@ -20,7 +20,7 @@ export class CardComponent {
     @Input() fromCreator: boolean = false;
     readonly states = State;
 
-    constructor(private taskService: TaskService, private dialog: MatDialog) {}
+    constructor(private taskService: TasksService, private dialog: MatDialog) {}
 
     deleteTask(): void {
         if (this.fromCreator) {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject, shareReplay, switchMap, takeUntil } from 'rxjs';
+import { Observable, ReplaySubject, shareReplay, switchMap, take, takeUntil } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable()
@@ -33,7 +33,7 @@ export abstract class BaseDataSource<T> {
 
     private loadData(): Observable<T> {
         if (!this.cache$) {
-            this.cache$ = this.dataSource$.pipe(shareReplay({ bufferSize: 1, refCount: false }));
+            this.cache$ = this.dataSource$.pipe(shareReplay({ bufferSize: 1, refCount: false }), take(1));
         }
 
         return this.cache$.pipe(tap((data) => this.source$.next(data)));

@@ -4,12 +4,12 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TaskCreatorService } from '@ui/task-creator/task-creator.service';
+import { TaskCreatorDataSource } from '@ui/task-creator/task-creator.data-source';
 import { TasksService } from '@services/tasks.service';
 import { DestroyService } from 'app/helpers/destroy.service';
 import { Color, TaskB } from 'app/models/task-b';
 import { CardComponent } from 'app/ui/card/card.component';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -36,8 +36,8 @@ export class TaskCreatorComponent {
     colorType = Color;
     creatorTask$: Observable<TaskB>;
 
-    constructor(private taskService: TasksService, private taskCreator: TaskCreatorService) {
-        this.creatorTask$ = this.taskCreator.creatorTask$;
+    constructor(private taskService: TasksService, private taskCreator: TaskCreatorDataSource) {
+        this.creatorTask$ = this.taskCreator.getData().pipe(tap(console.log));
     }
 
     changeColor(color: Color): void {

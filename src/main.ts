@@ -71,7 +71,7 @@ bootstrapApplication(AppComponent, {
             provide: UNAUTH$_TOKEN,
             useFactory: (authService: AuthService) => authService.isAuthed$.pipe(filter((authed) => !authed)),
             deps: [AuthService],
-        }, // unauth events
+        },
         {
             provide: DataSourceContext,
             useFactory: (resetsOn$: Observable<void>, resetUntil$: DestroyService) =>

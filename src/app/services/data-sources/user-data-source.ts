@@ -10,7 +10,7 @@ import { Observable, tap } from 'rxjs';
     providedIn: 'root',
 })
 export class UserDataSource extends BaseDataSource<User> {
-    protected dataSource$ = this.http.get<User>(`${environment.apiUrl}/account/user`, {
+    protected dataSource$: Observable<User> = this.http.get<User>(`${environment.apiUrl}/account/user`, {
         withCredentials: true,
     });
 

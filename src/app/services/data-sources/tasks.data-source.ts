@@ -6,7 +6,7 @@ import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
 
 export class TasksDataSource extends BaseDataSource<TaskB[]> {
-    protected dataSource$ = this.http.get<TaskB[]>(`${environment.apiUrl}/task/${this.boardId}`, {
+    protected dataSource$: Observable<TaskB[]> = this.http.get<TaskB[]>(`${environment.apiUrl}/task/${this.boardId}`, {
         withCredentials: true,
     });
 

@@ -9,7 +9,7 @@ import { Observable, switchMap, tap } from 'rxjs';
     providedIn: 'root',
 })
 export class CurrentBoardDataSource extends BaseDataSource<Board> {
-    protected dataSource$ = this.http
+    protected dataSource$: Observable<Board> = this.http
         .get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true })
         .pipe(switchMap((id) => this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true })));
 

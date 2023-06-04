@@ -17,7 +17,9 @@ interface EditTask {
     state?: State;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class TaskCreatorService {
     readonly creatorTask$: Observable<TaskB>;
     private creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>(this.createNewDefaultTask());

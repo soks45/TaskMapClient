@@ -27,7 +27,7 @@ import { finalize } from 'rxjs/operators';
     ],
     standalone: true,
     imports: [MatButtonModule, CdkDragHandle, MatIconModule, NgIf, CardComponent, AsyncPipe],
-    providers: [TaskCreatorService, DestroyService],
+    providers: [DestroyService],
 })
 export class TaskCreatorComponent {
     @Input() newPos!: Point;

@@ -16,7 +16,7 @@ export interface ShareBoard {
     providedIn: 'root',
 })
 export class BoardsDataSource extends BaseDataSource<Board[]> {
-    protected dataSource$ = this.http.get<Board[]>(`${environment.apiUrl}/board`, {
+    protected dataSource$: Observable<Board[]> = this.http.get<Board[]>(`${environment.apiUrl}/board`, {
         withCredentials: true,
     });
 

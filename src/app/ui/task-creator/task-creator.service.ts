@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
+import { DestroyService } from 'app/helpers/destroy.service';
 import { Color, State, TaskB } from 'app/models/task-b';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, takeUntil, tap } from 'rxjs';
 
 interface EditTask {
     taskId?: number;
@@ -21,11 +22,14 @@ export class TaskCreatorService {
     readonly creatorTask$: Observable<TaskB>;
     private creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>(this.createNewDefaultTask());
 
-    constructor(private currentBoardService: CurrentBoardDataSource) {
+    constructor(private currentBoardService: CurrentBoardDataSource, private destroyed$: DestroyService) {
         this.creatorTask$ = this.creatorTaskSource.asObservable();
         this.currentBoardService
             .getData()
-            .pipe(tap((board) => this.edit({ boardId: board.boardId })))
+            .pipe(
+                tap((board) => this.edit({ boardId: board.boardId })),
+                takeUntil(destroyed$)
+            )
             .subscribe();
     }
 

@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskCreatorService } from '@ui/task-creator/task-creator.service';
 import { TasksService } from '@services/tasks.service';
+import { DestroyService } from 'app/helpers/destroy.service';
 import { Color, TaskB } from 'app/models/task-b';
 import { CardComponent } from 'app/ui/card/card.component';
 import { Observable } from 'rxjs';
@@ -26,7 +27,7 @@ import { finalize } from 'rxjs/operators';
     ],
     standalone: true,
     imports: [MatButtonModule, CdkDragHandle, MatIconModule, NgIf, CardComponent, AsyncPipe],
-    providers: [TaskCreatorService],
+    providers: [TaskCreatorService, DestroyService],
 })
 export class TaskCreatorComponent {
     @Input() newPos!: Point;

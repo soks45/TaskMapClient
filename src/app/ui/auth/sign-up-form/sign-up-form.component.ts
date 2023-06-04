@@ -87,7 +87,7 @@ export class SignUpFormComponent extends FormMixin(BaseObject) {
         this.isLoading = true;
 
         const value = this.formGroup.value;
-        const { firstName, lastName, username }: InputUser = value as InputUser;
+        const { firstName, lastName }: InputUser = value as InputUser;
         const password = value['passwords']!.passwordConfirm!;
 
         this.authService
@@ -95,9 +95,11 @@ export class SignUpFormComponent extends FormMixin(BaseObject) {
                 {
                     firstName,
                     lastName,
-                    username,
                 },
-                password
+                {
+                    username: value.username!,
+                    password,
+                }
             )
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe(() => this.router.navigateByUrl(defaultPageRoute));

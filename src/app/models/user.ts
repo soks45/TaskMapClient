@@ -1,5 +1,4 @@
 export interface InputUser {
-    username: string;
     firstName: string;
     lastName: string;
 }
@@ -13,5 +12,4 @@ export interface ShortUser {
 export interface User extends ShortUser {
     firstName: string;
     lastName: string;
-    lastBoardId: number;
 }

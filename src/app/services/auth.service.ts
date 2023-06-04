@@ -28,17 +28,18 @@ export class AuthService {
     private accessTokenKey = 'K@#:@UC';
     private refreshTokenKey = 'a;kldw@#)1';
 
-    readonly isAuthed$ = this.isAuthedSource$.asObservable().pipe(distinctUntilChanged());
+    readonly isAuthed$: Observable<boolean> = this.isAuthedSource$.asObservable().pipe(distinctUntilChanged());
 
     constructor(private router: Router, private http: HttpClient) {}
 
-    signup(user: InputUser, password: string): Observable<LoginResult> {
+    signup(user: InputUser, credentials: Credentials): Observable<LoginResult> {
         const userId = 0;
         return this.http
             .post<LoginResult>(`${environment.apiUrl}/account/register`, {
                 userId,
                 ...user,
-                password: Md5.init(password),
+                username: credentials.username,
+                password: Md5.init(credentials.password),
             })
             .pipe(tap((x: LoginResult) => this.authorize(x)));
     }

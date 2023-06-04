@@ -8,6 +8,8 @@ export class DataSourceContext {
 }
 
 export abstract class BaseDataSource<T> {
+    protected abstract dataSource$: Observable<T>;
+
     private cache$?: Observable<T>;
     private source$: ReplaySubject<T> = new ReplaySubject<T>(1);
     private content$: Observable<T> = this.source$.asObservable();
@@ -15,8 +17,6 @@ export abstract class BaseDataSource<T> {
     protected constructor(private context: DataSourceContext) {
         this.context.resetsOn$.pipe(takeUntil(this.context.resetUntil$)).subscribe(() => this.reset());
     }
-
-    protected abstract dataSource$: Observable<T>;
 
     getData(): Observable<T> {
         return this.loadData().pipe(switchMap(() => this.content$));

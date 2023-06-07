@@ -5,15 +5,16 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     Input,
     Output,
     ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DragViewService } from '@ui/adaptive-drag/drag-view.service';
-import { DestroyService } from 'app/helpers/destroy.service';
-import { filter, merge, Subject, take, takeUntil, tap } from 'rxjs';
+import { filter, merge, Subject, take, tap } from 'rxjs';
 
 export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
 
@@ -24,7 +25,7 @@ export type InitItemPosition = (boundarySize: Point, itemSize: Point) => Point;
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [CdkDrag, NgIf],
-    providers: [DragViewService, DestroyService],
+    providers: [DragViewService],
 })
 export class AdaptiveDragComponent implements AfterViewInit {
     @Input() initItemPosition!: InitItemPosition;
@@ -32,30 +33,16 @@ export class AdaptiveDragComponent implements AfterViewInit {
     @ViewChild('dragItem') dragItem?: ElementRef;
     @Output() newPosition: EventEmitter<Point> = new EventEmitter<Point>();
     isProtectingDragAction: boolean = false;
-    boundarySize: Point = {
-        x: 0,
-        y: 0,
-    };
-    itemSize: Point = {
-        x: 0,
-        y: 0,
-    };
-    absolutePosition: Point = {
-        x: 0,
-        y: 0,
-    };
-    relativePosition: Point = {
-        x: 0,
-        y: 0,
-    };
+
+    boundarySize: Point = this.getPoint();
+    itemSize: Point = this.getPoint();
+    absolutePosition: Point = this.getPoint();
+    relativePosition: Point = this.getPoint();
+
     resizesBoundary$: Subject<void> = new Subject<void>();
     resizesItem$: Subject<void> = new Subject<void>();
 
-    constructor(
-        private dragView: DragViewService,
-        private cdr: ChangeDetectorRef,
-        private destroyed$: DestroyService
-    ) {}
+    constructor(private dragView: DragViewService, private cdr: ChangeDetectorRef, private dr: DestroyRef) {}
 
     ngAfterViewInit(): void {
         this.observeResizes(this.dragItem, (v) => {
@@ -71,7 +58,7 @@ export class AdaptiveDragComponent implements AfterViewInit {
         const rBoundary$ = this.resizesBoundary$.pipe(
             filter(() => this.isInited),
             tap(() => this.setAbsolutePosition()),
-            takeUntil(this.destroyed$)
+            takeUntilDestroyed(this.dr)
         );
 
         rBoundary$.subscribe();
@@ -79,7 +66,7 @@ export class AdaptiveDragComponent implements AfterViewInit {
         const rItem$ = this.resizesItem$.pipe(
             filter(() => this.isInited),
             tap(() => this.setRelativePosition()),
-            takeUntil(this.destroyed$)
+            takeUntilDestroyed(this.dr)
         );
 
         rItem$.subscribe();
@@ -91,7 +78,7 @@ export class AdaptiveDragComponent implements AfterViewInit {
                     this.relativePosition = this.initItemPosition(this.boundarySize, this.itemSize);
                     this.setAbsolutePosition();
                 }),
-                takeUntil(this.destroyed$)
+                takeUntilDestroyed(this.dr)
             )
             .subscribe();
     }
@@ -116,7 +103,7 @@ export class AdaptiveDragComponent implements AfterViewInit {
         const HTMLElement = element instanceof ElementRef<HTMLElement> ? element.nativeElement : element;
         const observer = new ResizeObserver(callback);
         observer.observe(HTMLElement as Element);
-        this.destroyed$.subscribe(() => observer.unobserve(HTMLElement as Element));
+        this.dr.onDestroy(() => observer.unobserve(HTMLElement as Element));
     }
 
     private setBoundarySize(rect: DOMRectReadOnly): void {
@@ -155,5 +142,12 @@ export class AdaptiveDragComponent implements AfterViewInit {
 
     private get isInited(): boolean {
         return this.boundarySize.x !== 0 && this.boundarySize.y !== 0 && this.itemSize.x !== 0 && this.itemSize.y !== 0;
+    }
+
+    private getPoint(): Point {
+        return {
+            x: 0,
+            y: 0,
+        };
     }
 }

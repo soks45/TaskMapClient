@@ -1,6 +1,7 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
     APP_INITIALIZER,
+    DestroyRef,
     enableProdMode,
     ErrorHandler,
     importProvidersFrom,
@@ -30,7 +31,6 @@ import { appInitializer } from 'app/app-initializer';
 import { AppComponent } from 'app/app.component';
 import { APP_ROUTES, PageRoutes } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
-import { DestroyService } from 'app/helpers/destroy.service';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 import { filter, Observable } from 'rxjs';
 
@@ -66,7 +66,6 @@ bootstrapApplication(AppComponent, {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler,
         },
-        DestroyService,
         {
             provide: UNAUTH$_TOKEN,
             useFactory: (authService: AuthService) => authService.isAuthed$.pipe(filter((authed) => !authed)),
@@ -74,9 +73,8 @@ bootstrapApplication(AppComponent, {
         },
         {
             provide: DataSourceContext,
-            useFactory: (resetsOn$: Observable<void>, resetUntil$: DestroyService) =>
-                new DataSourceContext(resetsOn$, resetUntil$),
-            deps: [UNAUTH$_TOKEN, DestroyService],
+            useFactory: (resetsOn$: Observable<void>, dr: DestroyRef) => new DataSourceContext(resetsOn$, dr),
+            deps: [UNAUTH$_TOKEN, DestroyRef],
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations(),

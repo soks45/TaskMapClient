@@ -1,13 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { TasksService } from '@services/tasks.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
-import { DestroyService } from 'app/helpers/destroy.service';
 import { TaskB } from 'app/models/task-b';
-import { Observable, switchMap, takeUntil } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { AdaptiveDragComponent } from '../adaptive-drag/adaptive-drag.component';
 import { CardComponent } from '../card/card.component';
 import { TaskCreatorComponent } from '../task-creator/task-creator.component';
@@ -26,9 +26,8 @@ import { TaskCreatorComponent } from '../task-creator/task-creator.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [NgFor, AdaptiveDragComponent, CardComponent, TaskCreatorComponent, AsyncPipe],
-    providers: [DestroyService],
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent {
     @Input()
     set id(boardId: string) {
         if (boardId && isFinite(Number(boardId)) && !isNaN(Number(boardId))) {
@@ -39,16 +38,10 @@ export class BoardComponent implements OnInit {
     tasks$?: Observable<TaskB[]>;
     boundaryClassName = 'board';
 
-    constructor(
-        private taskService: TasksService,
-        private currentBoard: CurrentBoardDataSource,
-        private destroyed$: DestroyService
-    ) {}
-
-    ngOnInit(): void {
+    constructor(private taskService: TasksService, private currentBoard: CurrentBoardDataSource) {
         this.tasks$ = this.currentBoard.getData().pipe(
             switchMap((b) => this.taskService.get(b.boardId)),
-            takeUntil(this.destroyed$)
+            takeUntilDestroyed()
         );
     }
 

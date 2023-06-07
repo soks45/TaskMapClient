@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { BoardComponent } from '@ui/board/board.component';
 import { PageRoutes } from 'app/app.routes';
-import { DestroyService } from 'app/helpers/destroy.service';
-import { takeUntil } from 'rxjs';
 
 @Component({
     selector: 'tm-board-page',
@@ -13,14 +12,9 @@ import { takeUntil } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [BoardComponent, RouterOutlet, RouterLink],
-    providers: [DestroyService],
 })
 export default class BoardPageComponent implements OnInit {
-    constructor(
-        private router: Router,
-        private currentBoard: CurrentBoardDataSource,
-        private destroyed$: DestroyService
-    ) {}
+    constructor(private router: Router, private currentBoard: CurrentBoardDataSource, private dr: DestroyRef) {}
 
     ngOnInit(): void {
         const url = this.router.routerState.snapshot.url;
@@ -38,7 +32,7 @@ export default class BoardPageComponent implements OnInit {
     private navigateToLastBoard(): void {
         this.currentBoard
             .getData()
-            .pipe(takeUntil(this.destroyed$))
+            .pipe(takeUntilDestroyed(this.dr))
             .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
     }
 }

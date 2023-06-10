@@ -82,7 +82,7 @@ bootstrapApplication(AppComponent, {
             APP_ROUTES,
             withPreloading(PreloadAllModules),
             withComponentInputBinding(),
-            withRouterConfig({ onSameUrlNavigation: 'reload', paramsInheritanceStrategy: 'always' }),
+            withRouterConfig({ onSameUrlNavigation: 'reload' }),
             withNavigationErrorHandler(() => inject(Router).navigate([PageRoutes.notFoundPageRoute]))
         ),
     ],

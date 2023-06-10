@@ -51,7 +51,7 @@ export class GoogleAuthBtnComponent implements OnInit {
         this.ngZone.run(() =>
             this.authService
                 .loginWithOAuth({ idToken: response.credential })
-                .subscribe(() => () => this.router.navigateByUrl(defaultPageRoute))
+                .subscribe(() => this.router.navigateByUrl(defaultPageRoute))
         );
     }
 }

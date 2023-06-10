@@ -8,7 +8,6 @@ import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-
 import { TasksService } from '@services/tasks.service';
 import { Color, TaskB } from 'app/models/task-b';
 import { CardComponent } from 'app/ui/card/card.component';
-import { Observable } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -32,11 +31,8 @@ export class TaskCreatorComponent {
     isLoading: boolean = false;
     isShowing: boolean = true;
     colorType = Color;
-    creatorTask$: Observable<TaskB>;
 
-    constructor(private taskService: TasksService, private taskCreator: TaskCreatorDataSource) {
-        this.creatorTask$ = this.taskCreator.getData();
-    }
+    constructor(private taskService: TasksService, public taskCreator: TaskCreatorDataSource) {}
 
     changeColor(color: Color): void {
         this.taskCreator.edit({ color: color });

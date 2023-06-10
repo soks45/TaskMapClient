@@ -6,7 +6,7 @@
         </button>
     </div>
     <div class="task-creator__content" *ngIf="isShowing" @smoothAppearance>
-        <ng-container *ngIf="creatorTask$ | async as task">
+        <ng-container *ngIf="taskCreator.getData() | async as task">
             <div class="task-creator__card">
                 <tm-card [task]="task" [fromCreator]="true"></tm-card>
             </div>

@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
+import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
 import { DataSourceContext } from '@services/data-sources/base.data-source';
 import { TasksDataSource } from '@services/data-sources/tasks.data-source';
@@ -44,7 +45,13 @@ export class TasksService {
 
     moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
         return this.http
-            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {})
+            .put<void>(
+                `${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`,
+                {},
+                {
+                    headers: boardGroupHeader(),
+                }
+            )
             .pipe(
                 tap(() =>
                     boardId !== newBoardId

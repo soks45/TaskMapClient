@@ -121,7 +121,7 @@ export class AuthService {
         return expires.getTime() - Date.now();
     }
 
-    private startTokenTimer() {
+    private startTokenTimer(): void {
         const timeout = this.getTokenRemainingTime();
         this.timer = of(true)
             .pipe(

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { BoardComponent } from '@ui/board/board.component';
 import { PageRoutes } from 'app/app.routes';
@@ -14,14 +14,7 @@ import { PageRoutes } from 'app/app.routes';
     imports: [BoardComponent, RouterOutlet, RouterLink],
 })
 export default class BoardPageComponent implements OnInit {
-    constructor(
-        private router: Router,
-        private currentBoard: CurrentBoardDataSource,
-        private dr: DestroyRef,
-        private route: ActivatedRoute
-    ) {
-        this.route.fragment.subscribe(console.log);
-    }
+    constructor(private router: Router, private currentBoard: CurrentBoardDataSource, private dr: DestroyRef) {}
 
     ngOnInit(): void {
         const url = this.router.routerState.snapshot.url;

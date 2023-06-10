@@ -23,6 +23,10 @@ export abstract class BaseDataSource<T> {
         return this.loadData().pipe(switchMap(() => this.content$));
     }
 
+    lastValue(): Observable<T> {
+        return this.getData().pipe(take(1));
+    }
+
     reload(): void {
         this.reset();
         this.loadData().subscribe();

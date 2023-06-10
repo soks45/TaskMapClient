@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" class="edit-card-dialog">
+<form [formGroup]="formGroup" class="edit-card-dialog" tmValidateForm (validatedSubmit)='onSubmit($event)'>
     <header mat-dialog-title>
         <h2 *ngIf="isNew; else edit">Create New Task</h2>
         <ng-template #edit>
@@ -32,7 +32,7 @@
         </mat-form-field>
     </div>
     <div mat-dialog-actions class="edit-card-dialog__actions" [align]="'end'">
-        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+        <button mat-raised-button color="primary" type='submit'>Submit</button>
         <button mat-stroked-button (click)="onCancel()">Cancel</button>
     </div>
 </form>

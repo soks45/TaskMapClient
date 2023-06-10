@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" class="share-board-dialog">
+<form [formGroup]="formGroup" class="share-board-dialog" tmValidateForm (validatedSubmit)='onSubmit($event)'>
     <header mat-dialog-title>
         <h2>Share Board</h2>
     </header>
@@ -28,7 +28,7 @@
         </mat-form-field>
     </div>
     <div mat-dialog-actions [align]="'end'">
-        <button mat-raised-button color="primary" (click)="onSubmit()">Share</button>
+        <button mat-raised-button color="primary" type='submit'>Share</button>
         <button mat-stroked-button (click)="onCancel()">Cancel</button>
     </div>
 </form>

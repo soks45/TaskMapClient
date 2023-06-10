@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { BaseForm } from '@mixins/form';
+import { ValidateFormDirective } from '@directives/validate-form.directive';
 import { AuthService, Credentials } from '@services/auth.service';
 import { defaultPageRoute } from 'app/app.routes';
 import { finalize } from 'rxjs/operators';
@@ -30,16 +30,15 @@ interface LoginForm {
         NgIf,
         MatButtonModule,
         MatIconModule,
+        ValidateFormDirective,
     ],
 })
-export class SignInFormComponent extends BaseForm {
+export class SignInFormComponent {
     formGroup: FormGroup<LoginForm>;
     isLoading = false;
     hide = true;
 
     constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
-        super();
-
         this.formGroup = this.fb.group<LoginForm>({
             username: new FormControl('', {
                 nonNullable: true,
@@ -52,15 +51,11 @@ export class SignInFormComponent extends BaseForm {
         });
     }
 
-    onSubmit(): void {
-        if (!this.checkForm()) {
-            return;
-        }
-
+    onSubmit(value: Credentials): void {
         this.isLoading = true;
 
         this.authService
-            .login(this.formGroup.value as Credentials)
+            .login(value)
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe(() => this.router.navigateByUrl(defaultPageRoute));
     }

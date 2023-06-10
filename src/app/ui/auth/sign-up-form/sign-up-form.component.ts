@@ -6,14 +6,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { BaseForm } from '@mixins/form';
+import { ValidateFormDirective } from '@directives/validate-form.directive';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
 import { defaultPageRoute, PageRoutes } from 'app/app.routes';
-import { InputUser } from 'app/models/user';
 import { finalize } from 'rxjs/operators';
 
-interface SignUpForm {
+interface SignUpValue {
+    firstName: string;
+    lastName: string;
+    username: string;
+    passwords: {
+        password: string;
+        passwordConfirm: string;
+    };
+}
+
+interface SignUpFormControls {
     firstName: FormControl<string>;
     lastName: FormControl<string>;
     username: FormControl<string>;
@@ -38,18 +47,17 @@ interface SignUpForm {
         MatButtonModule,
         MatIconModule,
         RouterLink,
+        ValidateFormDirective,
     ],
 })
-export class SignUpFormComponent extends BaseForm {
+export class SignUpFormComponent {
     readonly loginUrl: string = '/' + PageRoutes.authPageRoute;
     isLoading = false;
     hide = true;
-    formGroup: FormGroup<SignUpForm>;
+    formGroup: FormGroup<SignUpFormControls>;
 
     constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
-        super();
-
-        this.formGroup = this.formBuilder.group<SignUpForm>({
+        this.formGroup = this.formBuilder.group<SignUpFormControls>({
             firstName: new FormControl('', {
                 nonNullable: true,
                 validators: [Validators.required, Validators.maxLength(255)],
@@ -78,28 +86,14 @@ export class SignUpFormComponent extends BaseForm {
         });
     }
 
-    onSubmit(): void {
-        if (!this.checkForm()) {
-            return;
-        }
-
+    onSubmit(value: SignUpValue): void {
         this.isLoading = true;
 
-        const value = this.formGroup.value;
-        const { firstName, lastName }: InputUser = value as InputUser;
-        const password = value['passwords']!.passwordConfirm!;
+        const { firstName, lastName, username } = value;
+        const password = value.passwords.passwordConfirm;
 
         this.authService
-            .signup(
-                {
-                    firstName,
-                    lastName,
-                },
-                {
-                    username: value.username!,
-                    password,
-                }
-            )
+            .signup({ firstName, lastName }, { username, password })
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe(() => this.router.navigateByUrl(defaultPageRoute));
     }

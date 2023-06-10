@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" class="create-board-dialog">
+<form [formGroup]="formGroup" class="create-board-dialog" tmValidateForm (validatedSubmit)='onSubmit($event)'>
     <header mat-dialog-title>
         <h2>New Board</h2>
     </header>
@@ -15,7 +15,7 @@
     </div>
 
     <div mat-dialog-actions class="create-board-dialog__actions" [align]="'end'">
-        <button mat-raised-button color="primary" (click)="onSubmit()">Submit</button>
+        <button mat-raised-button color="primary" type='submit'>Submit</button>
         <button mat-stroked-button (click)="onCancel()">Cancel</button>
     </div>
 </form>

@@ -7,15 +7,21 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BaseForm } from '@mixins/form';
+import { ValidateFormDirective } from '@directives/validate-form.directive';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { MessagesService } from '@services/messages.service';
 import { UserDataSource } from '@services/data-sources/user-data-source';
 import { AccessRights, Board } from 'app/models/board';
-import { Observable, switchMap, take } from 'rxjs';
+import { User } from 'app/models/user';
+import { switchMap, take } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 interface CreateBoard {
+    boardName: string;
+    boardDescription: string;
+}
+
+interface CreateBoardControls {
     boardName: FormControl<string>;
     boardDescription: FormControl<string>;
 }
@@ -32,14 +38,15 @@ interface CreateBoard {
         MatOptionModule,
         MatSelectModule,
         ReactiveFormsModule,
+        ValidateFormDirective,
     ],
     templateUrl: './create-board-dialog.component.html',
     styleUrls: ['./create-board-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateBoardDialogComponent extends BaseForm {
+export class CreateBoardDialogComponent {
     isLoading: boolean = false;
-    formGroup: FormGroup<CreateBoard>;
+    formGroup: FormGroup<CreateBoardControls>;
 
     userId = -1;
 
@@ -50,9 +57,7 @@ export class CreateBoardDialogComponent extends BaseForm {
         private boardService: BoardsDataSource,
         private userService: UserDataSource
     ) {
-        super();
-
-        this.formGroup = this.formBuilder.group({
+        this.formGroup = this.formBuilder.group<CreateBoardControls>({
             boardName: new FormControl('new board', {
                 nonNullable: true,
                 validators: [Validators.required],
@@ -64,16 +69,24 @@ export class CreateBoardDialogComponent extends BaseForm {
         });
     }
 
-    onSubmit(): void {
-        if (!this.checkForm()) {
-            this.messages.error('You have some errors in form');
-            return;
-        }
-
+    onSubmit(value: CreateBoard): void {
         this.isLoading = true;
 
-        this.formValue$
+        this.userService
+            .getData()
             .pipe(
+                take(1),
+                map(
+                    (user: User) =>
+                        <Board>{
+                            userId: user.userId,
+                            boardId: 0,
+                            accessRights: AccessRights.administrating,
+                            isShared: true,
+                            createdDate: new Date().toString(),
+                            ...value,
+                        }
+                ),
                 switchMap((board) => this.boardService.add(board)),
                 finalize(() => (this.isLoading = false))
             )
@@ -82,19 +95,5 @@ export class CreateBoardDialogComponent extends BaseForm {
 
     onCancel(): void {
         this.dialogRef.close(false);
-    }
-
-    private get formValue$(): Observable<Board> {
-        return this.userService.getData().pipe(
-            take(1),
-            map((user) => ({
-                userId: user.userId,
-                boardId: 0,
-                accessRights: AccessRights.administrating,
-                isShared: true,
-                createdDate: new Date().toString(),
-                ...this.formGroup.getRawValue(),
-            }))
-        );
     }
 }

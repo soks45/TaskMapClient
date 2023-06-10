@@ -1,4 +1,4 @@
-<form [formGroup]="formGroup" class="sign-up-form std-form">
+<form [formGroup]="formGroup" tmValidateForm class="sign-up-form std-form" (validatedSubmit)='onSubmit($event)'>
     <div class="std-form__content">
         <mat-form-field appearance="outline" class="std-form__form-field">
             <mat-label>First name</mat-label>
@@ -120,7 +120,7 @@
     <div class="std-form__actions">
         <div class="sign-up-form__submit-btn-block">
             <div class="std-form__submit-btn-wrapper">
-                <button class="std-form__submit-btn" (click)="onSubmit()">Sign Up</button>
+                <button class="std-form__submit-btn" type='submit'>Sign Up</button>
             </div>
             <a class="std-form__submit-btn-question" [routerLink]="loginUrl">I already have an account</a>
         </div>

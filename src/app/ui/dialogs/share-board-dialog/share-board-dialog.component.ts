@@ -6,8 +6,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { BaseForm } from '@mixins/form';
-import { BoardsDataSource, ShareBoard } from '@services/data-sources/boards.data-source';
+import { ValidateFormDirective } from '@directives/validate-form.directive';
+import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { UserDataSource } from '@services/data-sources/user-data-source';
 import { UsersDataSource } from '@services/data-sources/users-data-source';
 import { AccessRights, Board } from 'app/models/board';
@@ -15,6 +15,11 @@ import { ShortUser } from 'app/models/user';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, withLatestFrom } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
+
+interface ShareBoardValue {
+    accessRights: AccessRights;
+    userIdList: number[];
+}
 
 interface ShareBoardControls {
     accessRights: FormControl<AccessRights>;
@@ -36,12 +41,13 @@ interface ShareBoardControls {
         NgIf,
         AsyncPipe,
         NgxMatSelectSearchModule,
+        ValidateFormDirective,
     ],
     templateUrl: './share-board-dialog.component.html',
     styleUrls: ['./share-board-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareBoardDialogComponent extends BaseForm {
+export class ShareBoardDialogComponent {
     accessRights = Object.values(AccessRights);
     isLoading = false;
 
@@ -59,8 +65,6 @@ export class ShareBoardDialogComponent extends BaseForm {
         private boardService: BoardsDataSource,
         private dialogRef: MatDialogRef<boolean>
     ) {
-        super();
-
         this.formGroup = this.fb.group({
             accessRights: new FormControl(AccessRights.readOnly, {
                 nonNullable: true,
@@ -89,25 +93,17 @@ export class ShareBoardDialogComponent extends BaseForm {
         );
     }
 
-    onSubmit(): void {
-        if (!this.checkForm()) {
-            return;
-        }
-
+    onSubmit(value: ShareBoardValue): void {
         this.boardService
-            .share(this.formValue)
+            .share({
+                boardId: this.data.boardId,
+                ...value,
+            })
             .pipe(finalize(() => (this.isLoading = false)))
             .subscribe(() => this.dialogRef.close(true));
     }
 
     onCancel(): void {
         this.dialogRef.close(false);
-    }
-
-    private get formValue(): ShareBoard {
-        return {
-            boardId: this.data.boardId,
-            ...this.formGroup.value,
-        } as ShareBoard;
     }
 }

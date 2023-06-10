@@ -7,7 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { BaseForm } from '@mixins/form';
+import { ValidateFormDirective } from '@directives/validate-form.directive';
 import { MessagesService } from '@services/messages.service';
 import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-source';
 import { TasksService } from '@services/tasks.service';
@@ -18,6 +18,13 @@ export interface EditDialogData {
     fromCreator: boolean;
     isAuthed: boolean;
     task: TaskB;
+}
+
+interface EditCard {
+    taskLabel: string;
+    taskText: string;
+    color: Color;
+    state: State;
 }
 
 interface EditCardForm {
@@ -44,9 +51,10 @@ interface EditCardForm {
         NgFor,
         MatOptionModule,
         MatButtonModule,
+        ValidateFormDirective,
     ],
 })
-export class EditCardDialogComponent extends BaseForm {
+export class EditCardDialogComponent {
     isNew = false;
     Colors = Colors;
     States = States;
@@ -62,7 +70,6 @@ export class EditCardDialogComponent extends BaseForm {
         private data: EditDialogData,
         private taskCreator: TaskCreatorDataSource
     ) {
-        super();
         if (this.data.fromCreator) {
             this.isNew = true;
         }
@@ -89,14 +96,14 @@ export class EditCardDialogComponent extends BaseForm {
         this.formGroup.patchValue(this.data.task);
     }
 
-    onSubmit(): void {
-        if (!this.checkForm()) {
-            this.messages.error('You have some errors in form');
-            return;
-        }
+    onSubmit(value: EditCard): void {
+        const formValue: TaskB = {
+            ...this.data.task,
+            ...value,
+        };
 
         if (this.data.fromCreator) {
-            this.taskCreator.edit(this.formValue);
+            this.taskCreator.edit(formValue);
             this.dialogRef.close();
             return;
         }
@@ -104,7 +111,7 @@ export class EditCardDialogComponent extends BaseForm {
         if (this.data.isAuthed) {
             this.isLoading = true;
             this.taskService
-                .edit(this.formValue)
+                .edit(formValue)
                 .pipe(finalize(() => (this.isLoading = false)))
                 .subscribe(() => this.dialogRef.close());
         }
@@ -112,12 +119,5 @@ export class EditCardDialogComponent extends BaseForm {
 
     onCancel(): void {
         this.dialogRef.close(false);
-    }
-
-    private get formValue(): TaskB {
-        return {
-            ...this.data.task,
-            ...this.formGroup.value,
-        };
     }
 }

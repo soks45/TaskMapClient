@@ -7,8 +7,7 @@ import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject } from '@mixins/mixins';
+import { BaseForm } from '@mixins/form';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { MessagesService } from '@services/messages.service';
 import { UserDataSource } from '@services/data-sources/user-data-source';
@@ -38,7 +37,7 @@ interface CreateBoard {
     styleUrls: ['./create-board-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreateBoardDialogComponent extends FormMixin(BaseObject) {
+export class CreateBoardDialogComponent extends BaseForm {
     isLoading: boolean = false;
     formGroup: FormGroup<CreateBoard>;
 

@@ -6,8 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject } from '@mixins/mixins';
+import { BaseForm } from '@mixins/form';
 import { AuthService, Credentials } from '@services/auth.service';
 import { defaultPageRoute } from 'app/app.routes';
 import { finalize } from 'rxjs/operators';
@@ -33,7 +32,7 @@ interface LoginForm {
         MatIconModule,
     ],
 })
-export class SignInFormComponent extends FormMixin(BaseObject) {
+export class SignInFormComponent extends BaseForm {
     formGroup: FormGroup<LoginForm>;
     isLoading = false;
     hide = true;

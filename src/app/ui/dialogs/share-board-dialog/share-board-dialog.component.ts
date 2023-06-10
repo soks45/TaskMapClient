@@ -6,8 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject } from '@mixins/mixins';
+import { BaseForm } from '@mixins/form';
 import { BoardsDataSource, ShareBoard } from '@services/data-sources/boards.data-source';
 import { UserDataSource } from '@services/data-sources/user-data-source';
 import { UsersDataSource } from '@services/data-sources/users-data-source';
@@ -42,7 +41,7 @@ interface ShareBoardControls {
     styleUrls: ['./share-board-dialog.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareBoardDialogComponent extends FormMixin(BaseObject) {
+export class ShareBoardDialogComponent extends BaseForm {
     accessRights = Object.values(AccessRights);
     isLoading = false;
 

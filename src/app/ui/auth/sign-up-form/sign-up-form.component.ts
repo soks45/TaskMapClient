@@ -6,8 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject } from '@mixins/mixins';
+import { BaseForm } from '@mixins/form';
 import { AuthService } from '@services/auth.service';
 import { CustomValidators } from '@validators/custom-validators';
 import { defaultPageRoute, PageRoutes } from 'app/app.routes';
@@ -41,7 +40,7 @@ interface SignUpForm {
         RouterLink,
     ],
 })
-export class SignUpFormComponent extends FormMixin(BaseObject) {
+export class SignUpFormComponent extends BaseForm {
     readonly loginUrl: string = '/' + PageRoutes.authPageRoute;
     isLoading = false;
     hide = true;

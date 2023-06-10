@@ -7,8 +7,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { FormMixin } from '@mixins/form.mixin';
-import { BaseObject } from '@mixins/mixins';
+import { BaseForm } from '@mixins/form';
 import { MessagesService } from '@services/messages.service';
 import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-source';
 import { TasksService } from '@services/tasks.service';
@@ -47,7 +46,7 @@ interface EditCardForm {
         MatButtonModule,
     ],
 })
-export class EditCardDialogComponent extends FormMixin(BaseObject) {
+export class EditCardDialogComponent extends BaseForm {
     isNew = false;
     Colors = Colors;
     States = States;

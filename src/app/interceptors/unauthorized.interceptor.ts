@@ -1,6 +1,5 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { environment } from '@environments/environment';
 import { AuthService } from '@services/auth.service';
 import { MessagesService } from '@services/messages.service';
@@ -9,7 +8,7 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable()
 export class UnauthorizedInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService, private router: Router, private messages: MessagesService) {}
+    constructor(private authService: AuthService, private messages: MessagesService) {}
 
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request).pipe(

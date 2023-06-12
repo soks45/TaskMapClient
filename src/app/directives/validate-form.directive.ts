@@ -1,7 +1,6 @@
-import { AfterViewInit, DestroyRef, Directive, EventEmitter, Output } from '@angular/core';
+import { DestroyRef, Directive, EventEmitter, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroup, FormGroupDirective } from '@angular/forms';
-import { BaseForm } from 'app/models/form';
 import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -9,15 +8,13 @@ import { map } from 'rxjs/operators';
     selector: '[tmValidateForm]',
     standalone: true,
 })
-export class ValidateFormDirective extends BaseForm implements AfterViewInit {
+export class ValidateFormDirective implements OnInit {
     formGroup!: FormGroup;
     @Output() validatedSubmit: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private formGroupDirective: FormGroupDirective, private dr: DestroyRef) {
-        super();
-    }
+    constructor(private formGroupDirective: FormGroupDirective, private dr: DestroyRef) {}
 
-    ngAfterViewInit(): void {
+    ngOnInit(): void {
         this.formGroup = this.formGroupDirective.form;
         this.formGroupDirective.ngSubmit
             .pipe(
@@ -26,5 +23,16 @@ export class ValidateFormDirective extends BaseForm implements AfterViewInit {
                 takeUntilDestroyed(this.dr)
             )
             .subscribe((v) => this.validatedSubmit.emit(v));
+    }
+
+    private checkForm(): boolean {
+        this.formGroup.updateValueAndValidity();
+        this.markFormGroupTouched();
+
+        return this.formGroup.valid;
+    }
+
+    private markFormGroupTouched(): void {
+        this.formGroup.markAsTouched();
     }
 }

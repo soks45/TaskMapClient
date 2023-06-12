@@ -27,12 +27,12 @@ import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { AuthService } from '@services/auth.service';
 import { DataSourceContext } from '@services/data-sources/base.data-source';
-import { appInitializer } from 'app/app-initializer';
 import { AppComponent } from 'app/app.component';
 import { APP_ROUTES, PageRoutes } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { filter, Observable } from 'rxjs';
+import { asapScheduler, filter, Observable, scheduled } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 if (environment.production) {
     enableProdMode();
@@ -58,7 +58,13 @@ bootstrapApplication(AppComponent, {
         ),
         {
             provide: APP_INITIALIZER,
-            useFactory: appInitializer,
+            useFactory: (authService: AuthService) => () =>
+                authService.refreshTokens().pipe(
+                    catchError(() => {
+                        authService.unauthorize();
+                        return scheduled([], asapScheduler);
+                    })
+                ),
             multi: true,
             deps: [AuthService],
         },

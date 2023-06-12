@@ -2,7 +2,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Point } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { TasksService } from '@services/tasks.service';
 import { InitItemPosition } from '@ui/adaptive-drag/adaptive-drag.component';
@@ -39,10 +38,7 @@ export class BoardComponent {
     boundaryClassName = 'board';
 
     constructor(private taskService: TasksService, private currentBoard: CurrentBoardDataSource) {
-        this.tasks$ = this.currentBoard.getData().pipe(
-            switchMap((b) => this.taskService.get(b.boardId)),
-            takeUntilDestroyed()
-        );
+        this.tasks$ = this.currentBoard.getData().pipe(switchMap((b) => this.taskService.get(b.boardId)));
     }
 
     initCreatorPosition: InitItemPosition = (boundarySize: Point, sizeOfItem: Point): Point => {

@@ -13,7 +13,7 @@ import { UsersDataSource } from '@services/data-sources/users-data-source';
 import { AccessRights, Board } from 'app/models/board';
 import { ShortUser } from 'app/models/user';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { debounceTime, distinctUntilChanged, Observable, startWith, Subject, withLatestFrom } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Observable, startWith, withLatestFrom } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 interface ShareBoardValue {
@@ -54,7 +54,6 @@ export class ShareBoardDialogComponent {
     formGroup: FormGroup<ShareBoardControls>;
     multiSelect: FormControl<string> = new FormControl<string>('', { nonNullable: true });
 
-    filter$: Subject<string>;
     filteredUsers$: Observable<ShortUser[]>;
 
     constructor(
@@ -76,12 +75,10 @@ export class ShareBoardDialogComponent {
             }),
         });
 
-        this.filter$ = new Subject<string>();
-
-        this.filteredUsers$ = this.filter$.pipe(
+        this.filteredUsers$ = this.multiSelect.valueChanges.pipe(
             startWith(''),
-            debounceTime(1000),
             distinctUntilChanged(),
+            debounceTime(1000),
             withLatestFrom(
                 this.usersDataSource.getData().pipe(
                     withLatestFrom(this.userDataSource.getData()),

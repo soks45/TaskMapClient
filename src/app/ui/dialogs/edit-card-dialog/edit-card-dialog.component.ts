@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ValidateFormDirective } from '@directives/validate-form.directive';
-import { MessagesService } from '@services/messages.service';
 import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-source';
 import { TasksService } from '@services/tasks.service';
 import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
@@ -16,7 +15,6 @@ import { finalize } from 'rxjs/operators';
 
 export interface EditDialogData {
     fromCreator: boolean;
-    isAuthed: boolean;
     task: TaskB;
 }
 
@@ -65,7 +63,6 @@ export class EditCardDialogComponent {
         private dialogRef: MatDialogRef<TaskB>,
         private formBuilder: FormBuilder,
         private taskService: TasksService,
-        private messages: MessagesService,
         @Inject(MAT_DIALOG_DATA)
         private data: EditDialogData,
         private taskCreator: TaskCreatorDataSource
@@ -108,13 +105,11 @@ export class EditCardDialogComponent {
             return;
         }
 
-        if (this.data.isAuthed) {
-            this.isLoading = true;
-            this.taskService
-                .edit(formValue)
-                .pipe(finalize(() => (this.isLoading = false)))
-                .subscribe(() => this.dialogRef.close());
-        }
+        this.isLoading = true;
+        this.taskService
+            .edit(formValue)
+            .pipe(finalize(() => (this.isLoading = false)))
+            .subscribe(() => this.dialogRef.close());
     }
 
     onCancel(): void {

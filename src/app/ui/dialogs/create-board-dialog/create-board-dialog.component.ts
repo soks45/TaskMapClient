@@ -13,7 +13,7 @@ import { MessagesService } from '@services/messages.service';
 import { UserDataSource } from '@services/data-sources/user-data-source';
 import { AccessRights, Board } from 'app/models/board';
 import { User } from 'app/models/user';
-import { switchMap, take } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 interface CreateBoard {
@@ -73,9 +73,8 @@ export class CreateBoardDialogComponent {
         this.isLoading = true;
 
         this.userService
-            .getData()
+            .lastValue()
             .pipe(
-                take(1),
                 map(
                     (user: User) =>
                         <Board>{

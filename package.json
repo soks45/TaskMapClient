@@ -29,7 +29,6 @@
     "@ngx-loading-bar/http-client": "^6.0.2",
     "@ngx-loading-bar/router": "^6.0.2",
     "md5-typescript": "^1.0.5",
-    "moment": "^2.29.1",
     "ngx-logger": "^5.0.9",
     "ngx-mat-select-search": "^7.0.2",
     "rxjs": "~7.5.0",

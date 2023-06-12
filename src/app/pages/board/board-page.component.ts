@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, DestroyRef, OnInit } from '@angular
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
-import { BoardComponent } from '@ui/board/board.component';
 import { PageRoutes } from 'app/app.routes';
 
 @Component({
@@ -11,7 +10,7 @@ import { PageRoutes } from 'app/app.routes';
     styleUrls: ['./board-page.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [BoardComponent, RouterOutlet, RouterLink],
+    imports: [RouterOutlet, RouterLink],
 })
 export default class BoardPageComponent implements OnInit {
     constructor(private router: Router, private currentBoard: CurrentBoardDataSource, private dr: DestroyRef) {}

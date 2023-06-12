@@ -2,8 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
+import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { Board } from 'app/models/board';
 import { Observable, switchMap, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -11,9 +13,17 @@ import { Observable, switchMap, tap } from 'rxjs';
 export class CurrentBoardDataSource extends BaseDataSource<Board> {
     protected dataSource$: Observable<Board> = this.http
         .get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true })
-        .pipe(switchMap((id) => this.http.get<Board>(`${environment.apiUrl}/board/${id}`, { withCredentials: true })));
+        .pipe(
+            switchMap((id) =>
+                this.boards.lastValue().pipe(map((boards) => boards.filter((board) => board.boardId === id)[0]))
+            )
+        );
 
-    constructor(private http: HttpClient, private dataSourceContext: DataSourceContext) {
+    constructor(
+        private http: HttpClient,
+        private dataSourceContext: DataSourceContext,
+        private boards: BoardsDataSource
+    ) {
         super(dataSourceContext);
     }
 

@@ -6,7 +6,7 @@ import { OAuthKey } from '@ui/auth/google-auth-btn/google-auth-btn.component';
 import { PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
-import { BehaviorSubject, distinctUntilChanged, Observable, of, Subscription, switchMap, throwError } from 'rxjs';
+import { distinctUntilChanged, Observable, of, ReplaySubject, Subscription, switchMap, throwError } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
 
 interface LoginResult {
@@ -24,7 +24,7 @@ export interface Credentials {
 })
 export class AuthService {
     private timer: Subscription | null = null;
-    private isAuthedSource$ = new BehaviorSubject<boolean>(false);
+    private isAuthedSource$ = new ReplaySubject<boolean>(1);
     private accessTokenKey = 'K@#:@UC';
     private refreshTokenKey = 'a;kldw@#)1';
 

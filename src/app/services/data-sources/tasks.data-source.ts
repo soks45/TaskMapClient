@@ -2,8 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
-import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
-import { SignalRService } from '@services/signalR.service';
+import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
 
@@ -12,14 +11,8 @@ export class TasksDataSource extends BaseDataSource<TaskB[]> {
         withCredentials: true,
     });
 
-    constructor(
-        public readonly boardId: number,
-        private converter: ConverterService,
-        private http: HttpClient,
-        private dataSourceContext: DataSourceContext,
-        private notifications: SignalRService
-    ) {
-        super(dataSourceContext);
+    constructor(public readonly boardId: number, private converter: ConverterService, private http: HttpClient) {
+        super();
     }
 
     add(entity: TaskB): Observable<void> {

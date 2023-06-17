@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { Color, State, TaskB } from 'app/models/task-b';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class TaskCreatorDataSource extends BaseDataSource<TaskB> {
-    private creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>({
+export class TaskCreatorDataSource {
+    public creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>({
         taskId: 0,
         taskText: 'some task definition',
         state: State.Main,
@@ -22,11 +21,8 @@ export class TaskCreatorDataSource extends BaseDataSource<TaskB> {
         userId: 0,
         next_task_id: 0,
     });
-    protected dataSource$: Observable<TaskB> = this.creatorTaskSource.asObservable();
 
-    constructor(private currentBoardService: CurrentBoardDataSource, private dataSourceContext: DataSourceContext) {
-        super(dataSourceContext);
-
+    constructor(private currentBoardService: CurrentBoardDataSource) {
         this.currentBoardService
             .getData()
             .pipe(
@@ -41,7 +37,5 @@ export class TaskCreatorDataSource extends BaseDataSource<TaskB> {
             ...this.creatorTaskSource.value,
             ...task,
         });
-
-        this.reload();
     }
 }

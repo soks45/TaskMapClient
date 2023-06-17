@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
-import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
+import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { TasksService } from '@services/tasks.service';
 import { AccessRights, Board } from 'app/models/board';
 import { Observable, tap } from 'rxjs';
@@ -21,12 +21,8 @@ export class BoardsDataSource extends BaseDataSource<Board[]> {
         withCredentials: true,
     });
 
-    constructor(
-        private http: HttpClient,
-        private taskService: TasksService,
-        private dataSourceContext: DataSourceContext
-    ) {
-        super(dataSourceContext);
+    constructor(private http: HttpClient, private taskService: TasksService) {
+        super();
     }
 
     add(entity: Board): Observable<void> {

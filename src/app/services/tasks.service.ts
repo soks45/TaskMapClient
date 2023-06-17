@@ -3,10 +3,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
-import { DataSourceContext } from '@services/data-sources/base.data-source';
 import { TasksDataSource } from '@services/data-sources/tasks.data-source';
 import { MessagesService } from '@services/messages.service';
-import { SignalRService } from '@services/signalR.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
@@ -17,13 +15,7 @@ import { Observable, tap } from 'rxjs';
 export class TasksService {
     private dataSources: MemoryStorage<number, TasksDataSource> = new MemoryStorage();
 
-    constructor(
-        private http: HttpClient,
-        private messages: MessagesService,
-        private converter: ConverterService,
-        private dataSourceContext: DataSourceContext,
-        private signalR: SignalRService
-    ) {}
+    constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
 
     get(boardId: number): Observable<TaskB[]> {
         return this.getDataSource(boardId).getData();
@@ -43,6 +35,10 @@ export class TasksService {
 
     delete(entity: TaskB): Observable<void> {
         return this.getDataSource(entity.boardId).delete(entity);
+    }
+
+    reload(boardId: number): void {
+        this.getDataSource(boardId).reload();
     }
 
     moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
@@ -75,7 +71,7 @@ export class TasksService {
     }
 
     private createDataSource(boardId: number): TasksDataSource {
-        return new TasksDataSource(boardId, this.converter, this.http, this.dataSourceContext, this.signalR);
+        return new TasksDataSource(boardId, this.converter, this.http);
     }
 
     private removeDataSource(boardId: number): void {

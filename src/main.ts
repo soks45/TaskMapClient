@@ -1,7 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
     APP_INITIALIZER,
-    DestroyRef,
     enableProdMode,
     ErrorHandler,
     importProvidersFrom,
@@ -26,12 +25,11 @@ import { LoadingBarModule } from '@ngx-loading-bar/core';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
 import { AuthService } from '@services/auth.service';
-import { DataSourceContext } from '@services/data-sources/base.data-source';
 import { AppComponent } from 'app/app.component';
 import { APP_ROUTES, PageRoutes } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { asapScheduler, filter, Observable, scheduled } from 'rxjs';
+import { asapScheduler, Observable, scheduled } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 if (environment.production) {
@@ -71,16 +69,6 @@ bootstrapApplication(AppComponent, {
         {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler,
-        },
-        {
-            provide: UNAUTH$_TOKEN,
-            useFactory: (authService: AuthService) => authService.isAuthed$.pipe(filter((authed) => !authed)),
-            deps: [AuthService],
-        },
-        {
-            provide: DataSourceContext,
-            useFactory: (resetsOn$: Observable<void>, dr: DestroyRef) => new DataSourceContext(resetsOn$, dr),
-            deps: [UNAUTH$_TOKEN, DestroyRef],
         },
         provideHttpClient(withInterceptorsFromDi()),
         provideAnimations(),

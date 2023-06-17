@@ -1,12 +1,5 @@
-import { DestroyRef, Injectable } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, ReplaySubject, shareReplay, switchMap, take } from 'rxjs';
-import { tap } from 'rxjs/operators';
-
-@Injectable()
-export class DataSourceContext {
-    constructor(public resetsOn$: Observable<any>, public dr: DestroyRef) {}
-}
+import { mergeMap, Observable, ReplaySubject, shareReplay, tap } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export abstract class BaseDataSource<T> {
     protected abstract dataSource$: Observable<T>;
@@ -14,12 +7,8 @@ export abstract class BaseDataSource<T> {
     private cache$?: Observable<T>;
     private source$: ReplaySubject<T> = new ReplaySubject<T>(1);
 
-    protected constructor(private context: DataSourceContext) {
-        this.context.resetsOn$.pipe(takeUntilDestroyed(context.dr)).subscribe(() => this.reset());
-    }
-
     getData(): Observable<T> {
-        return this.loadData().pipe(switchMap(() => this.source$));
+        return this.loadData().pipe(mergeMap(() => this.source$));
     }
 
     lastValue(): Observable<T> {

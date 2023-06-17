@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
+import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { ShortUser } from 'app/models/user';
 import { Observable } from 'rxjs';
 
@@ -13,7 +13,7 @@ export class UsersDataSource extends BaseDataSource<ShortUser[]> {
         withCredentials: true,
     });
 
-    constructor(private http: HttpClient, private dataSourceContext: DataSourceContext) {
-        super(dataSourceContext);
+    constructor(private http: HttpClient) {
+        super();
     }
 }

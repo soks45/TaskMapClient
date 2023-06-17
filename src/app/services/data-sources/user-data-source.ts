@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
+import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { UploadService } from '@services/upload.service';
 import { User } from 'app/models/user';
 import { Observable, tap } from 'rxjs';
@@ -14,12 +14,8 @@ export class UserDataSource extends BaseDataSource<User> {
         withCredentials: true,
     });
 
-    constructor(
-        private uploadService: UploadService,
-        private http: HttpClient,
-        private dataSourceContext: DataSourceContext
-    ) {
-        super(dataSourceContext);
+    constructor(private uploadService: UploadService, private http: HttpClient) {
+        super();
     }
 
     uploadAvatar(avatar: File): Observable<void> {

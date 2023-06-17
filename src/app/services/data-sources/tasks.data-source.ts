@@ -3,6 +3,7 @@ import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
 import { BaseDataSource, DataSourceContext } from '@services/data-sources/base.data-source';
+import { SignalRService } from '@services/signalR.service';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
 
@@ -15,7 +16,8 @@ export class TasksDataSource extends BaseDataSource<TaskB[]> {
         public readonly boardId: number,
         private converter: ConverterService,
         private http: HttpClient,
-        private dataSourceContext: DataSourceContext
+        private dataSourceContext: DataSourceContext,
+        private notifications: SignalRService
     ) {
         super(dataSourceContext);
     }

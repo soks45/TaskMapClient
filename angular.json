@@ -19,7 +19,7 @@
                     "skipTests": true
                 },
                 "@schematics/angular:directive": {
-                    Соо
+                    "skipTests": true
                 },
                 "@schematics/angular:pipe": {
                     "skipTests": true

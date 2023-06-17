@@ -6,6 +6,7 @@ import { ConverterService } from '@services/converter.service';
 import { DataSourceContext } from '@services/data-sources/base.data-source';
 import { TasksDataSource } from '@services/data-sources/tasks.data-source';
 import { MessagesService } from '@services/messages.service';
+import { SignalRService } from '@services/signalR.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
@@ -20,7 +21,8 @@ export class TasksService {
         private http: HttpClient,
         private messages: MessagesService,
         private converter: ConverterService,
-        private dataSourceContext: DataSourceContext
+        private dataSourceContext: DataSourceContext,
+        private signalR: SignalRService
     ) {}
 
     get(boardId: number): Observable<TaskB[]> {
@@ -73,7 +75,7 @@ export class TasksService {
     }
 
     private createDataSource(boardId: number): TasksDataSource {
-        return new TasksDataSource(boardId, this.converter, this.http, this.dataSourceContext);
+        return new TasksDataSource(boardId, this.converter, this.http, this.dataSourceContext, this.signalR);
     }
 
     private removeDataSource(boardId: number): void {

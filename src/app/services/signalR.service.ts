@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import * as signalR from '@microsoft/signalr';
 import { IRetryPolicy, LogLevel, RetryContext } from '@microsoft/signalr';
-import { from, Observable } from 'rxjs';
+import { AuthService } from '@services/auth.service';
+import { from, Observable, switchMap } from 'rxjs';
 
 function retryPolicyFactory(): IRetryPolicy {
     return {
@@ -18,15 +19,20 @@ function retryPolicyFactory(): IRetryPolicy {
 @Injectable({
     providedIn: 'root',
 })
-export class NotificationService {
+export class SignalRService {
     private readonly hubConnection: signalR.HubConnection;
 
-    constructor() {
+    constructor(private authService: AuthService) {
         this.hubConnection = new signalR.HubConnectionBuilder()
             .withUrl(environment.signalRHubs.notifications)
             .withAutomaticReconnect(retryPolicyFactory())
+            .configureLogging(LogLevel.Trace)
             .configureLogging(LogLevel.Error)
             .build();
+
+        this.authService.isAuthed$
+            .pipe(switchMap((auth) => (auth ? this.startConnection() : this.stopConnection())))
+            .subscribe();
     }
 
     public startConnection(): Observable<void> {
@@ -35,5 +41,9 @@ export class NotificationService {
 
     public stopConnection(): Observable<void> {
         return from(this.hubConnection.stop());
+    }
+
+    public joinBoard(boardId: number): void {
+        this.hubConnection.invoke('JoinBoard', boardId.toString());
     }
 }

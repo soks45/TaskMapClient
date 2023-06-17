@@ -5,6 +5,7 @@ import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
 import { TasksDataSource } from '@services/data-sources/tasks.data-source';
 import { MessagesService } from '@services/messages.service';
+import { SignalRService } from '@services/signalR.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
@@ -15,7 +16,14 @@ import { Observable, tap } from 'rxjs';
 export class TasksService {
     private dataSources: MemoryStorage<number, TasksDataSource> = new MemoryStorage();
 
-    constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
+    constructor(
+        private http: HttpClient,
+        private messages: MessagesService,
+        private converter: ConverterService,
+        private signalRService: SignalRService
+    ) {
+        this.signalRService.hubConnection.on('ReceiveNotification', (id) => this.reload(Number(id)));
+    }
 
     get(boardId: number): Observable<TaskB[]> {
         return this.getDataSource(boardId).state();

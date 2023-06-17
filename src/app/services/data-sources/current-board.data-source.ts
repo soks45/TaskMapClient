@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { SignalRService } from '@services/signalR.service';
-import { TasksService } from '@services/tasks.service';
 import { Board } from 'app/models/board';
 import { Observable, switchMap, take, tap } from 'rxjs';
 import { DataSubject } from 'rxjs-data-subject';
@@ -13,12 +12,7 @@ import { map } from 'rxjs/operators';
     providedIn: 'root',
 })
 export class CurrentBoardDataSource extends DataSubject<Board> {
-    constructor(
-        private http: HttpClient,
-        private boards: BoardsDataSource,
-        private signalRService: SignalRService,
-        private tasksService: TasksService
-    ) {
+    constructor(private http: HttpClient, private boards: BoardsDataSource, private signalRService: SignalRService) {
         super(
             http.get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true }).pipe(
                 switchMap((id) => this.signalRService.joinBoard(id)),
@@ -30,8 +24,6 @@ export class CurrentBoardDataSource extends DataSubject<Board> {
                 )
             )
         );
-
-        this.signalRService.hubConnection.on('ReceiveNotification', (id) => this.tasksService.reload(Number(id)));
     }
 
     switchBoard(id: number): Observable<void> {

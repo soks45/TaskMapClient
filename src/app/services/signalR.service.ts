@@ -24,7 +24,11 @@ export class SignalRService {
 
     constructor(private authService: AuthService) {
         this.hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl(environment.signalRHubs.notifications)
+            .withUrl(environment.signalRHubs.notifications, {
+                accessTokenFactory: () => {
+                    return this.authService.accessToken!;
+                },
+            })
             .withAutomaticReconnect(retryPolicyFactory())
             .configureLogging(LogLevel.Trace)
             .configureLogging(LogLevel.Error)

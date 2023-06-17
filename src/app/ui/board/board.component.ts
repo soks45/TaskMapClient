@@ -38,7 +38,7 @@ export class BoardComponent {
     boundaryClassName = 'board';
 
     constructor(private taskService: TasksService, private currentBoard: CurrentBoardDataSource) {
-        this.tasks$ = this.currentBoard.getData().pipe(switchMap((b) => this.taskService.get(b.boardId)));
+        this.tasks$ = this.currentBoard.state().pipe(switchMap((b) => this.taskService.get(b.boardId)));
     }
 
     initCreatorPosition: InitItemPosition = (boundarySize: Point, sizeOfItem: Point): Point => {

@@ -2,10 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
-import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { TasksService } from '@services/tasks.service';
 import { AccessRights, Board } from 'app/models/board';
 import { Observable, tap } from 'rxjs';
+import { DataSubject } from 'rxjs-data-subject';
 
 export interface ShareBoard {
     boardId: number;
@@ -16,13 +16,13 @@ export interface ShareBoard {
 @Injectable({
     providedIn: 'root',
 })
-export class BoardsDataSource extends BaseDataSource<Board[]> {
-    protected dataSource$: Observable<Board[]> = this.http.get<Board[]>(`${environment.apiUrl}/board`, {
-        withCredentials: true,
-    });
-
+export class BoardsDataSource extends DataSubject<Board[]> {
     constructor(private http: HttpClient, private taskService: TasksService) {
-        super();
+        super(
+            http.get<Board[]>(`${environment.apiUrl}/board`, {
+                withCredentials: true,
+            })
+        );
     }
 
     add(entity: Board): Observable<void> {

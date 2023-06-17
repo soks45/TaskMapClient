@@ -73,7 +73,7 @@ export class CreateBoardDialogComponent {
         this.isLoading = true;
 
         this.userService
-            .lastValue()
+            .state()
             .pipe(
                 map(
                     (user: User) =>

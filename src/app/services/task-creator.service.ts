@@ -7,7 +7,7 @@ import { BehaviorSubject, tap } from 'rxjs';
 @Injectable({
     providedIn: 'root',
 })
-export class TaskCreatorDataSource {
+export class TaskCreatorService {
     public creatorTaskSource: BehaviorSubject<TaskB> = new BehaviorSubject<TaskB>({
         taskId: 0,
         taskText: 'some task definition',
@@ -24,7 +24,7 @@ export class TaskCreatorDataSource {
 
     constructor(private currentBoardService: CurrentBoardDataSource) {
         this.currentBoardService
-            .getData()
+            .state()
             .pipe(
                 tap((board) => this.edit({ boardId: board.boardId })),
                 takeUntilDestroyed()

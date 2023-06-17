@@ -3,7 +3,7 @@
 </div>
 
 <mat-menu #boardsMenu="matMenu" class="boards-menu">
-    <button mat-menu-item class="boards-menu__item" *ngFor="let board of (boardsService.getData() | async)" (click)='onBoardClick(board)'>
+    <button mat-menu-item class="boards-menu__item" *ngFor="let board of (boardsService.state() | async)" (click)='onBoardClick(board)'>
         <span class="boards-menu__name">{{ board.boardName }}</span>
         <mat-icon *ngIf="board.isShared; else share">folder_shared</mat-icon>
         <ng-template #share>

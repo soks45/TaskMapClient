@@ -80,8 +80,8 @@ export class ShareBoardDialogComponent {
             distinctUntilChanged(),
             debounceTime(1000),
             withLatestFrom(
-                this.usersDataSource.getData().pipe(
-                    withLatestFrom(this.userDataSource.getData()),
+                this.usersDataSource.state().pipe(
+                    withLatestFrom(this.userDataSource.state()),
                     map((value) => value[0].filter((user) => value[1].userId !== user.userId))
                 )
             ),

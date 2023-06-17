@@ -4,7 +4,7 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-source';
+import { TaskCreatorService } from '@services/task-creator.service';
 import { TasksService } from '@services/tasks.service';
 import { Color, TaskB } from 'app/models/task-b';
 import { CardComponent } from 'app/ui/card/card.component';
@@ -32,7 +32,7 @@ export class TaskCreatorComponent {
     isShowing: boolean = true;
     colorType = Color;
 
-    constructor(private taskService: TasksService, public taskCreator: TaskCreatorDataSource) {}
+    constructor(private taskService: TasksService, public taskCreator: TaskCreatorService) {}
 
     changeColor(color: Color): void {
         this.taskCreator.edit({ color: color });

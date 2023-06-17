@@ -18,7 +18,7 @@ export class TasksService {
     constructor(private http: HttpClient, private messages: MessagesService, private converter: ConverterService) {}
 
     get(boardId: number): Observable<TaskB[]> {
-        return this.getDataSource(boardId).getData();
+        return this.getDataSource(boardId).state();
     }
 
     remove(boardId: number): void {

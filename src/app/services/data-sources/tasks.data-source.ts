@@ -2,17 +2,17 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments/environment';
 import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
-import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { TaskB } from 'app/models/task-b';
 import { Observable, tap } from 'rxjs';
+import { DataSubject } from 'rxjs-data-subject';
 
-export class TasksDataSource extends BaseDataSource<TaskB[]> {
-    protected dataSource$: Observable<TaskB[]> = this.http.get<TaskB[]>(`${environment.apiUrl}/task/${this.boardId}`, {
-        withCredentials: true,
-    });
-
+export class TasksDataSource extends DataSubject<TaskB[]> {
     constructor(public readonly boardId: number, private converter: ConverterService, private http: HttpClient) {
-        super();
+        super(
+            http.get<TaskB[]>(`${environment.apiUrl}/task/${boardId}`, {
+                withCredentials: true,
+            })
+        );
     }
 
     add(entity: TaskB): Observable<void> {

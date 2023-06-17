@@ -37,7 +37,7 @@ export default class DashboardComponent implements OnInit {
     constructor(private boardService: BoardsDataSource, private tasks: TasksService) {}
 
     ngOnInit(): void {
-        this.boards$ = this.boardService.getData().pipe(
+        this.boards$ = this.boardService.state().pipe(
             switchMap((boards) =>
                 combineLatest(
                     boards.map((board) =>

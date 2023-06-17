@@ -8,7 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ValidateFormDirective } from '@directives/validate-form.directive';
-import { TaskCreatorDataSource } from '@services/data-sources/task-creator.data-source';
+import { TaskCreatorService } from '@services/task-creator.service';
 import { TasksService } from '@services/tasks.service';
 import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
 import { finalize } from 'rxjs/operators';
@@ -65,7 +65,7 @@ export class EditCardDialogComponent {
         private taskService: TasksService,
         @Inject(MAT_DIALOG_DATA)
         private data: EditDialogData,
-        private taskCreator: TaskCreatorDataSource
+        private taskCreator: TaskCreatorService
     ) {
         if (this.data.fromCreator) {
             this.isNew = true;

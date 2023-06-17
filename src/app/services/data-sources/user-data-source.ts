@@ -1,21 +1,21 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { BaseDataSource } from '@services/data-sources/base.data-source';
 import { UploadService } from '@services/upload.service';
 import { User } from 'app/models/user';
 import { Observable, tap } from 'rxjs';
+import { DataSubject } from 'rxjs-data-subject';
 
 @Injectable({
     providedIn: 'root',
 })
-export class UserDataSource extends BaseDataSource<User> {
-    protected dataSource$: Observable<User> = this.http.get<User>(`${environment.apiUrl}/account/user`, {
-        withCredentials: true,
-    });
-
+export class UserDataSource extends DataSubject<User> {
     constructor(private uploadService: UploadService, private http: HttpClient) {
-        super();
+        super(
+            http.get<User>(`${environment.apiUrl}/account/user`, {
+                withCredentials: true,
+            })
+        );
     }
 
     uploadAvatar(avatar: File): Observable<void> {

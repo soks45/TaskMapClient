@@ -29,7 +29,7 @@ export default class BoardPageComponent implements OnInit {
 
     private navigateToLastBoard(): void {
         this.currentBoard
-            .getData()
+            .state()
             .pipe(takeUntilDestroyed(this.dr))
             .subscribe((board) => this.router.navigate([PageRoutes.boardPageRoute, board.boardId]));
     }

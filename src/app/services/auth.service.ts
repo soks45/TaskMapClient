@@ -94,9 +94,9 @@ export class AuthService {
     }
 
     private authorize(x: LoginResult): void {
-        this.isAuthedSource$.next(true);
         this.saveTokens(x);
         this.startTokenTimer();
+        this.isAuthedSource$.next(true);
     }
 
     private saveTokens(x: LoginResult): void {

@@ -34,7 +34,7 @@ export class SignalRService {
                 },
             })
             .withAutomaticReconnect(retryPolicyFactory())
-            .configureLogging(LogLevel.Error)
+            .configureLogging(LogLevel.None)
             .build();
 
         this.authService.isAuthed$
@@ -58,11 +58,20 @@ export class SignalRService {
         );
     }
 
-    private safeInvoke<T>(invoke: () => Promise<T>): Observable<T> {
+    public sendTaskListChangedEvent(boardId: number): Observable<void> {
+        return this.safeInvoke(() => this.hubConnection.invoke(`BoardTaskListChangedNotification`, boardId));
+    }
+
+    public sendBoardChangedEvent(boardId: number): Observable<void> {
+        return this.safeInvoke(() => this.hubConnection.invoke(`BoardChangedNotification`, boardId));
+    }
+
+    private safeInvoke(invoke: () => Promise<any>): Observable<void> {
         return this.connectionState$.pipe(
             filter((state) => state === HubConnectionState.Connected),
-            take(1),
-            switchMap(() => from(invoke()))
+            tap(() => invoke()),
+            map(() => void 0),
+            take(1)
         );
     }
 

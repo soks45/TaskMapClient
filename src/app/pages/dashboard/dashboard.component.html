@@ -2,8 +2,6 @@
     <div
         class="dashboard-page__boards"
         cdkDropListGroup
-        [cdkDropListGroupDisabled]="isLoading"
-        [ngStyle]="isLoading ? { opacity: 0.7 } : null"
     >
         <div
             class="dashboard-page__board"
@@ -13,9 +11,11 @@
             (cdkDropListDropped)="drop($event)"
             cdkDropListOrientation="vertical"
             [id]="setId(board.boardId)"
+            (contextmenu)="onContextMenu($event, board)"
         >
             <div class="dashboard-page__board-header">
-                {{ board.boardName }}
+                <span>{{ board.boardName }}</span>
+                <mat-icon *ngIf="board.isShared">folder_shared</mat-icon>
             </div>
             <div class="dashboard-page__task" *ngFor="let task of board.tasks" cdkDrag [cdkDragData]="task">
                 <tm-card [task]="task"></tm-card>
@@ -23,4 +23,15 @@
             </div>
         </div>
     </div>
+
+    <div style="visibility: hidden; position: fixed"
+         [style.left]="contextMenuPosition.x"
+         [style.top]="contextMenuPosition.y"
+         [matMenuTriggerFor]="contextMenu">
+    </div>
+    <mat-menu #contextMenu="matMenu">
+        <ng-template matMenuContent let-item="item">
+            <button mat-menu-item (click)="deleteBoard(item)">Delete board {{item.boardName}}</button>
+        </ng-template>
+    </mat-menu>
 </div>

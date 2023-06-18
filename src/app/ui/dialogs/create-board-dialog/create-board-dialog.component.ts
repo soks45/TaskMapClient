@@ -13,7 +13,7 @@ import { MessagesService } from '@services/messages.service';
 import { UserDataSource } from '@services/data-sources/user-data-source';
 import { AccessRights, Board } from 'app/models/board';
 import { User } from 'app/models/user';
-import { switchMap } from 'rxjs';
+import { switchMap, take } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 
 interface CreateBoard {
@@ -60,7 +60,7 @@ export class CreateBoardDialogComponent {
         this.formGroup = this.formBuilder.group<CreateBoardControls>({
             boardName: new FormControl('new board', {
                 nonNullable: true,
-                validators: [Validators.required],
+                validators: [Validators.required, Validators.maxLength(16)],
             }),
             boardDescription: new FormControl('', {
                 nonNullable: true,
@@ -86,6 +86,7 @@ export class CreateBoardDialogComponent {
                             ...value,
                         }
                 ),
+                take(1),
                 switchMap((board) => this.boardService.add(board)),
                 finalize(() => (this.isLoading = false))
             )

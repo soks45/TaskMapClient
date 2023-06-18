@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
@@ -13,7 +14,7 @@ import { Board } from 'app/models/board';
 @Component({
     selector: 'tm-boards-menu',
     standalone: true,
-    imports: [CommonModule, MatMenuModule, MatDialogModule, MatIconModule, RouterLink],
+    imports: [CommonModule, MatMenuModule, MatDialogModule, MatIconModule, RouterLink, MatButtonModule],
     templateUrl: './boards-menu.component.html',
     styleUrls: ['./boards-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

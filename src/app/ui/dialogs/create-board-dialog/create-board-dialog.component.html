@@ -8,6 +8,11 @@
             <mat-label>Label</mat-label>
             <input matInput type="text" formControlName="boardName" />
         </mat-form-field>
+        <mat-error>
+            <span *ngIf="formGroup.controls['boardName'].errors && formGroup.controls['boardName'].errors?.['maxlength']">
+                Too big board name
+            </span>
+        </mat-error>
         <mat-form-field>
             <mat-label>Description</mat-label>
             <input matInput type="text" formControlName="boardDescription" />
@@ -16,6 +21,6 @@
 
     <div mat-dialog-actions class="create-board-dialog__actions" [align]="'end'">
         <button mat-raised-button color="primary" type='submit'>Submit</button>
-        <button mat-stroked-button (click)="onCancel()">Cancel</button>
+        <button mat-stroked-button (click)="onCancel()" type='button'>Cancel</button>
     </div>
 </form>

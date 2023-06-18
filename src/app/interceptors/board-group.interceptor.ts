@@ -4,7 +4,7 @@ import { CurrentBoardDataSource } from '@services/data-sources/current-board.dat
 import { Board } from 'app/models/board';
 import { Observable, switchMap, take } from 'rxjs';
 
-export const NEED_BOARD_GROUP = 'Board-Group';
+const NEED_BOARD_GROUP = 'Board-Group';
 
 export function boardGroupHeader(headers?: HttpHeaders): HttpHeaders {
     if (!headers) {

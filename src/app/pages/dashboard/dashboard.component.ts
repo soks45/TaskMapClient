@@ -7,15 +7,17 @@ import {
     moveItemInArray,
     transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { AsyncPipe, NgFor, NgStyle } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { AsyncPipe, NgFor, NgIf, NgStyle } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { TasksService } from '@services/tasks.service';
 import { CardComponent } from '@ui/card/card.component';
 import { Board } from 'app/models/board';
 import { TaskB } from 'app/models/task-b';
-import { combineLatest, Observable, switchMap } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { combineLatest, Observable, of, switchMap, take } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 interface BoardWithTasks extends Board {
     tasks: TaskB[];
@@ -27,29 +29,37 @@ interface BoardWithTasks extends Board {
     styleUrls: ['./dashboard.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [CdkDropListGroup, NgStyle, NgFor, CdkDropList, CdkDrag, CardComponent, CdkDragPreview, AsyncPipe],
+    imports: [
+        CdkDropListGroup,
+        NgStyle,
+        NgFor,
+        CdkDropList,
+        CdkDrag,
+        CardComponent,
+        CdkDragPreview,
+        AsyncPipe,
+        MatMenuModule,
+        MatIconModule,
+        NgIf,
+    ],
 })
-export default class DashboardComponent implements OnInit {
-    boards$?: Observable<BoardWithTasks[]>;
-    isLoading: boolean = false;
+export default class DashboardComponent {
+    boards$: Observable<BoardWithTasks[]>;
     readonly idPrefix = 'boardId-';
 
-    constructor(private boardService: BoardsDataSource, private tasks: TasksService) {}
+    @ViewChild(MatMenuTrigger) contextMenu!: MatMenuTrigger;
 
-    ngOnInit(): void {
+    contextMenuPosition = { x: '0px', y: '0px' };
+
+    constructor(private boardService: BoardsDataSource, private tasks: TasksService) {
         this.boards$ = this.boardService.state().pipe(
-            switchMap((boards) =>
-                combineLatest(
-                    boards.map((board) =>
-                        this.tasks.get(board.boardId).pipe(
-                            map((tasks) => ({
-                                ...board,
-                                tasks,
-                            }))
-                        )
-                    )
-                )
-            )
+            switchMap((boards) => {
+                if (boards.length === 0) {
+                    return of([]);
+                }
+
+                return this.boardsWithTasks(boards);
+            })
         );
     }
 
@@ -71,11 +81,7 @@ export default class DashboardComponent implements OnInit {
         const previousTaskId = $event.currentIndex === 0 ? 0 : $event.container.data[$event.currentIndex - 1].taskId;
 
         if (boardId !== newBoardId || (boardId === newBoardId && $event.previousIndex !== $event.currentIndex)) {
-            this.isLoading = true;
-            this.tasks
-                .moveTaskInList(taskId, previousTaskId, boardId, newBoardId)
-                .pipe(finalize(() => (this.isLoading = false)))
-                .subscribe();
+            this.tasks.moveTaskInList(taskId, previousTaskId, boardId, newBoardId).pipe(take(1)).subscribe();
         }
     }
 
@@ -85,5 +91,31 @@ export default class DashboardComponent implements OnInit {
 
     setId(boardId: number): string {
         return this.idPrefix + boardId;
+    }
+
+    deleteBoard(board: Board): void {
+        this.boardService.delete(board).subscribe();
+    }
+
+    onContextMenu(event: MouseEvent, item: Board) {
+        event.preventDefault();
+        this.contextMenuPosition.x = event.clientX + 'px';
+        this.contextMenuPosition.y = event.clientY + 'px';
+        this.contextMenu.menuData = { item: item };
+        this.contextMenu.menu?.focusFirstItem('mouse');
+        this.contextMenu.openMenu();
+    }
+
+    private boardsWithTasks(boards: Board[]): Observable<BoardWithTasks[]> {
+        return combineLatest(
+            boards.map((board) =>
+                this.tasks.get(board.boardId).pipe(
+                    map((tasks) => ({
+                        ...board,
+                        tasks,
+                    }))
+                )
+            )
+        );
     }
 }

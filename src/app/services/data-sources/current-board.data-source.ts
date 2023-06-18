@@ -2,27 +2,19 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
-import { SignalRService } from '@services/signalR.service';
 import { Board } from 'app/models/board';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { DataSubject } from 'rxjs-data-subject';
-import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
 })
 export class CurrentBoardDataSource extends DataSubject<Board> {
-    constructor(private http: HttpClient, private boards: BoardsDataSource, private signalRService: SignalRService) {
+    constructor(private http: HttpClient, private boards: BoardsDataSource) {
         super(
-            http.get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true }).pipe(
-                switchMap((id) => this.signalRService.joinBoard(id)),
-                switchMap((id) =>
-                    this.boards.state().pipe(
-                        take(1),
-                        map((boards) => boards.filter((board) => board.boardId === id)[0])
-                    )
-                )
-            )
+            http
+                .get<number>(`${environment.apiUrl}/account/last-board`, { withCredentials: true })
+                .pipe(switchMap((id) => this.boards.get(id)))
         );
     }
 

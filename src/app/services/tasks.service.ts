@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
-import { boardGroupHeader } from '@interceptors/board-group.interceptor';
 import { ConverterService } from '@services/converter.service';
 import { TasksDataSource } from '@services/data-sources/tasks.data-source';
 import { MessagesService } from '@services/messages.service';
 import { SignalRService } from '@services/signalR.service';
 import { MemoryStorage } from 'app/helpers/memory-storage';
 import { TaskB } from 'app/models/task-b';
-import { Observable, tap } from 'rxjs';
+import { forkJoin, Observable, switchMap, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -21,9 +21,7 @@ export class TasksService {
         private messages: MessagesService,
         private converter: ConverterService,
         private signalRService: SignalRService
-    ) {
-        this.signalRService.hubConnection.on('ReceiveNotification', (id) => this.reload(Number(id)));
-    }
+    ) {}
 
     get(boardId: number): Observable<TaskB[]> {
         return this.getDataSource(boardId).state();
@@ -51,18 +49,18 @@ export class TasksService {
 
     moveTaskInList(taskId: number, previousTaskId: number, boardId: number, newBoardId: number): Observable<void> {
         return this.http
-            .put<void>(
-                `${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`,
-                {},
-                {
-                    headers: boardGroupHeader(),
-                }
-            )
+            .put<void>(`${environment.apiUrl}/task/list/${taskId}&${newBoardId}&${previousTaskId}`, {})
             .pipe(
                 tap(() =>
                     boardId !== newBoardId
                         ? (this.getDataSource(boardId).reload(), this.getDataSource(newBoardId).reload())
                         : this.getDataSource(boardId).reload()
+                ),
+                switchMap(() =>
+                    forkJoin([
+                        this.signalRService.sendTaskListChangedEvent(boardId),
+                        this.signalRService.sendTaskListChangedEvent(newBoardId),
+                    ]).pipe(map(() => void 0))
                 )
             );
     }
@@ -79,7 +77,7 @@ export class TasksService {
     }
 
     private createDataSource(boardId: number): TasksDataSource {
-        return new TasksDataSource(boardId, this.converter, this.http);
+        return new TasksDataSource(boardId, this.converter, this.http, this.signalRService);
     }
 
     private removeDataSource(boardId: number): void {

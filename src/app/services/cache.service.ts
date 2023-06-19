@@ -18,9 +18,6 @@ export class CacheService {
     }
 
     reloadAll(): void {
-        this.dataServices.forEach((service) => {
-            console.log(service, 'reload');
-            service.reload();
-        });
+        this.dataServices.forEach((service) => service.reload());
     }
 }

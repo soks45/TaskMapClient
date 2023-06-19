@@ -2,7 +2,7 @@ import { Env } from '@environments/env';
 
 export const environment: Env = {
     production: true,
-    apiUrl: 'https://tskmp.ru:4443/',
+    apiUrl: 'https://tskmp.ru:4443/api',
     signalRHubs: {
         notifications: 'https://tskmp.ru:4443/notificationHub',
     },

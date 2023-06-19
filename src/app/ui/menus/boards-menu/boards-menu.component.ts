@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
+import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { CreateBoardDialogComponent } from '@ui/dialogs/create-board-dialog/create-board-dialog.component';
 import { ShareBoardDialogComponent } from '@ui/dialogs/share-board-dialog/share-board-dialog.component';
 import { PageRoutes } from 'app/app.routes';
@@ -22,7 +23,12 @@ import { Board } from 'app/models/board';
 export class BoardsMenuComponent {
     @ViewChild('boardsMenu') menu!: MatMenu;
 
-    constructor(public boardsService: BoardsDataSource, private dialog: MatDialog, private router: Router) {}
+    constructor(
+        public boardsService: BoardsDataSource,
+        private dialog: MatDialog,
+        private router: Router,
+        private currentBoard: CurrentBoardDataSource
+    ) {}
 
     onCreateNewBoard(event: MouseEvent): void {
         event.stopPropagation();
@@ -32,7 +38,7 @@ export class BoardsMenuComponent {
     }
 
     onBoardClick(board: Board): void {
-        this.router.navigate([PageRoutes.boardPageRoute, board.boardId]);
+        this.currentBoard.switchBoard(board.boardId).subscribe(() => this.router.navigate([PageRoutes.boardPageRoute]));
     }
 
     onShare(event: MouseEvent, board: Board): void {

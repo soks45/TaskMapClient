@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { Color, State, TaskB } from 'app/models/task-b';
-import { BehaviorSubject, tap } from 'rxjs';
+import { BehaviorSubject, filter, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -26,6 +26,7 @@ export class TaskCreatorService {
         this.currentBoardService
             .state()
             .pipe(
+                filter(Boolean),
                 tap((board) => this.edit({ boardId: board.boardId })),
                 takeUntilDestroyed()
             )

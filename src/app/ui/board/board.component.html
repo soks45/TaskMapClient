@@ -1,4 +1,4 @@
-<div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance>
+<div [class]="boundaryClassName" (contextmenu)="contextMenu($event)" #board @smoothAppearance *ngIf='(currentBoard.state() | async)'>
     <ng-container *ngFor="let task of tasks$ | async">
         <tm-adaptive-drag
             [initItemPosition]="initCardPosition(task)"
@@ -25,3 +25,9 @@
         ></tm-task-creator>
     </tm-adaptive-drag>
 </div>
+<ng-container *ngIf='showNoCurrentBoardWarning$ | async'>
+    <div class='no-boards'>
+        <span>Oops... Your last board was restored!</span>
+        <button mat-raised-button color='primary' (click)='createBoardDialog()'>Click to create a new one!</button>
+    </div>
+</ng-container>

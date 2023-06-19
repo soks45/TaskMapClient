@@ -3,13 +3,28 @@
     height: 100%;
     margin: auto;
     border-radius: 6px;
-    background: radial-gradient(100% 100% at 50% 0%, #fefefe 0%, #f0f0f0 100%)
-        /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */;
+    background: radial-gradient(100% 100% at 50% 0%, #fefefe 0%, #f0f0f0 100%);
     position: relative;
     border-color: #c2c2c2;
 
     &__task-creator {
         display: flex;
+    }
+}
+
+.no-boards {
+    @extend .board;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    span {
+        font-size: 24px;
+    }
+
+    button {
+        margin-top: 20px;
     }
 }
 

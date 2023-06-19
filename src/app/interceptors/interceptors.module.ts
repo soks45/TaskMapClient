@@ -1,7 +1,6 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BoardGroupInterceptor } from '@interceptors/board-group.interceptor';
 import { GlobalHttpInterceptor } from '@interceptors/global-http.iterceptor';
 import { JwtInterceptor } from '@interceptors/jwt.interceptor';
 import { UnauthorizedInterceptor } from '@interceptors/unauthorized.interceptor';
@@ -19,11 +18,6 @@ import { UnauthorizedInterceptor } from '@interceptors/unauthorized.interceptor'
         {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedInterceptor,
-            multi: true,
-        },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: BoardGroupInterceptor,
             multi: true,
         },
     ],

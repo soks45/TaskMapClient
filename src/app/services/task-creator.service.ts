@@ -37,6 +37,7 @@ export class TaskCreatorService {
         this.creatorTaskSource.next(<TaskB>{
             ...this.creatorTaskSource.value,
             ...task,
+            state: State.Main,
         });
     }
 }

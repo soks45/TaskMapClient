@@ -42,6 +42,10 @@ export class CardComponent {
     }
 
     newTaskPosition(newPosition: Point): void {
+        if (this.fromCreator) {
+            return;
+        }
+
         this.taskService
             .edit({
                 ...this.task,
@@ -51,6 +55,10 @@ export class CardComponent {
     }
 
     changeState(): void {
+        if (this.fromCreator) {
+            return;
+        }
+
         this.taskService
             .edit({
                 ...this.task,

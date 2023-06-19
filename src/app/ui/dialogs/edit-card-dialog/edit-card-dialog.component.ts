@@ -10,7 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ValidateFormDirective } from '@directives/validate-form.directive';
 import { TaskCreatorService } from '@services/task-creator.service';
 import { TasksService } from '@services/tasks.service';
-import { Color, Colors, State, States, TaskB } from 'app/models/task-b';
+import { Color, Colors, State, TaskB } from 'app/models/task-b';
 import { finalize } from 'rxjs/operators';
 
 export interface EditDialogData {
@@ -55,7 +55,16 @@ interface EditCardForm {
 export class EditCardDialogComponent {
     isNew = false;
     Colors = Colors;
-    States = States;
+    states = [
+        {
+            value: State.Main,
+            label: 'Main',
+        },
+        {
+            value: State.Short,
+            label: 'Short',
+        },
+    ];
     isLoading: boolean = false;
     formGroup: FormGroup<EditCardForm>;
 

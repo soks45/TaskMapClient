@@ -1,12 +1,5 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import {
-    APP_INITIALIZER,
-    enableProdMode,
-    ErrorHandler,
-    importProvidersFrom,
-    inject,
-    InjectionToken,
-} from '@angular/core';
+import { APP_INITIALIZER, enableProdMode, ErrorHandler, importProvidersFrom, inject, isDevMode } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -29,14 +22,12 @@ import { AppComponent } from 'app/app.component';
 import { APP_ROUTES, PageRoutes } from 'app/app.routes';
 import { GlobalErrorHandler } from 'app/error-handlers/global-error-handler';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
-import { asapScheduler, Observable, scheduled } from 'rxjs';
+import { asapScheduler, scheduled } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 if (environment.production) {
     enableProdMode();
 }
-
-export const UNAUTH$_TOKEN = new InjectionToken<Observable<void>>('UNAUTH');
 
 bootstrapApplication(AppComponent, {
     providers: [
@@ -44,10 +35,8 @@ bootstrapApplication(AppComponent, {
             BrowserModule,
             InterceptorsModule,
             LoggerModule.forRoot({
-                level: NgxLoggerLevel.TRACE,
-                serverLogLevel: NgxLoggerLevel.ERROR,
+                level: isDevMode() ? NgxLoggerLevel.TRACE : NgxLoggerLevel.ERROR,
                 colorScheme: ['#aaaaaa', '#bbbbbb', '#4444aa', '#333399', 'black', 'black', 'black'],
-                serverLoggingUrl: environment.logUrl,
             }),
             MatSnackBarModule,
             LoadingBarHttpClientModule,

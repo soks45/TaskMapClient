@@ -6,6 +6,10 @@
     align-items: center;
     justify-content: center;
 
+    &__username {
+        padding: 5px 15px;
+    }
+
     &__avatar-selector {
         display: none;
     }

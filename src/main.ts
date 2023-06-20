@@ -1,5 +1,6 @@
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { APP_INITIALIZER, enableProdMode, ErrorHandler, importProvidersFrom, inject, isDevMode } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { bootstrapApplication, BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -41,7 +42,8 @@ bootstrapApplication(AppComponent, {
             MatSnackBarModule,
             LoadingBarHttpClientModule,
             LoadingBarRouterModule,
-            LoadingBarModule
+            LoadingBarModule,
+            MatDialogModule
         ),
         {
             provide: APP_INITIALIZER,

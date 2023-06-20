@@ -1,0 +1,36 @@
+<form [formGroup]="formGroup" class="edit-board-dialog" tmValidateForm (validatedSubmit)='onSubmit($event)'>
+    <header mat-dialog-title>
+        <h2 #edit>
+            <h2>Edit Board</h2>
+        </h2>
+    </header>
+    <div mat-dialog-content class="edit-board-dialog__content">
+        <mat-form-field>
+            <mat-label>Label</mat-label>
+            <input matInput type="text" formControlName="boardName" />
+            <mat-error>
+                <span *ngIf="formGroup.controls['boardName'].errors && formGroup.controls['boardName'].errors?.['maxlength']">
+                    Too big board name
+                </span>
+            </mat-error>
+        </mat-form-field>
+        <mat-error>
+            <span *ngIf="formGroup.controls['boardName'].errors && formGroup.controls['boardName'].errors?.['maxlength']">
+                Too big board name
+            </span>
+        </mat-error>
+        <mat-form-field>
+            <mat-label>Description</mat-label>
+            <input matInput type="text" formControlName="boardDescription" />
+            <mat-error>
+                <span *ngIf="formGroup.controls['boardDescription'].errors && formGroup.controls['boardDescription'].errors?.['maxlength']">
+                    Too big board name
+                </span>
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div mat-dialog-actions class="edit-card-dialog__actions" [align]="'end'">
+        <button mat-raised-button color="primary" type='submit'>Submit</button>
+        <button mat-stroked-button (click)="onCancel()" type='button'>Cancel</button>
+    </div>
+</form>

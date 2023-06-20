@@ -1,0 +1,12 @@
+.edit-board-dialog {
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+    &__content {
+        display: flex;
+        flex-direction: column;
+    }
+}

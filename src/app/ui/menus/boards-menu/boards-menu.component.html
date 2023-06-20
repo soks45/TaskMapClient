@@ -5,9 +5,9 @@
 <mat-menu #boardsMenu="matMenu" class="boards-menu">
     <button mat-menu-item class="boards-menu__item" *ngFor="let board of (boardsService.state() | async)" (click)='onBoardClick(board)'>
         <span class="boards-menu__name">{{ board.boardName }}</span>
-        <mat-icon *ngIf="board.isShared; else share">folder_shared</mat-icon>
+        <mat-icon *ngIf="board.isShared; else share" (click)="onUnShare(board)">folder_shared</mat-icon>
         <ng-template #share>
-            <mat-icon (click)="onShare($event, board)">share</mat-icon>
+            <mat-icon (click)="onShare(board)">share</mat-icon>
         </ng-template>
     </button>
 

@@ -14,8 +14,13 @@
             (contextmenu)="onContextMenu($event, board)"
         >
             <div class="dashboard-page__board-header">
-                <span>{{ board.boardName }}</span>
-                <mat-icon *ngIf="board.isShared">folder_shared</mat-icon>
+                <span class="dashboard-page__board-header--left">{{ board.boardName }}
+                    <mat-icon *ngIf="board.isShared" (click)='unShare(board)'>folder_shared</mat-icon>
+                </span>
+                <div class="dashboard-page__board-header--right">
+                    <mat-icon (click)='editBoard(board)'>edit</mat-icon>
+                    <mat-icon (click)='deleteBoard(board)'>close</mat-icon>
+                </div>
             </div>
             <div class="dashboard-page__task" *ngFor="let task of board.tasks" cdkDrag [cdkDragData]="task">
                 <tm-card [task]="task"></tm-card>
@@ -31,7 +36,9 @@
     </div>
     <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-item="item">
-            <button mat-menu-item (click)="deleteBoard(item)">Delete board {{item.boardName}}</button>
+            <button mat-menu-item (click)="editBoard(item)">New Task</button>
+            <button mat-menu-item (click)="editBoard(item)">Edit</button>
+            <button mat-menu-item (click)="deleteBoard(item)">Delete</button>
         </ng-template>
     </mat-menu>
 </div>

@@ -48,8 +48,6 @@ export class CreateBoardDialogComponent {
     isLoading: boolean = false;
     formGroup: FormGroup<CreateBoardControls>;
 
-    userId = -1;
-
     constructor(
         private dialogRef: MatDialogRef<boolean>,
         private formBuilder: FormBuilder,

@@ -78,6 +78,21 @@ export class BoardsDataSource extends DataSubject<Board[]> {
             );
     }
 
+    public unShare(entity: Board): Observable<void> {
+        return this.http
+            .put<void>(
+                `${environment.apiUrl}/board/unshare/${entity.boardId}`,
+                {},
+                {
+                    withCredentials: true,
+                }
+            )
+            .pipe(
+                tap(() => this.reload()),
+                switchMap(() => this.signalRService.sendBoardChangedEvent(entity.boardId))
+            );
+    }
+
     private joinBoards(boards: Board[]): Observable<Board[]> {
         const unProcessed = boards.filter((b) => !this.processed.has(b.boardId));
 

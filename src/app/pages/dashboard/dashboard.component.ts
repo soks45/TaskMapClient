@@ -9,11 +9,15 @@ import {
 } from '@angular/cdk/drag-drop';
 import { AsyncPipe, NgFor, NgIf, NgStyle } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { ConfirmService } from '@services/confirm.service';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { TasksService } from '@services/tasks.service';
 import { CardComponent } from '@ui/card/card.component';
+import { EditBoardDialogComponent } from '@ui/dialogs/edit-board-dialog/edit-board-dialog.component';
 import { Board } from 'app/models/board';
 import { TaskB } from 'app/models/task-b';
 import { combineLatest, Observable, of, switchMap, take } from 'rxjs';
@@ -41,6 +45,7 @@ interface BoardWithTasks extends Board {
         MatMenuModule,
         MatIconModule,
         NgIf,
+        MatButtonModule,
     ],
 })
 export default class DashboardComponent {
@@ -51,7 +56,12 @@ export default class DashboardComponent {
 
     contextMenuPosition = { x: '0px', y: '0px' };
 
-    constructor(private boardService: BoardsDataSource, private tasks: TasksService) {
+    constructor(
+        private boardService: BoardsDataSource,
+        private tasks: TasksService,
+        private confirmService: ConfirmService,
+        private dialog: MatDialog
+    ) {
         this.boards$ = this.boardService.state().pipe(
             switchMap((boards) => {
                 if (boards.length === 0) {
@@ -93,8 +103,30 @@ export default class DashboardComponent {
         return this.idPrefix + boardId;
     }
 
+    editBoard(board: Board): void {
+        this.dialog.open(EditBoardDialogComponent, {
+            data: board,
+        });
+    }
+
     deleteBoard(board: Board): void {
-        this.boardService.delete(board).subscribe();
+        this.confirmService
+            .confirm({
+                title: 'delete board',
+                question: `Are you sure you want to delete this board ${board.boardName}`,
+            })
+            .pipe(switchMap((confirmation: boolean) => (confirmation ? this.boardService.delete(board) : of(void 0))))
+            .subscribe();
+    }
+
+    unShare(board: Board): void {
+        this.confirmService
+            .confirm({
+                title: 'unshare board',
+                question: `Are you sure you want to unshare this board ${board.boardName}`,
+            })
+            .pipe(switchMap((confirmation: boolean) => (confirmation ? this.boardService.unShare(board) : of(void 0))))
+            .subscribe();
     }
 
     onContextMenu(event: MouseEvent, item: Board) {

@@ -5,12 +5,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenu, MatMenuModule } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
+import { ConfirmService } from '@services/confirm.service';
 import { BoardsDataSource } from '@services/data-sources/boards.data-source';
 import { CurrentBoardDataSource } from '@services/data-sources/current-board.data-source';
 import { CreateBoardDialogComponent } from '@ui/dialogs/create-board-dialog/create-board-dialog.component';
 import { ShareBoardDialogComponent } from '@ui/dialogs/share-board-dialog/share-board-dialog.component';
 import { PageRoutes } from 'app/app.routes';
 import { Board } from 'app/models/board';
+import { of, switchMap } from 'rxjs';
 
 @Component({
     selector: 'tm-boards-menu',
@@ -27,7 +29,8 @@ export class BoardsMenuComponent {
         public boardsService: BoardsDataSource,
         private dialog: MatDialog,
         private router: Router,
-        private currentBoard: CurrentBoardDataSource
+        private currentBoard: CurrentBoardDataSource,
+        private confirmService: ConfirmService
     ) {}
 
     onCreateNewBoard(event: MouseEvent): void {
@@ -41,10 +44,20 @@ export class BoardsMenuComponent {
         this.currentBoard.switchBoard(board.boardId).subscribe(() => this.router.navigate([PageRoutes.boardPageRoute]));
     }
 
-    onShare(event: MouseEvent, board: Board): void {
+    onShare(board: Board): void {
         this.dialog.open(ShareBoardDialogComponent, {
             closeOnNavigation: true,
             data: board,
         });
+    }
+
+    onUnShare(board: Board) {
+        this.confirmService
+            .confirm({
+                title: 'unshare board',
+                question: `Are you sure you want to unshare this board ${board.boardName}`,
+            })
+            .pipe(switchMap((confirmation: boolean) => (confirmation ? this.boardsService.unShare(board) : of(void 0))))
+            .subscribe();
     }
 }

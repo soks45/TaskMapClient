@@ -7,7 +7,7 @@ import { PageRoutes } from 'app/app.routes';
 import { InputUser } from 'app/models/user';
 import { Md5 } from 'md5-typescript';
 import { distinctUntilChanged, Observable, of, ReplaySubject, Subscription, switchMap, throwError } from 'rxjs';
-import { delay, finalize, tap } from 'rxjs/operators';
+import { delay, finalize, map, tap } from 'rxjs/operators';
 
 interface LoginResult {
     accessToken: string;
@@ -29,6 +29,7 @@ export class AuthService {
     private refreshTokenKey = 'a;kldw@#)1';
 
     readonly isAuthed$: Observable<boolean> = this.isAuthedSource$.asObservable().pipe(distinctUntilChanged());
+    readonly isNotAuthed$: Observable<boolean> = this.isAuthed$.pipe(map((state) => !state));
 
     constructor(private router: Router, private http: HttpClient) {}
 

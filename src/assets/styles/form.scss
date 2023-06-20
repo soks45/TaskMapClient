@@ -1,16 +1,20 @@
-$form-field-width: 260px;
-$submit-btn-width: $form-field-width - 4px;
+:root {
+    --form-field-width: 260px;
+    --form-field-height: 20px;
+}
+
+$form-field-width: var(--form-field-width);
+$form-field-height: var(--form-field-height);
+
+$submit-btn-width: calc(var(--form-field-width) - 4px);
 
 .std-form {
     border-radius: 6px;
-    min-width: 420px;
+    width: 420px;
     background: rgba(241, 241, 241, 0.51);
     border: 1px solid #212121;
     box-shadow: 3px 3px 8px 3px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(2px);
-
-    $form-field-width: 260px;
-    $submit-btn-width: $form-field-width - 4px;
 
     &__content {
         margin-top: 58px;
@@ -66,5 +70,33 @@ $submit-btn-width: $form-field-width - 4px;
 
     &__error {
         font-size: 75%;
+    }
+}
+
+@media only screen and (max-width: 540px)  {
+    .std-form {
+        width: 360px;
+
+        &__content {
+            margin-top: 38px;
+        }
+    }
+
+    :root {
+        --form-field-width: 240px
+    }
+}
+
+@media only screen and (max-width: 420px)  {
+    .std-form {
+        width: 320px;
+
+        &__content {
+            //margin-top: 3px;
+        }
+    }
+
+    :root {
+        --form-field-width: 180px
     }
 }

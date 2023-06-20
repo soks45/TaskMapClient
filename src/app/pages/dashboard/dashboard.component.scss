@@ -7,6 +7,7 @@
         display: flex;
         flex-wrap: wrap;
         column-gap: 20px;
+        justify-content: flex-start;
         row-gap: 10px;
     }
 
@@ -15,6 +16,7 @@
         border-radius: 6px;
         border: 1px solid #e5e4e4;
         width: 250px;
+        transition: .5s ease-in-out;
 
         &-header {
             display: flex;
@@ -28,6 +30,10 @@
             mat-icon {
                 margin-left: 10px;
             }
+        }
+
+        &:hover {
+            box-shadow: 3px 6px 15px rgba(0, 0, 0, 0.25);
         }
     }
 
@@ -48,5 +54,34 @@
 
     .cdk-drag-animating {
         transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+@media only screen and (max-width: 870px)  {
+    .dashboard-page {
+        max-width: 600%;
+
+        &__boards {
+            justify-content: center;
+        }
+    }
+}
+
+
+@media only screen and (max-width: 930px)  {
+    .dashboard-page {
+        width: 620px;
+    }
+}
+
+@media only screen and (max-width: 640px)  {
+    .dashboard-page {
+        width: 340px;
+    }
+}
+
+@media only screen and (max-width: 450px)  {
+    .dashboard-page {
+        width: 300px;
     }
 }

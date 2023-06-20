@@ -34,3 +34,15 @@ $white: #f5f4f4;
         padding-right: 35px;
     }
 }
+
+@media only screen and (max-width: 850px)  {
+    .header {
+        &__name {
+            padding-left: 10px;
+            height: 40px;
+            min-width: 90px;
+            margin-right: 10px;
+        }
+    }
+}
+

@@ -24,3 +24,14 @@
         display: none;
     }
 }
+
+@media only screen and (max-width: 850px)  {
+    .user-avatar {
+        cursor: pointer;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+}

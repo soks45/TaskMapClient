@@ -40,6 +40,14 @@
     }
 }
 
+@media only screen and (max-width: 1200px)  {
+    .authed-header {
+        &__menu-item {
+            min-width: 180px;
+        }
+    }
+}
+
 @media only screen and (max-width: 850px)  {
     .authed-header {
         display: flex;
@@ -48,7 +56,7 @@
 
         &__menu-item {
             height: 40px;
-            min-width: 180px;
+            min-width: 160px;
             margin-right: 20px;
         }
 

@@ -1,8 +1,8 @@
 <header class="header">
     <div class="header__content">
-        <div class="header__left">
-            <div class="header__logo"></div>
-            <div class="header__name" [routerLink]='defaultPageRoute'>TaskMap</div>
+        <div class="header__left" [routerLink]='defaultPageRoute'>
+            <div class="header__name" *ngIf='breakPoints.smallScreen$ | async'>TaskMap</div>
+            <mat-icon svgIcon="logo" class="header__logo"></mat-icon>
         </div>
 
         <div class="header__right">

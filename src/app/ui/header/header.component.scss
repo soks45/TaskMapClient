@@ -9,10 +9,14 @@ $white: #f5f4f4;
     font-size: x-large;
 
     &__name {
-        padding-left: 5vh;
         font-weight: 600;
         font-size: 32px;
         line-height: 38px;
+    }
+
+    &__logo {
+        margin-left: 25px;
+        transform: scale(2);
     }
 
     &__content {
@@ -23,7 +27,7 @@ $white: #f5f4f4;
     }
 
     &__left {
-        margin-left: 5vh;
+        margin-left: 10vh;
         display: flex;
         align-items: center;
     }
@@ -35,13 +39,26 @@ $white: #f5f4f4;
     }
 }
 
-@media only screen and (max-width: 850px)  {
+@media only screen and (max-width: 1200px)  {
     .header {
+        font-size: large;
+
         &__name {
             padding-left: 10px;
             height: 40px;
             min-width: 90px;
             margin-right: 10px;
+        }
+
+        &__logo {
+            transform: scale(1.7);
+            margin-right: 20px;
+        }
+
+        &__left {
+            margin-left: 5vh;
+            display: flex;
+            align-items: center;
         }
     }
 }

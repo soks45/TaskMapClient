@@ -66,6 +66,10 @@ export class SignalRService {
         return this.safeInvoke(() => this.hubConnection.invoke(`BoardChangedNotification`, boardId));
     }
 
+    public sendShareBoardNotificationEvent(userIds: number[]): Observable<void> {
+        return this.safeInvoke(() => this.hubConnection.invoke(`ShareBoardNotification`, userIds));
+    }
+
     private safeInvoke(invoke: () => Promise<any>): Observable<void> {
         return this.connectionState$.pipe(
             filter((state) => state === HubConnectionState.Connected),

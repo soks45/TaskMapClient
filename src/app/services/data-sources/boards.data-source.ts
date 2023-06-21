@@ -80,7 +80,7 @@ export class BoardsDataSource extends DataSubject<Board[]> {
             })
             .pipe(
                 tap(() => this.reload()),
-                switchMap(() => this.signalRService.sendBoardChangedEvent(entity.boardId))
+                switchMap(() => this.signalRService.sendShareBoardNotificationEvent(entity.userIdList))
             );
     }
 

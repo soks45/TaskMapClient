@@ -36,7 +36,6 @@
     </div>
     <mat-menu #contextMenu="matMenu">
         <ng-template matMenuContent let-item="item">
-            <button mat-menu-item (click)="editBoard(item)">New Task</button>
             <button mat-menu-item (click)="editBoard(item)">Edit</button>
             <button mat-menu-item (click)="deleteBoard(item)">Delete</button>
         </ng-template>

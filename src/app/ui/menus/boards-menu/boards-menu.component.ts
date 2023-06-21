@@ -44,14 +44,20 @@ export class BoardsMenuComponent {
         this.currentBoard.switchBoard(board.boardId).subscribe(() => this.router.navigate([PageRoutes.boardPageRoute]));
     }
 
-    onShare(board: Board): void {
+    onShare(event: Event, board: Board): void {
+        event.stopPropagation();
+        event.preventDefault();
+
         this.dialog.open(ShareBoardDialogComponent, {
             closeOnNavigation: true,
             data: board,
         });
     }
 
-    onUnShare(board: Board) {
+    onUnShare(event: Event, board: Board) {
+        event.stopPropagation();
+        event.preventDefault();
+
         this.confirmService
             .confirm({
                 title: 'unshare board',

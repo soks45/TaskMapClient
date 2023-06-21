@@ -1,9 +1,9 @@
 <header class="header">
     <div class="header__content">
-        <div class="header__left" [routerLink]='defaultPageRoute'>
+        <a class="header__left" [routerLink]='defaultPageRoute'>
             <div class="header__name" *ngIf='(breakPoints.smallScreen$ | async) || (auth.isNotAuthed$ | async)'>TaskMap</div>
             <mat-icon svgIcon="logo" class="header__logo"></mat-icon>
-        </div>
+        </a>
 
         <div class="header__right">
             <ng-container *ngIf="auth.isAuthed$ | async">

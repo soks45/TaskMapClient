@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '@environments/environment';
+import { MessagesService } from '@services/messages.service';
 import { SignalRService } from '@services/signalR.service';
 import { TasksService } from '@services/tasks.service';
 import { AccessRights, Board } from 'app/models/board';
 import { forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { DataSubject } from 'rxjs-data-subject';
-import { map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 export interface ShareBoard {
     boardId: number;
@@ -20,7 +21,12 @@ export interface ShareBoard {
 export class BoardsDataSource extends DataSubject<Board[]> {
     private processed: Set<number> = new Set<number>();
 
-    constructor(private http: HttpClient, private taskService: TasksService, private signalRService: SignalRService) {
+    constructor(
+        private http: HttpClient,
+        private taskService: TasksService,
+        private signalRService: SignalRService,
+        private messages: MessagesService
+    ) {
         super(
             http
                 .get<Board[]>(`${environment.apiUrl}/board`, {
@@ -88,6 +94,10 @@ export class BoardsDataSource extends DataSubject<Board[]> {
                 }
             )
             .pipe(
+                catchError((err: unknown) => {
+                    this.messages.error('You can`t unshare this board');
+                    throw err;
+                }),
                 tap(() => this.reload()),
                 switchMap(() => this.signalRService.sendBoardChangedEvent(entity.boardId))
             );

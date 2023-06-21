@@ -84,7 +84,7 @@ export class BoardsDataSource extends DataSubject<Board[]> {
             );
     }
 
-    public unShare(entity: Board): Observable<void> {
+    unShare(entity: Board): Observable<void> {
         return this.http
             .put<void>(
                 `${environment.apiUrl}/board/unshare/${entity.boardId}`,
@@ -122,6 +122,7 @@ export class BoardsDataSource extends DataSubject<Board[]> {
 
     private listenHub(): void {
         this.signalRService.hubConnection.on('BoardChangedNotification', () => this.reload());
+        this.signalRService.hubConnection.on('ShareBoardNotification', () => this.reload());
         this.signalRService.hubConnection.onclose(() => this.processed.clear());
     }
 }

@@ -7,7 +7,7 @@ import { TasksService } from '@services/tasks.service';
 import { AccessRights, Board } from 'app/models/board';
 import { forkJoin, Observable, of, switchMap, tap } from 'rxjs';
 import { DataSubject } from 'rxjs-data-subject';
-import { catchError, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 export interface ShareBoard {
     boardId: number;
@@ -94,10 +94,6 @@ export class BoardsDataSource extends DataSubject<Board[]> {
                 }
             )
             .pipe(
-                catchError((err: unknown) => {
-                    this.messages.error('You can`t unshare this board');
-                    throw err;
-                }),
                 tap(() => this.reload()),
                 switchMap(() => this.signalRService.sendBoardChangedEvent(entity.boardId))
             );
